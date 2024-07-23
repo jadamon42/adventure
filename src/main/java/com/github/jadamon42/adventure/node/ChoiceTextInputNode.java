@@ -26,7 +26,7 @@ public class ChoiceTextInputNode extends LinkableTextNode {
 
     @Override
     public StoryNode getNextNode() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("Use getNextNode(int) instead");
+        throw new UnsupportedOperationException("Use getChoice(Player, int).getNextNode() instead");
     }
 
     @Override
