@@ -25,7 +25,7 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
     }
 
     @Override
-    public void start() {
+    public void startGame() {
         while (currentNode != null) {
             currentNode.accept(this);
         }
@@ -60,18 +60,18 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
         return player;
     }
 
-    public void resetToMessage(UUID messageId) {
-        GameState savedState = interactableCheckpoints.get(messageId);
-        if (savedState != null) {
-            this.player = new Player(savedState.getPlayer());
-            this.currentNode = savedState.getCurrentNode();
-            this.messageHistory = savedState.getMessageHistory();
-            this.interactableCheckpoints = savedState.getMessageToGameStateMap();
-            replayMessages();
-        } else {
-            System.out.println("Invalid message ID");
-        }
-    }
+//    public void resetToMessage(UUID messageId) {
+//        GameState savedState = interactableCheckpoints.get(messageId);
+//        if (savedState != null) {
+//            this.player = new Player(savedState.getPlayer());
+//            this.currentNode = savedState.getCurrentNode();
+//            this.messageHistory = savedState.getMessageHistory();
+//            this.interactableCheckpoints = savedState.getMessageToGameStateMap();
+//            replayMessages();
+//        } else {
+//            System.out.println("Invalid message ID");
+//        }
+//    }
 
     @Override
     public void visit(ConditionalTextNode node) {
