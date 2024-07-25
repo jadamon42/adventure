@@ -2,8 +2,8 @@ package com.github.jadamon42.adventure.model;
 
 public class Player {
     private String name;
-    private final Inventory inventory;
-    private final Effects effects;
+    private Inventory inventory;
+    private Effects effects;
 
     public Player() {
         inventory = new Inventory();
@@ -24,6 +24,10 @@ public class Player {
         return name;
     }
 
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
+    }
+
     public Inventory getInventory() {
         return inventory;
     }
@@ -38,6 +42,10 @@ public class Player {
 
     public boolean hasItem(String itemName) {
         return inventory.contains(itemName);
+    }
+
+    public void setEffects(Effects effects) {
+        this.effects = effects;
     }
 
     public Effects getEffects() {

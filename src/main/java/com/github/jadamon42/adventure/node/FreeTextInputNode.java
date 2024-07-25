@@ -8,13 +8,13 @@ public class FreeTextInputNode extends LinkableTextNode {
 
     private final Consumer<String> textConsumer;
 
-    public FreeTextInputNode(String text) {
-        super(text);
+    public FreeTextInputNode(String prompt) {
+        super(prompt);
         this.textConsumer = null;
     }
 
-    public FreeTextInputNode(String text, Consumer<String> consumer) {
-        super(text);
+    public FreeTextInputNode(String prompt, Consumer<String> consumer) {
+        super(prompt);
         this.textConsumer = consumer;
     }
 

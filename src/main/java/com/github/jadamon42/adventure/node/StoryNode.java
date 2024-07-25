@@ -16,4 +16,8 @@ public abstract class StoryNode {
     }
 
     public abstract void accept(StoryNodeVisitor visitor);
+
+    public abstract StoryNode getNextNode();
+
+    public abstract <T extends  StoryNode> T then(T nextNode);
 }
