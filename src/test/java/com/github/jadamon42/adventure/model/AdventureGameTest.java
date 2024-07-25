@@ -12,7 +12,7 @@ class AdventureGameTest {
     public static void main(String[] args) {
         Player player = new Player();
         ConsoleGameEngine adventureGame = new ConsoleGameEngine(player, start(player), new ConsoleInputHandler());
-        adventureGame.start();
+        adventureGame.startGame();
     }
 
     private static LinkableTextNode start(Player player) {
