@@ -1,6 +1,6 @@
-package com.github.jadamon42.adventure.model;
+package com.github.jadamon42.adventure.node;
 
-import com.github.jadamon42.adventure.node.StoryNode;
+import com.github.jadamon42.adventure.model.Player;
 
 import java.util.function.Function;
 

@@ -1,4 +1,6 @@
-package com.github.jadamon42.adventure.model;
+package com.github.jadamon42.adventure.util;
+
+import com.github.jadamon42.adventure.model.Player;
 
 import java.util.HashMap;
 import java.util.function.Function;

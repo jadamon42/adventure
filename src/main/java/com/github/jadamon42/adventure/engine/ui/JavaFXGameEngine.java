@@ -4,6 +4,7 @@ import com.github.jadamon42.adventure.engine.GameEngine;
 import com.github.jadamon42.adventure.engine.GameStateManager;
 import com.github.jadamon42.adventure.model.*;
 import com.github.jadamon42.adventure.node.*;
+import com.github.jadamon42.adventure.util.TextInterpolator;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

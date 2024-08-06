@@ -1,6 +1,5 @@
 package com.github.jadamon42.adventure.node;
 
-import com.github.jadamon42.adventure.model.LinkableTextChoice;
 import com.github.jadamon42.adventure.model.Player;
 
 import java.util.List;
