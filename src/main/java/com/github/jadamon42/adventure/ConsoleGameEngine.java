@@ -75,7 +75,7 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
 
     @Override
     public void visit(BranchTextNode node) {
-        TextChoice availableChoice = node.getChoice(player);
+        LinkableTextChoice availableChoice = node.getChoice(player);
         handleOutput(availableChoice.getText());
         currentNode = availableChoice.getNextNode();
     }
@@ -91,9 +91,9 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
     public void visit(ChoiceTextInputNode node) {
         handleInteractableOutputNode(node);
 
-        List<TextChoice> availableChoices = node.getChoices(player);
+        List<LinkableTextChoice> availableChoices = node.getChoices(player);
         int choiceIndex = inputHandler.getMultipleChoiceInput(availableChoices);
-        TextChoice choice = availableChoices.get(choiceIndex);
+        LinkableTextChoice choice = availableChoices.get(choiceIndex);
         String text = TextInterpolator.interpolate(choice.getText(), player);
         handleInput(text);
         currentNode = choice.getNextNode();

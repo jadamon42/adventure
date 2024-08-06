@@ -1,25 +1,25 @@
 package com.github.jadamon42.adventure.node;
 
 import com.github.jadamon42.adventure.StoryNodeVisitor;
+import com.github.jadamon42.adventure.model.LinkableTextChoice;
 import com.github.jadamon42.adventure.model.Player;
-import com.github.jadamon42.adventure.model.TextChoice;
 
 import java.util.List;
 
 public class BranchTextNode extends LinkableTextNode {
-    private final List<TextChoice> choices;
+    private final List<LinkableTextChoice> choices;
 
     /*
      * The first `TextChoice` that has a condition that returns true will be displayed.
      * The last `TextChoice` in the parameter list should not have a condition,
      * as it will be used as a default if no other conditions are met.
      */
-    public BranchTextNode(TextChoice... options) {
+    public BranchTextNode(LinkableTextChoice... options) {
         super(null);
         this.choices = List.of(options);
     }
 
-    public TextChoice getChoice(Player player) {
+    public LinkableTextChoice getChoice(Player player) {
         return choices.stream()
                 .filter(choice -> choice.isAvailable(player))
                 .findFirst()

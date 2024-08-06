@@ -210,7 +210,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
             buttonPane.setPrefWrapLength(600);
 
             List<Button> buttons = new ArrayList<>();
-            for (TextChoice choice : node.getChoices(player)) {
+            for (LinkableTextChoice choice : node.getChoices(player)) {
                 Button button = new Button(choice.getText());
                 button.setOnAction(e -> {
                     currentNode = choice.getNextNode();
@@ -240,7 +240,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
 
     @Override
     public void visit(BranchTextNode node) {
-        TextChoice availableChoice = node.getChoice(player);
+        LinkableTextChoice availableChoice = node.getChoice(player);
         addGameMessage(availableChoice.getText());
         currentNode = availableChoice.getNextNode();
     }

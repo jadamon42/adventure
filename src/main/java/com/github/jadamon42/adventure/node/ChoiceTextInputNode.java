@@ -1,20 +1,20 @@
 package com.github.jadamon42.adventure.node;
 
 import com.github.jadamon42.adventure.StoryNodeVisitor;
+import com.github.jadamon42.adventure.model.LinkableTextChoice;
 import com.github.jadamon42.adventure.model.Player;
-import com.github.jadamon42.adventure.model.TextChoice;
 
 import java.util.List;
 
 public class ChoiceTextInputNode extends LinkableTextNode {
-    private final List<TextChoice> choices;
+    private final List<LinkableTextChoice> choices;
 
-    public ChoiceTextInputNode(String prompt, TextChoice... choices) {
+    public ChoiceTextInputNode(String prompt, LinkableTextChoice... choices) {
         super(prompt);
         this.choices = List.of(choices);
     }
 
-    public List<TextChoice> getChoices(Player player) {
+    public List<LinkableTextChoice> getChoices(Player player) {
         return choices.stream()
                 .filter(choice -> choice.isAvailable(player))
                 .toList();

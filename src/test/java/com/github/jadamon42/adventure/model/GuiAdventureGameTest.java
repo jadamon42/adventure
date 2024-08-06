@@ -45,9 +45,9 @@ public class GuiAdventureGameTest extends Application {
         );
         node.then(new ExpositionalTextNode("You see a door."))
             .then(new ChoiceTextInputNode("Enter it?",
-                                          new TextChoice("Yes", openTheDoor()),
-                                          new TextChoice("No", boringEnd()),
-                                          new TextChoice("Yes, but with style", openTheDoor(), p -> p.getName().contains("cool"))));
+                                          new LinkableTextChoice("Yes", openTheDoor()),
+                                          new LinkableTextChoice("No", boringEnd()),
+                                          new LinkableTextChoice("Yes, but with style", openTheDoor(), p -> p.getName().contains("cool"))));
         return node;
     }
 
@@ -58,9 +58,9 @@ public class GuiAdventureGameTest extends Application {
     private static LinkableTextNode openTheDoor() {
         LinkableTextNode node = new ExpositionalTextNode("You open the door and enter a new room.");
         node.then(new ChoiceTextInputNode("In the new new room, you see a glowing orb. What do you do?",
-                                          new TextChoice("Pick it up and put it in my backpack", pickUpTheOrb()),
-                                          new TextChoice("Destroy it", destroyTheOrb()),
-                                          new TextChoice("Leave it", boringEnd())));
+                                          new LinkableTextChoice("Pick it up and put it in my backpack", pickUpTheOrb()),
+                                          new LinkableTextChoice("Destroy it", destroyTheOrb()),
+                                          new LinkableTextChoice("Leave it", boringEnd())));
         return node;
     }
 
@@ -78,14 +78,14 @@ public class GuiAdventureGameTest extends Application {
 
     private static LinkableTextNode leaveTheRoomChoice() {
         return new ChoiceTextInputNode("Would you like to leave the room, or stay for a while?",
-                                       new TextChoice("Leave the room", leaveTheRoomEnding()),
-                                       new TextChoice("Stay for a while", stayForAWhile()));
+                                       new LinkableTextChoice("Leave the room", leaveTheRoomEnding()),
+                                       new LinkableTextChoice("Stay for a while", stayForAWhile()));
     }
 
     private static LinkableTextNode leaveTheRoomEnding() {
         return new BranchTextNode(
-                new TextChoice("You leave the room with a useless orb. Maybe some day you can sell it.", p -> p.hasItem(orb)),
-                new TextChoice("You leave the room.")
+                new LinkableTextChoice("You leave the room with a useless orb. Maybe some day you can sell it.", p -> p.hasItem(orb)),
+                new LinkableTextChoice("You leave the room.")
         );
     }
 
@@ -96,10 +96,10 @@ public class GuiAdventureGameTest extends Application {
             .then(new ExpositionalTextNode("\"Hey! What are you doing in my room?\" shouts the Ogre. \"I'm going to eat you!\""))
             .then(
                     new ChoiceTextInputNode("What do you do?",
-                                            new TextChoice("Throw the orb at the ogre", throwTheOrb(), p -> p.hasItem(orb)),
-                                            new TextChoice("Stand up, raise my fists, and fight the ogre", fightTheOgre()),
-                                            new TextChoice("Run away", leaveTheRoomEnding()),
-                                            new TextChoice("Apologize and explain that I was just exploring", deathByOgre())
+                                            new LinkableTextChoice("Throw the orb at the ogre", throwTheOrb(), p -> p.hasItem(orb)),
+                                            new LinkableTextChoice("Stand up, raise my fists, and fight the ogre", fightTheOgre()),
+                                            new LinkableTextChoice("Run away", leaveTheRoomEnding()),
+                                            new LinkableTextChoice("Apologize and explain that I was just exploring", deathByOgre())
                     )
             );
         return node;
@@ -117,8 +117,8 @@ public class GuiAdventureGameTest extends Application {
         LinkableTextNode node = new ExpositionalTextNode("The ogre laughs as you hobble over to him. You have very little energy because you are so exhausted.");
         node.then(
                 new BranchTextNode(
-                        new TextChoice("You throw the first punch, and the ogre is thrown back as if he was hit by a train. You are amazed at your newfound strength. It must be the orb...", null, p -> p.hasEffect(superStrength)),
-                        new TextChoice("You throw the first punch.", deathByOgre())
+                        new LinkableTextChoice("You throw the first punch, and the ogre is thrown back as if he was hit by a train. You are amazed at your newfound strength. It must be the orb...", null, p -> p.hasEffect(superStrength)),
+                        new LinkableTextChoice("You throw the first punch.", deathByOgre())
                 )
         );
         return node;
