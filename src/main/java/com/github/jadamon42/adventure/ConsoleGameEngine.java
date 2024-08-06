@@ -74,10 +74,17 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
 //    }
 
     @Override
-    public void visit(ConditionalTextNode node) {
+    public void visit(BranchTextNode node) {
         TextChoice availableChoice = node.getChoice(player);
         handleOutput(availableChoice.getText());
         currentNode = availableChoice.getNextNode();
+    }
+
+    @Override
+    public void visit(ConditionalTextNode node) {
+        TextChoice availableChoice = node.getChoice(player);
+        handleOutput(availableChoice.getText());
+        currentNode = node.getNextNode();
     }
 
     @Override

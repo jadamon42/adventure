@@ -9,10 +9,22 @@ public class TextChoice {
     private final StoryNode nextNode;
     private final Function<Player, Boolean> condition;
 
+    public TextChoice(String text) {
+        this.text = text;
+        this.nextNode = null;
+        this.condition = player -> true;
+    }
+
     public TextChoice(String text, StoryNode nextNode) {
         this.text = text;
         this.nextNode = nextNode;
         this.condition = player -> true;
+    }
+
+    public TextChoice(String text, Function<Player, Boolean> condition) {
+        this.text = text;
+        this.nextNode = null;
+        this.condition = condition;
     }
 
     public TextChoice(String text, StoryNode nextNode, Function<Player, Boolean> condition) {

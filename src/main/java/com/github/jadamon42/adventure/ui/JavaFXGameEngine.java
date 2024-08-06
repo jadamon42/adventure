@@ -4,7 +4,6 @@ import com.github.jadamon42.adventure.*;
 import com.github.jadamon42.adventure.model.*;
 import com.github.jadamon42.adventure.node.*;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -85,12 +84,19 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
             buttonPane.setVgap(10);
             buttonPane.setPrefWrapLength(600);
 
-            Button button = new Button("Play Again");
-            button.setOnAction(e -> {
+            Button againButton = new Button("Play Again");
+            againButton.setOnAction(e -> {
                 loadGame(NIL_UUID);
             });
-            button.setFocusTraversable(false);
-            buttonPane.getChildren().add(button);
+            againButton.setFocusTraversable(false);
+            buttonPane.getChildren().add(againButton);
+
+            Button exitButton = new Button("Exit Game");
+            exitButton.setOnAction(e -> {
+                Platform.exit();
+            });
+            exitButton.setFocusTraversable(false);
+            buttonPane.getChildren().add(exitButton);
 
             messagePanel.getChildren().add(buttonPane);
             scrollPane.setVvalue(1.0);
@@ -233,10 +239,17 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
     }
 
     @Override
-    public void visit(ConditionalTextNode node) {
+    public void visit(BranchTextNode node) {
         TextChoice availableChoice = node.getChoice(player);
         addGameMessage(availableChoice.getText());
         currentNode = availableChoice.getNextNode();
+    }
+
+    @Override
+    public void visit(ConditionalTextNode node) {
+        TextChoice availableChoice = node.getChoice(player);
+        addGameMessage(availableChoice.getText());
+        currentNode = node.getNextNode();
     }
 
     private void addGameMessage(String text) {

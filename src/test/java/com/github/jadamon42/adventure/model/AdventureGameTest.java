@@ -59,9 +59,9 @@ class AdventureGameTest {
     }
 
     private static LinkableTextNode leaveTheRoomEnding() {
-        return new ConditionalTextNode(
-                new TextChoice("You leave the room with a useless orb. Maybe some day you can sell it.", null, p -> p.hasItem(orb)),
-                new TextChoice("You leave the room.", null)
+        return new BranchTextNode(
+                new TextChoice("You leave the room with a useless orb. Maybe some day you can sell it.", p -> p.hasItem(orb)),
+                new TextChoice("You leave the room.")
         );
     }
 
@@ -92,7 +92,7 @@ class AdventureGameTest {
     private static LinkableTextNode fightTheOgre() {
         LinkableTextNode node = new ExpositionalTextNode("The ogre laughs as you hobble over to him. You have very little energy because you are so exhausted.");
         node.then(
-                new ConditionalTextNode(
+                new BranchTextNode(
                         new TextChoice("You throw the first punch, and the ogre is thrown back as if he was hit by a train. You are amazed at your newfound strength. It must be the orb...", null, p -> p.hasEffect(superStrength)),
                         new TextChoice("You throw the first punch.", deathByOgre())
                 )

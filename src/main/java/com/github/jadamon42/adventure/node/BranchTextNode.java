@@ -6,7 +6,7 @@ import com.github.jadamon42.adventure.model.TextChoice;
 
 import java.util.List;
 
-public class ConditionalTextNode extends LinkableTextNode {
+public class BranchTextNode extends LinkableTextNode {
     private final List<TextChoice> choices;
 
     /*
@@ -14,22 +14,28 @@ public class ConditionalTextNode extends LinkableTextNode {
      * The last `TextChoice` in the parameter list should not have a condition,
      * as it will be used as a default if no other conditions are met.
      */
-    public ConditionalTextNode(TextChoice... options) {
+    public BranchTextNode(TextChoice... options) {
         super(null);
         this.choices = List.of(options);
     }
 
     public TextChoice getChoice(Player player) {
         return choices.stream()
-                      .filter(choice -> choice.isAvailable(player))
-                      .findFirst()
-                      .orElseThrow();
+                .filter(choice -> choice.isAvailable(player))
+                .findFirst()
+                .orElseThrow();
     }
 
     @Override
     public String getText() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Use getChoice(Player).getText() instead");
     }
+
+    @Override
+    public StoryNode getNextNode() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Use getChoice(Player).getNextNode() instead");
+    }
+
 
     @Override
     public void accept(StoryNodeVisitor visitor) {

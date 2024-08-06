@@ -3,11 +3,8 @@ package com.github.jadamon42.adventure.model;
 import com.github.jadamon42.adventure.node.*;
 import com.github.jadamon42.adventure.ui.JavaFXGameEngine;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -35,8 +32,18 @@ public class GuiAdventureGameTest extends Application {
     private static LinkableTextNode start(Player player) {
         LinkableTextNode node = new ExpositionalTextNode("** First Adventure: The Room **");
         node.then(new FreeTextInputNode("What is your name?", player::setName))
-            .then(new ExpositionalTextNode("Hello, $PLAYER_NAME. You are in a room."))
-            .then(new ExpositionalTextNode("You see a door."))
+            .then(playerNameAndExposition(player));
+        return node;
+    }
+
+    private static LinkableTextNode playerNameAndExposition(Player player) {
+        LinkableTextNode node = new ConditionalTextNode(
+                new TextChoice("$PLAYER_NAME? What a dumb name. Anyway, you are in a room (with a dumb name).", p -> p.getName().equalsIgnoreCase("nick") || p.getName().equalsIgnoreCase("victor") || p.getName().equalsIgnoreCase("nicholas") || p.getName().equalsIgnoreCase("neck")),
+                new TextChoice("$PLAYER_NAME? What a cool name! Anyway, you are in a room (and everyone is probably jealous of how cool you are).", p -> p.getName().equalsIgnoreCase("jonathan") || p.getName().equalsIgnoreCase("jon")),
+                new TextChoice("$PLAYER_NAME? You sound old. Anyway, you're in a room (and you're old).", p -> p.getName().equalsIgnoreCase("dave") || p.getName().equalsIgnoreCase("david") || p.getName().equalsIgnoreCase("natalie")),
+                new TextChoice("Hello, $PLAYER_NAME. You are in a room.")
+        );
+        node.then(new ExpositionalTextNode("You see a door."))
             .then(new ChoiceTextInputNode("Enter it?",
                                           new TextChoice("Yes", openTheDoor()),
                                           new TextChoice("No", boringEnd()),
@@ -76,9 +83,9 @@ public class GuiAdventureGameTest extends Application {
     }
 
     private static LinkableTextNode leaveTheRoomEnding() {
-        return new ConditionalTextNode(
-                new TextChoice("You leave the room with a useless orb. Maybe some day you can sell it.", null, p -> p.hasItem(orb)),
-                new TextChoice("You leave the room.", null)
+        return new BranchTextNode(
+                new TextChoice("You leave the room with a useless orb. Maybe some day you can sell it.", p -> p.hasItem(orb)),
+                new TextChoice("You leave the room.")
         );
     }
 
@@ -109,7 +116,7 @@ public class GuiAdventureGameTest extends Application {
     private static LinkableTextNode fightTheOgre() {
         LinkableTextNode node = new ExpositionalTextNode("The ogre laughs as you hobble over to him. You have very little energy because you are so exhausted.");
         node.then(
-                new ConditionalTextNode(
+                new BranchTextNode(
                         new TextChoice("You throw the first punch, and the ogre is thrown back as if he was hit by a train. You are amazed at your newfound strength. It must be the orb...", null, p -> p.hasEffect(superStrength)),
                         new TextChoice("You throw the first punch.", deathByOgre())
                 )

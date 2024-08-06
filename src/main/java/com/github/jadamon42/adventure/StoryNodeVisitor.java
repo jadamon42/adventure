@@ -3,15 +3,17 @@ package com.github.jadamon42.adventure;
 import com.github.jadamon42.adventure.node.*;
 
 public interface StoryNodeVisitor {
-    void visit(ChoiceTextInputNode choiceTextInputNode);
+    void visit(ChoiceTextInputNode node);
 
-    void visit(LinkableTextNode linkableTextNode);
+    void visit(LinkableTextNode node);
 
-    void visit(FreeTextInputNode freeTextInputNode);
+    void visit(FreeTextInputNode node);
 
-    void visit(AcquireItemTextNode acquireItemTextNode);
+    void visit(AcquireItemTextNode node);
 
-    void visit(AcquireEffectTextNode acquireEffectTextNode);
+    void visit(AcquireEffectTextNode node);
 
-    void visit(ConditionalTextNode conditionalTextNode);
+    void visit(BranchTextNode node);
+
+    void visit(ConditionalTextNode node);
 }
