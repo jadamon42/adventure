@@ -1,4 +1,4 @@
-package com.github.jadamon42.adventure;
+package com.github.jadamon42.adventure.model;
 
 import java.io.Serializable;
 import java.util.UUID;

@@ -1,7 +1,6 @@
-package com.github.jadamon42.adventure;
+package com.github.jadamon42.adventure.engine.console;
 
 import com.github.jadamon42.adventure.model.LinkableTextChoice;
-import com.github.jadamon42.adventure.model.TextChoice;
 
 import java.util.List;
 import java.util.Scanner;

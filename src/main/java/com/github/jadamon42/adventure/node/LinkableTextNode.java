@@ -1,7 +1,5 @@
 package com.github.jadamon42.adventure.node;
 
-import com.github.jadamon42.adventure.StoryNodeVisitor;
-
 public abstract class LinkableTextNode extends StoryNode implements TextNode {
     private final String text;
     private StoryNode nextNode;

@@ -1,7 +1,7 @@
 package com.github.jadamon42.adventure.model;
 
 import com.github.jadamon42.adventure.node.*;
-import com.github.jadamon42.adventure.ui.JavaFXGameEngine;
+import com.github.jadamon42.adventure.engine.ui.JavaFXGameEngine;
 import javafx.application.Application;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;

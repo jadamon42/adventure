@@ -1,6 +1,4 @@
-package com.github.jadamon42.adventure;
-
-import com.github.jadamon42.adventure.node.*;
+package com.github.jadamon42.adventure.node;
 
 public interface StoryNodeVisitor {
     void visit(LinkableTextNode node);

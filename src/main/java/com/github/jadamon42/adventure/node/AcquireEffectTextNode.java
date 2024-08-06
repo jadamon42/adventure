@@ -1,6 +1,5 @@
 package com.github.jadamon42.adventure.node;
 
-import com.github.jadamon42.adventure.StoryNodeVisitor;
 import com.github.jadamon42.adventure.model.Effect;
 
 public class AcquireEffectTextNode extends LinkableTextNode {

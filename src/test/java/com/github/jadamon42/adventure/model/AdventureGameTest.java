@@ -1,7 +1,7 @@
 package com.github.jadamon42.adventure.model;
 
-import com.github.jadamon42.adventure.ConsoleGameEngine;
-import com.github.jadamon42.adventure.ConsoleInputHandler;
+import com.github.jadamon42.adventure.engine.console.ConsoleGameEngine;
+import com.github.jadamon42.adventure.engine.console.ConsoleInputHandler;
 import com.github.jadamon42.adventure.node.*;
 
 class AdventureGameTest {

@@ -1,4 +1,4 @@
-package com.github.jadamon42.adventure;
+package com.github.jadamon42.adventure.engine;
 
 import com.github.jadamon42.adventure.model.Player;
 

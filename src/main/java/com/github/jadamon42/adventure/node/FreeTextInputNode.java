@@ -1,7 +1,5 @@
 package com.github.jadamon42.adventure.node;
 
-import com.github.jadamon42.adventure.StoryNodeVisitor;
-
 import java.util.function.Consumer;
 
 public class FreeTextInputNode extends LinkableTextNode {

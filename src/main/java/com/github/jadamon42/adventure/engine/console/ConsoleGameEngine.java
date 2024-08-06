@@ -1,5 +1,7 @@
-package com.github.jadamon42.adventure;
+package com.github.jadamon42.adventure.engine.console;
 
+import com.github.jadamon42.adventure.engine.GameEngine;
+import com.github.jadamon42.adventure.engine.GameStateManager;
 import com.github.jadamon42.adventure.model.*;
 import com.github.jadamon42.adventure.node.*;
 

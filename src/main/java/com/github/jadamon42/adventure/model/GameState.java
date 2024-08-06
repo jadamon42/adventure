@@ -1,6 +1,5 @@
 package com.github.jadamon42.adventure.model;
 
-import com.github.jadamon42.adventure.Message;
 import com.github.jadamon42.adventure.node.StoryNode;
 
 import java.io.Serializable;
