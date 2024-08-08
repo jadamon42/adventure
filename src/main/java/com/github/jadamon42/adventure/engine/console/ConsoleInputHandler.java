@@ -1,6 +1,6 @@
 package com.github.jadamon42.adventure.engine.console;
 
-import com.github.jadamon42.adventure.node.LinkableTextChoice;
+import com.github.jadamon42.adventure.node.LinkedTextChoice;
 
 import java.util.List;
 import java.util.Scanner;
@@ -19,7 +19,7 @@ public class ConsoleInputHandler implements InputHandler {
     }
 
     @Override
-    public int getMultipleChoiceInput(List<LinkableTextChoice> choices) {
+    public int getMultipleChoiceInput(List<LinkedTextChoice> choices) {
         for (int i = 0; i < choices.size(); i++) {
             System.out.println((i + 1) + ". " + choices.get(i).getText());
         }

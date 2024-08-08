@@ -18,12 +18,12 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
     private final InputHandler inputHandler;
     private final GameStateManager gameStateManager;
 
-    public ConsoleGameEngine(Player player, StoryNode startNode, InputHandler inputHandler) {
+    public ConsoleGameEngine(Player player, StoryNode startNode) {
         this.player = player;
         this.currentNode = startNode;
         this.messageHistory = new ArrayList<>();
         this.interactableCheckpoints = new HashMap<>();
-        this.inputHandler = inputHandler;
+        this.inputHandler = new ConsoleInputHandler();
         this.gameStateManager = new GameStateManager();
     }
 
@@ -77,14 +77,14 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
 //    }
 
     @Override
-    public void visit(BranchTextNode node) {
-        LinkableTextChoice availableChoice = node.getChoice(player);
+    public void visit(BranchNode node) {
+        LinkedTextChoice availableChoice = node.getChoice(player);
         handleOutput(availableChoice.getText());
         currentNode = availableChoice.getNextNode();
     }
 
     @Override
-    public void visit(ConditionalTextNode node) {
+    public void visit(SwitchNode node) {
         TextChoice availableChoice = node.getChoice(player);
         handleOutput(availableChoice.getText());
         currentNode = node.getNextNode();
@@ -94,9 +94,9 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
     public void visit(ChoiceTextInputNode node) {
         handleInteractableOutputNode(node);
 
-        List<LinkableTextChoice> availableChoices = node.getChoices(player);
+        List<LinkedTextChoice> availableChoices = node.getChoices(player);
         int choiceIndex = inputHandler.getMultipleChoiceInput(availableChoices);
-        LinkableTextChoice choice = availableChoices.get(choiceIndex);
+        LinkedTextChoice choice = availableChoices.get(choiceIndex);
         String text = TextInterpolator.interpolate(choice.getText(), player);
         handleInput(text);
         currentNode = choice.getNextNode();
@@ -130,12 +130,12 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
     }
 
     @Override
-    public void visit(LinkableTextNode node) {
+    public void visit(LinkableStoryTextNode node) {
         handleOutput(node.getText());
         currentNode = node.getNextNode();
     }
 
-    private void handleInteractableOutputNode(LinkableTextNode node) {
+    private void handleInteractableOutputNode(StoryTextNode node) {
         String text = TextInterpolator.interpolate(node.getText(), player);
         System.out.println(text);
         Message message = new Message(text, false);

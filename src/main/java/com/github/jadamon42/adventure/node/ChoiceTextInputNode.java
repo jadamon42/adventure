@@ -4,15 +4,15 @@ import com.github.jadamon42.adventure.model.Player;
 
 import java.util.List;
 
-public class ChoiceTextInputNode extends LinkableTextNode {
-    private final List<LinkableTextChoice> choices;
+public class ChoiceTextInputNode extends StoryTextNode {
+    private final List<LinkedTextChoice> choices;
 
-    public ChoiceTextInputNode(String prompt, LinkableTextChoice... choices) {
+    public ChoiceTextInputNode(String prompt, LinkedTextChoice... choices) {
         super(prompt);
         this.choices = List.of(choices);
     }
 
-    public List<LinkableTextChoice> getChoices(Player player) {
+    public List<LinkedTextChoice> getChoices(Player player) {
         return choices.stream()
                 .filter(choice -> choice.isAvailable(player))
                 .toList();
@@ -20,11 +20,6 @@ public class ChoiceTextInputNode extends LinkableTextNode {
 
     public StoryNode getChoice(Player player, int index) {
         return getChoices(player).get(index).getNextNode();
-    }
-
-    @Override
-    public StoryNode getNextNode() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("Use getChoice(Player, int).getNextNode() instead");
     }
 
     @Override

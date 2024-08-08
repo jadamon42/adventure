@@ -2,7 +2,7 @@ package com.github.jadamon42.adventure.node;
 
 import com.github.jadamon42.adventure.model.Item;
 
-public class AcquireItemTextNode extends LinkableTextNode {
+public class AcquireItemTextNode extends LinkableStoryTextNode {
     private final Item item;
 
     public AcquireItemTextNode(String text, Item item) {

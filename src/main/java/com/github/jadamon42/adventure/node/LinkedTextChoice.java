@@ -4,25 +4,25 @@ import com.github.jadamon42.adventure.model.Player;
 
 import java.util.function.Function;
 
-public class LinkableTextChoice extends TextChoice {
+public class LinkedTextChoice extends TextChoice {
     private final StoryNode nextNode;
 
-    public LinkableTextChoice(String text, StoryNode nextNode) {
+    public LinkedTextChoice(String text, StoryNode nextNode) {
         super(text);
         this.nextNode = nextNode;
     }
 
-    public LinkableTextChoice(String text, StoryNode nextNode, Function<Player, Boolean> condition) {
+    public LinkedTextChoice(String text, StoryNode nextNode, Function<Player, Boolean> condition) {
         super(text, condition);
         this.nextNode = nextNode;
     }
 
-    public LinkableTextChoice(String text) {
+    public LinkedTextChoice(String text) {
         super(text);
         this.nextNode = null;
     }
 
-    public LinkableTextChoice(String text, Function<Player, Boolean> condition) {
+    public LinkedTextChoice(String text, Function<Player, Boolean> condition) {
         super(text, condition);
         this.nextNode = null;
     }

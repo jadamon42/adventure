@@ -2,7 +2,7 @@ package com.github.jadamon42.adventure.node;
 
 import com.github.jadamon42.adventure.model.Effect;
 
-public class AcquireEffectTextNode extends LinkableTextNode {
+public class AcquireEffectTextNode extends LinkableStoryTextNode {
     private final Effect effect;
 
     public AcquireEffectTextNode(String text, Effect effect) {

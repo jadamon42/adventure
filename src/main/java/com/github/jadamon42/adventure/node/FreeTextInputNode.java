@@ -2,14 +2,9 @@ package com.github.jadamon42.adventure.node;
 
 import java.util.function.Consumer;
 
-public class FreeTextInputNode extends LinkableTextNode {
+public class FreeTextInputNode extends LinkableStoryTextNode {
 
     private final Consumer<String> textConsumer;
-
-    public FreeTextInputNode(String prompt) {
-        super(prompt);
-        this.textConsumer = null;
-    }
 
     public FreeTextInputNode(String prompt, Consumer<String> consumer) {
         super(prompt);

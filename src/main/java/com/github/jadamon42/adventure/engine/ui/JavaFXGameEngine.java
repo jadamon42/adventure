@@ -87,16 +87,12 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
             buttonPane.setPrefWrapLength(600);
 
             Button againButton = new Button("Play Again");
-            againButton.setOnAction(e -> {
-                loadGame(NIL_UUID);
-            });
+            againButton.setOnAction(e -> loadGame(NIL_UUID));
             againButton.setFocusTraversable(false);
             buttonPane.getChildren().add(againButton);
 
             Button exitButton = new Button("Exit Game");
-            exitButton.setOnAction(e -> {
-                Platform.exit();
-            });
+            exitButton.setOnAction(e -> Platform.exit());
             exitButton.setFocusTraversable(false);
             buttonPane.getChildren().add(exitButton);
 
@@ -151,7 +147,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
     }
 
     @Override
-    public void visit(LinkableTextNode node) {
+    public void visit(LinkableStoryTextNode node) {
         addGameMessage(node.getText());
         currentNode = node.getNextNode();
     }
@@ -212,7 +208,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
             buttonPane.setPrefWrapLength(600);
 
             List<Button> buttons = new ArrayList<>();
-            for (LinkableTextChoice choice : node.getChoices(player)) {
+            for (LinkedTextChoice choice : node.getChoices(player)) {
                 Button button = new Button(choice.getText());
                 button.setOnAction(e -> {
                     currentNode = choice.getNextNode();
@@ -241,14 +237,14 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
     }
 
     @Override
-    public void visit(BranchTextNode node) {
-        LinkableTextChoice availableChoice = node.getChoice(player);
+    public void visit(BranchNode node) {
+        LinkedTextChoice availableChoice = node.getChoice(player);
         addGameMessage(availableChoice.getText());
         currentNode = availableChoice.getNextNode();
     }
 
     @Override
-    public void visit(ConditionalTextNode node) {
+    public void visit(SwitchNode node) {
         TextChoice availableChoice = node.getChoice(player);
         addGameMessage(availableChoice.getText());
         currentNode = node.getNextNode();
