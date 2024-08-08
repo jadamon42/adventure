@@ -42,16 +42,42 @@ public class GuiAdventureGameTest extends Application {
                 new TextChoice("$PLAYER_NAME? You sound old. Anyway, you're in a room (and you're old).", p -> p.getName().equalsIgnoreCase("dave") || p.getName().equalsIgnoreCase("david") || p.getName().equalsIgnoreCase("natalie")),
                 new TextChoice("Hello, $PLAYER_NAME. You are in a room.")
         );
-        node.then(new ExpositionalTextNode("You see a door."))
-            .then(new ChoiceTextInputNode("Enter it?",
-                                          new LinkedTextChoice("Yes", openTheDoor()),
-                                          new LinkedTextChoice("No", boringEnd()),
-                                          new LinkedTextChoice("Yes, but with style", openTheDoor(), p -> p.getName().contains("cool"))));
+        node.then(nameTag());
         return node;
     }
 
     private static ExpositionalTextNode boringEnd() {
         return new ExpositionalTextNode("Your life is boring.");
+    }
+
+    private static LinkableStoryTextNode nameTag() {
+        LinkableStoryTextNode node = new ExpositionalTextNode("The room is empty, but you notice a name tag on a small table with a pen next to it.");
+        node.then(new ChoiceTextInputNode("Would you like to put your name on the name tag and wear it?",
+                                          new LinkedTextChoice("Yes", wearTheNameTag()),
+                                          new LinkedTextChoice("No", leaveTheNameTag())));
+        return node;
+    }
+
+    private static AcquireItemTextNode wearTheNameTag() {
+        AcquireItemTextNode node = new AcquireItemTextNode("You write your name, $PLAYER_NAME, on the name tag, stick it on, and proudly wear it.", new Item("name tag"));
+        node.then(new ExpositionalTextNode("With your name written across your chest, you scan the room for other goodies."))
+            .then(lookAround());
+        return node;
+    }
+
+    private static ExpositionalTextNode leaveTheNameTag() {
+        ExpositionalTextNode node = new ExpositionalTextNode("You leave the name tag on the table, and look around the room.");
+        node.then(lookAround());
+        return node;
+    }
+
+    private static ExpositionalTextNode lookAround() {
+        ExpositionalTextNode node = new ExpositionalTextNode("You see a door.");
+        node.then(new ChoiceTextInputNode("Enter it?",
+                      new LinkedTextChoice("Yes", openTheDoor()),
+                      new LinkedTextChoice("No", boringEnd()),
+                      new LinkedTextChoice("Yes, but with style", openTheDoor(), p -> p.getName().contains("cool"))));
+        return node;
     }
 
     private static ExpositionalTextNode openTheDoor() {
@@ -92,16 +118,50 @@ public class GuiAdventureGameTest extends Application {
         ExpositionalTextNode node = new ExpositionalTextNode("You stay for a while.");
         node.then(new ExpositionalTextNode("After 14 days of staying in this room, you feel dehydrated, hungry, tired, and weak. You ask yourself why you stayed in this room for so long, it was a very stupid decision."))
             .then(new ExpositionalTextNode("Suddenly, an ogre enters the room."))
-            .then(new ExpositionalTextNode("\"Hey! What are you doing in my room?\" shouts the Ogre. \"I'm going to eat you!\""))
-            .then(
-                    new ChoiceTextInputNode("What do you do?",
-                                            new LinkedTextChoice("Throw the orb at the ogre", throwTheOrb(), p -> p.hasItem(orb)),
-                                            new LinkedTextChoice("Stand up, raise my fists, and fight the ogre", fightTheOgre()),
-                                            new LinkedTextChoice("Run away", leaveTheRoomEnding()),
-                                            new LinkedTextChoice("Apologize and explain that I was just exploring", deathByOgre())
-                    )
-            );
+            .then(new ExpositionalTextNode("\"Hey! What are you doing in my room?\" shouts the Ogre."))
+            .then(dealWithOgre());
         return node;
+    }
+
+    private static BranchNode dealWithOgre() {
+        return new BranchNode(
+                new LinkedTextChoice("\"Wait...\" the Ogre interrupts himself \"Your name is $PLAYER_NAME? That is an Ogre name! Are you an Ogre too?\"", areYouAnOgre(), p -> p.getName().length() <= 4),
+                new LinkedTextChoice("\"I will eat $PLAYER_NAME the human!\"", chooseWhatToDoWithOgre(), p -> p.hasItem("name tag")),
+                new LinkedTextChoice("\"I'm going to eat you!\"", chooseWhatToDoWithOgre()));
+    }
+
+    private static ChoiceTextInputNode areYouAnOgre() {
+        return new ChoiceTextInputNode(
+                "What to do tell the Ogre?",
+                new LinkedTextChoice("Yes, I am an Ogre", iAmAnOgre()),
+                new LinkedTextChoice("No, I am not an Ogre. I am better. I am a human.", iAmAHuman())
+        );
+    }
+
+    private static ExpositionalTextNode iAmAnOgre() {
+        ExpositionalTextNode node = new ExpositionalTextNode("The Ogre looks confused. He scratches his head, and then says, \"You are a very small Ogre, and you are very ugly.\"");
+        node.then(new ExpositionalTextNode("\"I feel bad for $PLAYER_NAME the micro Ogre. You were not fed enough humans as a young Ogre to grow big and strong like me.\""))
+            .then(new ExpositionalTextNode("The Ogre pats you on the head, trying to console his new friend."))
+            .then(new ExpositionalTextNode("\"I am sorry for you, $PLAYER_NAME. But I cannot help you, and I am tired of looking at you because your are so ugly. I am going to leave.\""))
+            .then(new ExpositionalTextNode("The Ogre leaves the room, and you are alone. You decide to leave the room"))
+            .then(leaveTheRoomEnding());
+        return node;
+    }
+
+    private static ExpositionalTextNode iAmAHuman() {
+        ExpositionalTextNode node = new ExpositionalTextNode("The Ogre laughs at you. \"Hahahahaha! What a stupid puny human!\"");
+        node.then(new ExpositionalTextNode("\"I am going to eat you, $PLAYER_NAME the human.\""))
+            .then(chooseWhatToDoWithOgre());
+        return node;
+    }
+
+    private static ChoiceTextInputNode chooseWhatToDoWithOgre() {
+        return new ChoiceTextInputNode("What do you do?",
+                new LinkedTextChoice("Throw the orb at the ogre", throwTheOrb(), p -> p.hasItem(orb)),
+                new LinkedTextChoice("Stand up, raise my fists, and fight the ogre", fightTheOgre()),
+                new LinkedTextChoice("Run away", leaveTheRoomEnding()),
+                new LinkedTextChoice("Apologize and explain that I was just exploring", deathByOgre())
+        );
     }
 
     private static ExpositionalTextNode throwTheOrb() {
