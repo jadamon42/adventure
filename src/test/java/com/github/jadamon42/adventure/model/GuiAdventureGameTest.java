@@ -125,7 +125,7 @@ public class GuiAdventureGameTest extends Application {
 
     private static BranchNode dealWithOgre() {
         return new BranchNode(
-                new LinkedTextChoice("\"Wait...\" the Ogre interrupts himself \"Your name is $PLAYER_NAME? That is an Ogre name! Are you an Ogre too?\"", areYouAnOgre(), p -> p.getName().length() <= 4),
+                new LinkedTextChoice("\"Wait...\" the Ogre interrupts himself \"Your name is $PLAYER_NAME? That is an Ogre name! Are you an Ogre too?\"", areYouAnOgre(), p -> p.getName().length() <= 5),
                 new LinkedTextChoice("\"I will eat $PLAYER_NAME the human!\"", chooseWhatToDoWithOgre(), p -> p.hasItem("name tag")),
                 new LinkedTextChoice("\"I'm going to eat you!\"", chooseWhatToDoWithOgre()));
     }
