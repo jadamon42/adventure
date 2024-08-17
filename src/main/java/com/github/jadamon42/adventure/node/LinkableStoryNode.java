@@ -1,16 +1,18 @@
 package com.github.jadamon42.adventure.node;
 
-public abstract class LinkableStoryNode extends StoryNode {
+public abstract class LinkableStoryNode extends StoryNode implements Linkable {
     private StoryNode nextNode;
 
     protected LinkableStoryNode() {
         super();
     }
 
+    @Override
     public StoryNode getNextNode() {
         return nextNode;
     }
 
+    @Override
     public <T extends  StoryNode> T then(T nextNode) {
         this.nextNode = nextNode;
         return nextNode;

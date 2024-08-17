@@ -1,0 +1,82 @@
+package com.github.jadamon42.adventure.model;
+
+import com.github.jadamon42.adventure.node.StoryNode;
+import com.github.jadamon42.adventure.util.StoryNodeTraverser;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+
+public class Checkpoint implements Serializable {
+    private final Player player;
+    private final HashMap<UUID, StoryNode> nodeMap;
+    private final UUID currentNodeId;
+    private final MessageHistory messageHistory;
+
+    public Checkpoint(Player player, StoryNode startNode) {
+        this.player = new Player(player);
+        StoryNodeTraverser traverser = new StoryNodeTraverser();
+        this.nodeMap = traverser.getStoryNodeMap(startNode);
+        this.currentNodeId = startNode.getId();
+        this.messageHistory = new MessageHistory();
+    }
+
+    private Checkpoint(Player player, HashMap<UUID, StoryNode> nodeMap, UUID currentNodeId, MessageHistory messageHistory) {
+        this.player = player;
+        this.nodeMap = nodeMap;
+        this.currentNodeId = currentNodeId;
+        this.messageHistory = messageHistory;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public UUID getCurrentNodeId() {
+        return currentNodeId;
+    }
+
+    public StoryNode getCurrentNode() {
+        return nodeMap.get(currentNodeId);
+    }
+
+    public MessageHistory getMessageHistory() {
+        return messageHistory;
+    }
+
+    public Checkpoint apply(CheckpointDelta checkpointDelta) {
+        Builder builder = new Builder(player, messageHistory);
+        builder.apply(checkpointDelta);
+        return builder.build();
+    }
+
+    public Checkpoint applyAll(List<CheckpointDelta> checkpointDeltas) {
+        Builder builder = new Builder(player, messageHistory);
+        for (CheckpointDelta checkpointDelta : checkpointDeltas) {
+            builder.apply(checkpointDelta);
+        }
+        return builder.build();
+    }
+
+    public class Builder {
+        private final Player player;
+        private UUID currentNodeId;
+        private final MessageHistory messageHistory;
+
+        public Builder(Player player, MessageHistory messageHistory) {
+            this.player = new Player(player);
+            this.messageHistory = new MessageHistory(messageHistory);
+        }
+
+        public void apply(CheckpointDelta checkpointDelta) {
+            player.apply(checkpointDelta.getPlayerDelta());
+            messageHistory.addAll(checkpointDelta.getMessages());
+            currentNodeId = checkpointDelta.getCurrentNodeId();
+        }
+
+        public Checkpoint build() {
+            return new Checkpoint(player, nodeMap, currentNodeId, messageHistory);
+        }
+    }
+}

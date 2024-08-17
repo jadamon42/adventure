@@ -4,7 +4,7 @@ import com.github.jadamon42.adventure.model.Player;
 
 import java.util.List;
 
-public class BranchNode extends LinkableStoryNode {
+public class BranchNode extends StoryNode {
     private final List<LinkedTextChoice> choices;
 
     /*
@@ -22,6 +22,10 @@ public class BranchNode extends LinkableStoryNode {
                 .filter(choice -> choice.isAvailable(player))
                 .findFirst()
                 .orElseThrow();
+    }
+
+    public List<LinkedTextChoice> getAllChoices() {
+        return choices;
     }
 
     @Override

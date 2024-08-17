@@ -1,6 +1,8 @@
 package com.github.jadamon42.adventure.model;
 
-public class Effect {
+import java.io.Serializable;
+
+public class Effect implements Serializable {
     private final String name;
 
     public Effect(String name) {

@@ -1,6 +1,8 @@
 package com.github.jadamon42.adventure.model;
 
-public class Player {
+import java.io.Serializable;
+
+public class Player implements Serializable {
     private String name;
     private Inventory inventory;
     private Effects effects;
@@ -32,8 +34,9 @@ public class Player {
         return inventory;
     }
 
-    public void addItem(Item item) {
+    public PlayerDelta addItem(Item item) {
         inventory.add(item);
+        return new PlayerDelta(item);
     }
 
     public boolean hasItem(Item item) {
@@ -52,8 +55,9 @@ public class Player {
         return effects;
     }
 
-    public void addEffect(Effect effect) {
+    public PlayerDelta addEffect(Effect effect) {
         effects.add(effect);
+        return new PlayerDelta(effect);
     }
 
     public boolean hasEffect(Effect effect) {
@@ -62,5 +66,17 @@ public class Player {
 
     public boolean hasEffect(String effectName) {
         return effects.contains(effectName);
+    }
+
+    public void apply(PlayerDelta playerDelta) {
+        if (playerDelta.getName() != null) {
+            this.name = playerDelta.getName();
+        }
+        for (Item item : playerDelta.getItems()) {
+            this.inventory.add(item);
+        }
+        for (Effect effect : playerDelta.getEffects()) {
+            this.effects.add(effect);
+        }
     }
 }

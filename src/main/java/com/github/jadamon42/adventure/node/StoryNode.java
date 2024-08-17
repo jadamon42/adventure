@@ -1,8 +1,9 @@
 package com.github.jadamon42.adventure.node;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public abstract class StoryNode {
+public abstract class StoryNode implements Serializable {
     private final UUID id;
 
     protected StoryNode() {

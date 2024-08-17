@@ -1,36 +1,41 @@
 package com.github.jadamon42.adventure.model;
 
-import com.github.jadamon42.adventure.node.StoryNode;
-
 import java.io.Serializable;
 import java.util.*;
 
 public class GameState implements Serializable {
-    private final Player player;
-    private final StoryNode currentNode;
-    private final List<Message> messageHistory;
-    private final Map<UUID, GameState> messageToGameStateMap;
+    private final Checkpoint initialCheckpoint;
+    private final List<CheckpointDelta> checkpointDeltas;
 
-    public GameState(Player player, StoryNode currentNode, List<Message> messageHistory, Map<UUID, GameState> messageToGameStateMap) {
-        this.player = new Player(player);
-        this.currentNode = currentNode;
-        this.messageHistory = new ArrayList<>(messageHistory);
-        this.messageToGameStateMap = new HashMap<>(messageToGameStateMap);
+    public GameState(Checkpoint initialCheckpoint) {
+        this.initialCheckpoint = initialCheckpoint;
+        this.checkpointDeltas = new ArrayList<>();
     }
 
-    public Player getPlayer() {
-        return player;
+    public void addCheckpoint(CheckpointDelta checkpointDelta) {
+        this.checkpointDeltas.add(checkpointDelta);
     }
 
-    public StoryNode getCurrentNode() {
-        return currentNode;
+    public Checkpoint getCheckpointForMessageId(UUID messageId) {
+        Checkpoint checkpoint = initialCheckpoint;
+        for (CheckpointDelta checkpointDelta : checkpointDeltas) {
+            if (checkpointDelta.getCurrentMessageId() == messageId) {
+                break;
+            }
+            checkpoint = initialCheckpoint.apply(checkpointDelta);
+        }
+        return checkpoint;
     }
 
-    public List<Message> getMessageHistory() {
-        return messageHistory;
+    public Checkpoint getInitialCheckpoint() {
+        return initialCheckpoint;
     }
 
-    public Map<UUID, GameState> getMessageToGameStateMap() {
-        return messageToGameStateMap;
+    public Checkpoint getLatestCheckpoint() {
+        return initialCheckpoint.applyAll(checkpointDeltas);
+    }
+
+    public void reset() {
+        checkpointDeltas.clear();
     }
 }

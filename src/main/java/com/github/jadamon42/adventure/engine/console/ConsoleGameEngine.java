@@ -1,30 +1,24 @@
 package com.github.jadamon42.adventure.engine.console;
 
 import com.github.jadamon42.adventure.engine.GameEngine;
-import com.github.jadamon42.adventure.engine.GameStateManager;
 import com.github.jadamon42.adventure.model.*;
 import com.github.jadamon42.adventure.node.*;
 import com.github.jadamon42.adventure.util.TextInterpolator;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
     private Player player;
     private StoryNode currentNode;
-    private List<Message> messageHistory;
-    private Map<UUID, GameState> interactableCheckpoints;
     private final InputHandler inputHandler;
-    private final GameStateManager gameStateManager;
 
     public ConsoleGameEngine(Player player, StoryNode startNode) {
         this.player = player;
         this.currentNode = startNode;
-        this.messageHistory = new ArrayList<>();
-        this.interactableCheckpoints = new HashMap<>();
         this.inputHandler = new ConsoleInputHandler();
-        this.gameStateManager = new GameStateManager();
     }
 
     @Override
@@ -36,26 +30,12 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
 
     @Override
     public void loadGame(String saveFile) {
-        try {
-            GameState gameState = gameStateManager.loadGame(saveFile);
-            this.player = gameState.getPlayer();
-            this.currentNode = gameState.getCurrentNode();
-            this.messageHistory = gameState.getMessageHistory();
-            this.interactableCheckpoints = gameState.getMessageToGameStateMap();
-            replayMessages();
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Failed to load game: " + e.getMessage());
-        }
+        ;
     }
 
     @Override
     public void saveGame(String saveFile) {
-        try {
-            GameState gameState = new GameState(player, currentNode, messageHistory, interactableCheckpoints);
-            gameStateManager.saveGame(saveFile, gameState);
-        } catch (IOException e) {
-            System.out.println("Failed to save game: " + e.getMessage());
-        }
+        ;
     }
 
     @Override
@@ -107,9 +87,9 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
         handleInteractableOutputNode(node);
 
         String input = inputHandler.getFreeTextInput();
-        Consumer<String> textConsumer = node.getTextConsumer();
+        BiConsumer<Player, Object> textConsumer = node.getTextConsumer();
         if (textConsumer != null) {
-            textConsumer.accept(input);
+            textConsumer.accept(player, input);
         }
         handleInput(input);
         currentNode = node.getNextNode();
@@ -139,29 +119,15 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
         String text = TextInterpolator.interpolate(node.getText(), player);
         System.out.println(text);
         Message message = new Message(text, false);
-        messageHistory.add(message);
-        interactableCheckpoints.put(message.getId(), new GameState(new Player(player), node, new ArrayList<>(messageHistory), new HashMap<>(interactableCheckpoints)));
     }
 
     private void handleOutput(String output) {
         String text = TextInterpolator.interpolate(output, player);
         System.out.println(text);
         Message message = new Message(text, false);
-        messageHistory.add(message);
     }
 
     private void handleInput(String input) {
         Message message = new Message(input, true);
-        messageHistory.add(message);
-    }
-
-    private void replayMessages() {
-        for (Message message : messageHistory) {
-            if (message.isPlayerMessage()) {
-                System.out.println("Player: " + message.getText());
-            } else {
-                System.out.println("Game: " + message.getText());
-            }
-        }
     }
 }

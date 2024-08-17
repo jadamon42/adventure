@@ -1,6 +1,6 @@
 package com.github.jadamon42.adventure.node;
 
-public abstract class LinkableStoryTextNode extends StoryTextNode {
+public abstract class LinkableStoryTextNode extends StoryTextNode implements Linkable {
     private StoryNode nextNode;
 
     protected LinkableStoryTextNode(String text) {
@@ -12,10 +12,12 @@ public abstract class LinkableStoryTextNode extends StoryTextNode {
         visitor.visit(this);
     }
 
+    @Override
     public StoryNode getNextNode() {
         return nextNode;
     }
 
+    @Override
     public <T extends  StoryNode> T then(T nextNode) {
         this.nextNode = nextNode;
         return nextNode;

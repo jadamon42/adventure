@@ -20,11 +20,12 @@ public class GuiAdventureGameTest extends Application {
         JavaFXGameEngine gameEngine = new JavaFXGameEngine(player, start(player));
         gameEngine.initialize(stage);
         gameEngine.startGame();
+//        gameEngine.loadGame("/Users/jdamon/Documents/Adventure/checkpoint.adch");
     }
 
     private static ExpositionalTextNode start(Player player) {
         ExpositionalTextNode node = new ExpositionalTextNode("** First Adventure: The Room **");
-        node.then(new FreeTextInputNode("What is your name?", player::setName))
+        node.then(new FreeTextInputNode("What is your name?", (p, str) -> p.setName(String.valueOf(str))))
             .then(playerNameAndExposition(player));
         return node;
     }

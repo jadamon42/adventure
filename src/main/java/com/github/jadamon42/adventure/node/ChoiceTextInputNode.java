@@ -22,6 +22,10 @@ public class ChoiceTextInputNode extends StoryTextNode {
         return getChoices(player).get(index).getNextNode();
     }
 
+    public List<LinkedTextChoice> getAllChoices() {
+        return choices;
+    }
+
     @Override
     public void accept(StoryNodeVisitor visitor) {
         visitor.visit(this);

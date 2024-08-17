@@ -1,9 +1,10 @@
 package com.github.jadamon42.adventure.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Effects {
+public class Effects implements Serializable {
     private final List<Effect> effects;
 
     public Effects() {

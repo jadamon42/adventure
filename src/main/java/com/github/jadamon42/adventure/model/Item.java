@@ -1,6 +1,8 @@
 package com.github.jadamon42.adventure.model;
 
-public class Item {
+import java.io.Serializable;
+
+public class Item implements Serializable {
     private final String name;
 
     public Item(String name) {

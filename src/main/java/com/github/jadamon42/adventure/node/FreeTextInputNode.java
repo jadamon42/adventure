@@ -1,17 +1,19 @@
 package com.github.jadamon42.adventure.node;
 
-import java.util.function.Consumer;
+import com.github.jadamon42.adventure.model.Player;
+import com.github.jadamon42.adventure.util.SerializableBiConsumer;
+
 
 public class FreeTextInputNode extends LinkableStoryTextNode {
 
-    private final Consumer<String> textConsumer;
+    private final SerializableBiConsumer<Player, Object> textConsumer;
 
-    public FreeTextInputNode(String prompt, Consumer<String> consumer) {
+    public FreeTextInputNode(String prompt, SerializableBiConsumer<Player, Object> consumer) {
         super(prompt);
         this.textConsumer = consumer;
     }
 
-    public Consumer<String> getTextConsumer() {
+    public SerializableBiConsumer<Player, Object> getTextConsumer() {
         return textConsumer;
     }
 

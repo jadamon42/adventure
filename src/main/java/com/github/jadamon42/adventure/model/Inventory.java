@@ -1,9 +1,10 @@
 package com.github.jadamon42.adventure.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Inventory {
+public class Inventory implements Serializable {
     private final List<Item> items;
 
     public Inventory() {

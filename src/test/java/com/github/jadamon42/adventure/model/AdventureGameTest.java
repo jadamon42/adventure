@@ -16,7 +16,7 @@ class AdventureGameTest {
 
     private static ExpositionalTextNode start(Player player) {
         ExpositionalTextNode node = new ExpositionalTextNode("** First Adventure: The Room **");
-        node.then(new FreeTextInputNode("What is your name?", player::setName))
+        node.then(new FreeTextInputNode("What is your name?", (p, str) -> p.setName(String.valueOf(str))))
             .then(new ExpositionalTextNode("Hello, $PLAYER_NAME. You are in a room."))
             .then(new ExpositionalTextNode("You see a door."))
             .then(new ChoiceTextInputNode("Enter it?",
