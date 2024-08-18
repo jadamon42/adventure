@@ -94,7 +94,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
             buttonPane.getChildren().add(exitButton);
 
             messagePanel.getChildren().add(buttonPane);
-            scrollPane.setVvalue(1.0);
+            scrollToBottom();
         });
     }
 
@@ -265,7 +265,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
             }
 
             messagePanel.getChildren().add(buttonPane);
-            scrollPane.setVvalue(1.0);
+            scrollToBottom();
         });
 
         try {
@@ -313,7 +313,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
             }
 
             messagePanel.getChildren().add(hbox);
-            scrollPane.setVvalue(1.0);
+            scrollToBottom();
         });
     }
 
@@ -350,5 +350,11 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
 
         addMessageToPanel(message);
         checkpointDeltaBuilder.addMessage(message);
+    }
+
+    private void scrollToBottom() {
+        scrollPane.applyCss();
+        scrollPane.layout();
+        scrollPane.setVvalue(scrollPane.getVmax());
     }
 }
