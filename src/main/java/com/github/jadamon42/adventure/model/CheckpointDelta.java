@@ -78,6 +78,10 @@ public class CheckpointDelta implements Serializable {
         public void setCurrentMessageId(UUID currentMessageId) {
             this.currentMessageId = currentMessageId;
         }
+
+        public Message getLatestMessage() {
+            return messages.getLast();
+        }
     }
 
 }

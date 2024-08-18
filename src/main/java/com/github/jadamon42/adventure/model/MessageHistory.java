@@ -1,10 +1,7 @@
 package com.github.jadamon42.adventure.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class MessageHistory implements Iterable<Message>, Serializable {
     private final List<Message> messages;
@@ -27,6 +24,16 @@ public class MessageHistory implements Iterable<Message>, Serializable {
 
     public void addAll(Message[] messages) {
         this.messages.addAll(Arrays.asList(messages));
+    }
+
+    public Message getLast() {
+        Message message;
+        try {
+            message = messages.getLast();
+        } catch (NoSuchElementException e) {
+            message = null;
+        }
+        return message;
     }
 
     @Override
