@@ -124,6 +124,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
     private void loadGame(UUID messageId) {
         this.loadingMessageId = messageId;
         loadGame(gameState.getCheckpointForMessageId(messageId));
+        gameState.resetToCheckpoint(messageId);
     }
 
     private void restartGame() {
