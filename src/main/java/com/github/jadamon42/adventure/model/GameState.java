@@ -2,6 +2,7 @@ package com.github.jadamon42.adventure.model;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameState implements Serializable {
     private final Checkpoint initialCheckpoint;
@@ -37,5 +38,18 @@ public class GameState implements Serializable {
 
     public void reset() {
         checkpointDeltas.clear();
+    }
+
+    public void resetToCheckpoint(UUID messageId) {
+        int index = -1;
+        for (int i = 0; i < checkpointDeltas.size(); i++) {
+            if (checkpointDeltas.get(i).getCurrentMessageId().equals(messageId)) {
+                index = i;
+                break;
+            }
+        }
+        if (index != -1) {
+            checkpointDeltas.subList(index + 1, checkpointDeltas.size()).clear();
+        }
     }
 }

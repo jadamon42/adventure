@@ -57,6 +57,7 @@ public class CheckpointDelta implements Serializable {
 
         public void addMessage(Message message) {
             messages.add(message);
+            currentMessageId = message.getId();
         }
 
         public void applyPlayerDelta(PlayerDelta playerDelta) {
@@ -77,6 +78,10 @@ public class CheckpointDelta implements Serializable {
 
         public void setCurrentMessageId(UUID currentMessageId) {
             this.currentMessageId = currentMessageId;
+        }
+
+        public Message getCurrentMessage() {
+            return messages.getLast();
         }
     }
 

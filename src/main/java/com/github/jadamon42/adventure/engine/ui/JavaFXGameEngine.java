@@ -124,6 +124,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
     private void loadGame(UUID messageId) {
         this.loadingMessageId = messageId;
         loadGame(gameState.getCheckpointForMessageId(messageId));
+        gameState.resetToCheckpoint(messageId);
     }
 
     private void restartGame() {
@@ -142,7 +143,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
             this.currentNode = checkpoint.getCurrentNode();
             replayMessages(checkpoint.getMessageHistory());
             for (Message message : checkpoint.getMessageHistory()) {
-                if (message.isInteractable() && !loadingMessageId.equals(message.getId())) {
+                if (message.isInteractable()) {
                     makeReplayButtonVisibleFor(message.getId());
                 }
             }
@@ -317,32 +318,41 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
         });
     }
 
-    private UUID addGameMessage(String text, boolean isInteractable) {
+    private UUID addGameMessage(String text) {
         String interpolated = TextInterpolator.interpolate(text, player);
-        Message message = new Message(interpolated, false, isInteractable);
+        Message message = new Message(interpolated, false, false);
 
         addMessageToPanel(message);
         checkpointDeltaBuilder.addMessage(message);
         return message.getId();
     }
 
-    private UUID addGameMessage(String text) {
-        return addGameMessage(text, false);
-    }
-
     private UUID addInteractableGameMessage(String text) {
-        UUID messageId;
-        if (!loadedGame) {
-            messageId = addGameMessage(text, true);
-            checkpointDeltaBuilder.setCurrentMessageId(messageId);
-            checkpointDeltaBuilder.setCurrentNodeId(currentNode.getId());
-            gameState.addCheckpoint(checkpointDeltaBuilder.build());
-            checkpointDeltaBuilder = CheckpointDelta.newBuilder();
-        } else {
-            loadedGame = false;
-            messageId = this.loadingMessageId;
-        }
-        return messageId;
+//        UUID messageId;
+//        if (!loadedGame) {
+//            messageId = addGameMessage(text, true);
+
+            String interpolated = TextInterpolator.interpolate(text, player);
+            Message message = new Message(interpolated, false, true);
+
+            if (checkpointDeltaBuilder.getCurrentMessage().equals(message)) {
+                message = checkpointDeltaBuilder.getCurrentMessage();
+            } else {
+                checkpointDeltaBuilder.setCurrentMessageId(message.getId());
+                checkpointDeltaBuilder.setCurrentNodeId(currentNode.getId());
+                gameState.addCheckpoint(checkpointDeltaBuilder.build());
+                checkpointDeltaBuilder = CheckpointDelta.newBuilder();
+                checkpointDeltaBuilder.addMessage(message);
+            }
+
+            addMessageToPanel(message);
+
+//        }
+//        else {
+//            loadedGame = false;
+//            messageId = this.loadingMessageId;
+//        }
+        return message.getId();
     }
 
     private void addPlayerMessage(String text) {

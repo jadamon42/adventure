@@ -38,5 +38,19 @@ public class Message implements Serializable {
     public boolean isInteractable() {
         return isInteractable;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        Message message = (Message) other;
+        return text.equals(message.text)
+               && isPlayerMessage == message.isPlayerMessage
+               && isInteractable == message.isInteractable;
+    }
 }
 
