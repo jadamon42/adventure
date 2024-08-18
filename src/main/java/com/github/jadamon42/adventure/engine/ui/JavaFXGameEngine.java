@@ -4,24 +4,22 @@ import com.github.jadamon42.adventure.engine.GameEngine;
 import com.github.jadamon42.adventure.engine.GameStateManager;
 import com.github.jadamon42.adventure.model.*;
 import com.github.jadamon42.adventure.node.*;
+import com.github.jadamon42.adventure.util.SerializableBiFunction;
 import com.github.jadamon42.adventure.util.TextInterpolator;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
-import java.util.function.BiConsumer;
 
 public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
     private Player player;
@@ -30,6 +28,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
     private CheckpointDelta.Builder checkpointDeltaBuilder;
     private GameState gameState;
     private boolean loadedGame;
+    private UUID loadingMessageId;
     private VBox messagePanel;
     private TextField inputField;
     private ScrollPane scrollPane;
@@ -42,6 +41,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
         this.checkpointDeltaBuilder = CheckpointDelta.newBuilder();
         this.gameState = new GameState(checkpoint);
         this.loadedGame = false;
+        this.loadingMessageId = null;
 
     }
 
@@ -121,8 +121,9 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
         });
     }
 
-    private void loadGame(UUID checkpointId) {
-        loadGame(gameState.getCheckpointForMessageId(checkpointId));
+    private void loadGame(UUID messageId) {
+        this.loadingMessageId = messageId;
+        loadGame(gameState.getCheckpointForMessageId(messageId));
     }
 
     private void restartGame() {
@@ -140,14 +141,17 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
             this.player = checkpoint.getPlayer();
             this.currentNode = checkpoint.getCurrentNode();
             replayMessages(checkpoint.getMessageHistory());
+            for (Message message : checkpoint.getMessageHistory()) {
+                if (message.isInteractable() && !loadingMessageId.equals(message.getId())) {
+                    makeReplayButtonVisibleFor(message.getId());
+                }
+            }
             startGame();
         }
     }
 
     private void clearMessages() {
-        Platform.runLater(() -> {
-            messagePanel.getChildren().clear();
-        });
+        Platform.runLater(() -> messagePanel.getChildren().clear());
     }
 
     private void replayMessages(MessageHistory messageHistory) {
@@ -155,6 +159,20 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
         for (Message message : messageHistory) {
             addMessageToPanel(message);
         }
+    }
+
+    private void makeReplayButtonVisibleFor(UUID messageId) {
+        Platform.runLater(() -> {
+            HBox hbox = (HBox) messagePanel.lookup("#" + messageId.toString());
+            if (hbox != null) {
+                for (Node child : hbox.getChildren()) {
+                    if (child instanceof Button && "Replay".equals(((Button) child).getText())) {
+                        child.setVisible(true);
+                        break;
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -186,7 +204,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
 
     @Override
     public void visit(FreeTextInputNode node) {
-        addInteractableGameMessage(node.getText());
+        UUID messageId = addInteractableGameMessage(node.getText());
 
         CountDownLatch latch = new CountDownLatch(1);
         Platform.runLater(() -> {
@@ -196,9 +214,10 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
                 String input = inputField.getText();
                 inputField.setText("");
                 inputField.setDisable(true);
-                BiConsumer<Player, Object> textConsumer = node.getTextConsumer();
+                SerializableBiFunction<Player, Object, PlayerDelta> textConsumer = node.getTextConsumer();
                 if (textConsumer != null) {
-                    textConsumer.accept(player, input);
+                    PlayerDelta playerDelta = textConsumer.apply(player, input);
+                    checkpointDeltaBuilder.applyPlayerDelta(playerDelta);
                 }
                 addPlayerMessage(input);
                 currentNode = node.getNextNode();
@@ -211,11 +230,13 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
         } catch (InterruptedException e) {
             Platform.runLater(() -> Thread.currentThread().interrupt());
         }
+
+        makeReplayButtonVisibleFor(messageId);
     }
 
     @Override
     public void visit(ChoiceTextInputNode node) {
-        addInteractableGameMessage(node.getText());
+        UUID messageId = addInteractableGameMessage(node.getText());
 
         CountDownLatch latch = new CountDownLatch(1);
         Platform.runLater(() -> {
@@ -252,6 +273,8 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
         } catch (InterruptedException e) {
             Platform.runLater(() -> Thread.currentThread().interrupt());
         }
+
+        makeReplayButtonVisibleFor(messageId);
     }
 
     @Override
@@ -273,37 +296,57 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
             Label label = new Label(message.getText());
             label.setWrapText(true);
 
-            HBox hbox = new HBox(label);
+            HBox hbox = new HBox();
+            hbox.setId(message.getId().toString());
             hbox.setAlignment(message.isPlayerMessage() ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
+
+            if (message.isInteractable()) {
+                Button replayButton = new Button("Replay");
+                replayButton.setFocusTraversable(false);
+                replayButton.setVisible(false);
+                replayButton.setOnAction(e -> loadGame(message.getId()));
+                Region spacer = new Region();
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+                hbox.getChildren().addAll(label, spacer, replayButton);
+            } else {
+                hbox.getChildren().add(label);
+            }
 
             messagePanel.getChildren().add(hbox);
             scrollPane.setVvalue(1.0);
         });
     }
 
-    private UUID addGameMessage(String text) {
+    private UUID addGameMessage(String text, boolean isInteractable) {
         String interpolated = TextInterpolator.interpolate(text, player);
-        Message message = new Message(interpolated, false);
+        Message message = new Message(interpolated, false, isInteractable);
 
         addMessageToPanel(message);
         checkpointDeltaBuilder.addMessage(message);
         return message.getId();
     }
 
-    private void addInteractableGameMessage(String text) {
+    private UUID addGameMessage(String text) {
+        return addGameMessage(text, false);
+    }
+
+    private UUID addInteractableGameMessage(String text) {
+        UUID messageId;
         if (!loadedGame) {
-            UUID messageId = addGameMessage(text);
+            messageId = addGameMessage(text, true);
             checkpointDeltaBuilder.setCurrentMessageId(messageId);
             checkpointDeltaBuilder.setCurrentNodeId(currentNode.getId());
             gameState.addCheckpoint(checkpointDeltaBuilder.build());
             checkpointDeltaBuilder = CheckpointDelta.newBuilder();
         } else {
             loadedGame = false;
+            messageId = this.loadingMessageId;
         }
+        return messageId;
     }
 
     private void addPlayerMessage(String text) {
-        Message message = new Message(text, true);
+        Message message = new Message(text, true, false);
 
         addMessageToPanel(message);
         checkpointDeltaBuilder.addMessage(message);

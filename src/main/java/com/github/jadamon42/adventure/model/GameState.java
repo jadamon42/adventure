@@ -19,10 +19,10 @@ public class GameState implements Serializable {
     public Checkpoint getCheckpointForMessageId(UUID messageId) {
         Checkpoint checkpoint = initialCheckpoint;
         for (CheckpointDelta checkpointDelta : checkpointDeltas) {
+            checkpoint = checkpoint.apply(checkpointDelta);
             if (checkpointDelta.getCurrentMessageId() == messageId) {
                 break;
             }
-            checkpoint = initialCheckpoint.apply(checkpointDelta);
         }
         return checkpoint;
     }

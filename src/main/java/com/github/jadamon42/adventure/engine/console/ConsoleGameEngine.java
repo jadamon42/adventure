@@ -3,15 +3,13 @@ package com.github.jadamon42.adventure.engine.console;
 import com.github.jadamon42.adventure.engine.GameEngine;
 import com.github.jadamon42.adventure.model.*;
 import com.github.jadamon42.adventure.node.*;
+import com.github.jadamon42.adventure.util.SerializableBiFunction;
 import com.github.jadamon42.adventure.util.TextInterpolator;
 
-import java.io.IOException;
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
-    private Player player;
+    private final Player player;
     private StoryNode currentNode;
     private final InputHandler inputHandler;
 
@@ -30,12 +28,10 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
 
     @Override
     public void loadGame(String saveFile) {
-        ;
     }
 
     @Override
     public void saveGame(String saveFile) {
-        ;
     }
 
     @Override
@@ -87,9 +83,9 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
         handleInteractableOutputNode(node);
 
         String input = inputHandler.getFreeTextInput();
-        BiConsumer<Player, Object> textConsumer = node.getTextConsumer();
+        SerializableBiFunction<Player, Object, PlayerDelta> textConsumer = node.getTextConsumer();
         if (textConsumer != null) {
-            textConsumer.accept(player, input);
+            textConsumer.apply(player, input);
         }
         handleInput(input);
         currentNode = node.getNextNode();
