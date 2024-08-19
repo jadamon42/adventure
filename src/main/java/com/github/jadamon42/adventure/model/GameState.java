@@ -2,7 +2,6 @@ package com.github.jadamon42.adventure.model;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameState implements Serializable {
     private final Checkpoint initialCheckpoint;

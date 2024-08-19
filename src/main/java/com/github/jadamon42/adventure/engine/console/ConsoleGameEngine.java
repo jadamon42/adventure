@@ -4,7 +4,6 @@ import com.github.jadamon42.adventure.engine.GameEngine;
 import com.github.jadamon42.adventure.model.*;
 import com.github.jadamon42.adventure.node.*;
 import com.github.jadamon42.adventure.util.SerializableBiFunction;
-import com.github.jadamon42.adventure.util.TextInterpolator;
 
 import java.util.*;
 
@@ -54,15 +53,15 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
 
     @Override
     public void visit(BranchNode node) {
-        LinkedTextChoice availableChoice = node.getChoice(player);
-        handleOutput(availableChoice.getText());
+        LinkedConditionalText availableChoice = node.getChoice(player);
+        handleOutput(availableChoice.getMessage().getInterpolatedText(player));
         currentNode = availableChoice.getNextNode();
     }
 
     @Override
     public void visit(SwitchNode node) {
-        TextChoice availableChoice = node.getChoice(player);
-        handleOutput(availableChoice.getText());
+        ConditionalText availableChoice = node.getChoice(player);
+        handleOutput(availableChoice.getMessage().getInterpolatedText(player));
         currentNode = node.getNextNode();
     }
 
@@ -72,9 +71,7 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
 
         List<LinkedTextChoice> availableChoices = node.getChoices(player);
         int choiceIndex = inputHandler.getMultipleChoiceInput(availableChoices);
-        LinkedTextChoice choice = availableChoices.get(choiceIndex);
-        String text = TextInterpolator.interpolate(choice.getText(), player);
-        handleInput(text);
+        LinkedConditionalText choice = availableChoices.get(choiceIndex);
         currentNode = choice.getNextNode();
     }
 
@@ -87,43 +84,35 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
         if (textConsumer != null) {
             textConsumer.apply(player, input);
         }
-        handleInput(input);
         currentNode = node.getNextNode();
     }
 
     @Override
     public void visit(AcquireEffectTextNode node) {
-        handleOutput(node.getText());
+        handleOutput(node.getMessage().getInterpolatedText(player));
         player.addEffect(node.getEffect());
         currentNode = node.getNextNode();
     }
 
     @Override
     public void visit(AcquireItemTextNode node) {
-        handleOutput(node.getText());
+        handleOutput(node.getMessage().getInterpolatedText(player));
         player.addItem(node.getItem());
         currentNode = node.getNextNode();
     }
 
     @Override
     public void visit(LinkableStoryTextNode node) {
-        handleOutput(node.getText());
+        handleOutput(node.getMessage().getInterpolatedText(player));
         currentNode = node.getNextNode();
     }
 
     private void handleInteractableOutputNode(StoryTextNode node) {
-        String text = TextInterpolator.interpolate(node.getText(), player);
+        String text = node.getMessage().getInterpolatedText(player);
         System.out.println(text);
-        Message message = new Message(text, false);
     }
 
-    private void handleOutput(String output) {
-        String text = TextInterpolator.interpolate(output, player);
+    private void handleOutput(String text) {
         System.out.println(text);
-        Message message = new Message(text, false);
-    }
-
-    private void handleInput(String input) {
-        Message message = new Message(input, true);
     }
 }

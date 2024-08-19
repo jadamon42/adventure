@@ -1,22 +1,24 @@
 package com.github.jadamon42.adventure.model;
 
+import com.github.jadamon42.adventure.util.TextInterpolator;
+
 import java.io.Serializable;
 import java.util.UUID;
 
-public class Message implements Serializable {
+public class TextMessage implements Serializable {
     private final UUID id;
     private final String text;
     private final boolean isPlayerMessage;
     private final boolean isInteractable;
 
-    public Message(String text, boolean isPlayerMessage) {
+    public TextMessage(String text, boolean isPlayerMessage) {
         this.id = UUID.randomUUID();
         this.text = text;
         this.isPlayerMessage = isPlayerMessage;
         this.isInteractable = false;
     }
 
-    public Message(String text, boolean isPlayerMessage, boolean isInteractable) {
+    public TextMessage(String text, boolean isPlayerMessage, boolean isInteractable) {
         this.id = UUID.randomUUID();
         this.text = text;
         this.isPlayerMessage = isPlayerMessage;
@@ -39,18 +41,8 @@ public class Message implements Serializable {
         return isInteractable;
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (this == other) {
-            return true;
-        }
-        if (other == null || getClass() != other.getClass()) {
-            return false;
-        }
-        Message message = (Message) other;
-        return text.equals(message.text)
-               && isPlayerMessage == message.isPlayerMessage
-               && isInteractable == message.isInteractable;
+    public String getInterpolatedText(Player player) {
+        return TextInterpolator.interpolate(text, player);
     }
 }
 

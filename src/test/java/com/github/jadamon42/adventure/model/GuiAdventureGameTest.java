@@ -26,22 +26,22 @@ public class GuiAdventureGameTest extends Application {
     private static ExpositionalTextNode start(Player player) {
         ExpositionalTextNode node = new ExpositionalTextNode("** First Adventure: The Room **");
         node.then(new FreeTextInputNode("What is your name?", (p, str) -> p.setName(String.valueOf(str))))
-            .then(playerNameAndExposition(player));
+            .then(playerNameAndExposition());
         return node;
     }
 
-    private static SwitchNode playerNameAndExposition(Player player) {
+    private static SwitchNode playerNameAndExposition() {
         SwitchNode node = new SwitchNode(
-                new TextChoice("$PLAYER_NAME? What a dumb name. Anyway, you are in a room (with a dumb name).",
+                new ConditionalText("$PLAYER_NAME? What a dumb name. Anyway, you are in a room (with a dumb name).",
                                p -> p.getName().equalsIgnoreCase("nick")
                                     || p.getName().equalsIgnoreCase("victor")
                                     || p.getName().equalsIgnoreCase("vector")
                                     || p.getName().equalsIgnoreCase("nicholas")
                                     || p.getName().equalsIgnoreCase("neck")
                                     || p.getName().equalsIgnoreCase("hannah")),
-                new TextChoice("$PLAYER_NAME? What a cool name! Anyway, you are in a room (and everyone is probably jealous of how cool you are).", p -> p.getName().equalsIgnoreCase("jonathan") || p.getName().equalsIgnoreCase("jon")),
-                new TextChoice("$PLAYER_NAME? You sound old. Anyway, you're in a room (and you're old).", p -> p.getName().equalsIgnoreCase("dave") || p.getName().equalsIgnoreCase("david") || p.getName().equalsIgnoreCase("natalie")),
-                new TextChoice("Hello, $PLAYER_NAME. You are in a room.")
+                new ConditionalText("$PLAYER_NAME? What a cool name! Anyway, you are in a room (and everyone is probably jealous of how cool you are).", p -> p.getName().equalsIgnoreCase("jonathan") || p.getName().equalsIgnoreCase("jon")),
+                new ConditionalText("$PLAYER_NAME? You sound old. Anyway, you're in a room (and you're old).", p -> p.getName().equalsIgnoreCase("dave") || p.getName().equalsIgnoreCase("david") || p.getName().equalsIgnoreCase("natalie")),
+                new ConditionalText("Hello, $PLAYER_NAME. You are in a room.")
         );
         node.then(nameTag());
         return node;
@@ -110,8 +110,8 @@ public class GuiAdventureGameTest extends Application {
 
     private static BranchNode leaveTheRoomEnding() {
         return new BranchNode(
-                new LinkedTextChoice("You leave the room with a useless orb. Maybe some day you can sell it.", p -> p.hasItem(orb)),
-                new LinkedTextChoice("You leave the room.")
+                new LinkedConditionalText("You leave the room with a useless orb. Maybe some day you can sell it.", p -> p.hasItem(orb)),
+                new LinkedConditionalText("You leave the room.")
         );
     }
 
@@ -126,9 +126,9 @@ public class GuiAdventureGameTest extends Application {
 
     private static BranchNode dealWithOgre() {
         return new BranchNode(
-                new LinkedTextChoice("\"Wait...\" the Ogre interrupts himself \"Your name is $PLAYER_NAME? That is an Ogre name! Are you an Ogre too?\"", areYouAnOgre(), p -> p.getName().length() <= 5),
-                new LinkedTextChoice("\"I will eat $PLAYER_NAME the human!\"", chooseWhatToDoWithOgre(), p -> p.hasItem("name tag")),
-                new LinkedTextChoice("\"I'm going to eat you!\"", chooseWhatToDoWithOgre()));
+                new LinkedConditionalText("\"Wait...\" the Ogre interrupts himself \"Your name is $PLAYER_NAME? That is an Ogre name! Are you an Ogre too?\"", areYouAnOgre(), p -> p.getName().length() <= 5),
+                new LinkedConditionalText("\"I will eat $PLAYER_NAME the human!\"", chooseWhatToDoWithOgre(), p -> p.hasItem("name tag")),
+                new LinkedConditionalText("\"I'm going to eat you!\"", chooseWhatToDoWithOgre()));
     }
 
     private static ChoiceTextInputNode areYouAnOgre() {
@@ -177,8 +177,8 @@ public class GuiAdventureGameTest extends Application {
         ExpositionalTextNode node = new ExpositionalTextNode("The ogre laughs as you hobble over to him. You have very little energy because you are so exhausted.");
         node.then(
                 new BranchNode(
-                        new LinkedTextChoice("You throw the first punch, and the ogre is thrown back as if he was hit by a train. You are amazed at your newfound strength. It must be the orb...", null, p -> p.hasEffect(superStrength)),
-                        new LinkedTextChoice("You throw the first punch.", deathByOgre())
+                        new LinkedConditionalText("You throw the first punch, and the ogre is thrown back as if he was hit by a train. You are amazed at your newfound strength. It must be the orb...", null, p -> p.hasEffect(superStrength)),
+                        new LinkedConditionalText("You throw the first punch.", deathByOgre())
                 )
         );
         return node;

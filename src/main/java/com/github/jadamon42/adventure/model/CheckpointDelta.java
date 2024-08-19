@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.UUID;
 
 public class CheckpointDelta implements Serializable {
-    private final Message[] messages;
+    private final TextMessage[] textMessages;
     private final PlayerDelta playerDelta;
     private final UUID currentNodeId;
     private final UUID currentMessageId;
 
-    public CheckpointDelta(List<Message> messages, PlayerDelta playerDelta, UUID currentNodeId, UUID currentMessageId) {
-        this.messages = messages.toArray(new Message[0]);
+    public CheckpointDelta(List<TextMessage> textMessages, PlayerDelta playerDelta, UUID currentNodeId, UUID currentMessageId) {
+        this.textMessages = textMessages.toArray(new TextMessage[0]);
         this.playerDelta = playerDelta;
         this.currentNodeId = currentNodeId;
         this.currentMessageId = currentMessageId;
@@ -26,8 +26,8 @@ public class CheckpointDelta implements Serializable {
         return playerDelta;
     }
 
-    public Message[] getMessages() {
-        return messages;
+    public TextMessage[] getMessages() {
+        return textMessages;
     }
 
     public UUID getCurrentNodeId() {
@@ -39,25 +39,24 @@ public class CheckpointDelta implements Serializable {
     }
 
     public static class Builder {
-        private final List<Message> messages;
+        private final List<TextMessage> textMessages;
         private final PlayerDelta.Builder playerDeltaBuilder;
         private UUID currentNodeId;
         private UUID currentMessageId;
 
         public Builder() {
-            messages = new ArrayList<>();
+            textMessages = new ArrayList<>();
             playerDeltaBuilder = PlayerDelta.newBuilder();
             currentNodeId = null;
             currentMessageId = null;
         }
 
         public CheckpointDelta build() {
-            return new CheckpointDelta(messages, playerDeltaBuilder.build(), currentNodeId, currentMessageId);
+            return new CheckpointDelta(textMessages, playerDeltaBuilder.build(), currentNodeId, currentMessageId);
         }
 
-        public void addMessage(Message message) {
-            messages.add(message);
-            currentMessageId = message.getId();
+        public void addMessage(TextMessage textMessage) {
+            textMessages.add(textMessage);
         }
 
         public void applyPlayerDelta(PlayerDelta playerDelta) {
@@ -78,10 +77,6 @@ public class CheckpointDelta implements Serializable {
 
         public void setCurrentMessageId(UUID currentMessageId) {
             this.currentMessageId = currentMessageId;
-        }
-
-        public Message getCurrentMessage() {
-            return messages.getLast();
         }
     }
 

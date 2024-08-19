@@ -10,11 +10,11 @@ class AdventureGameTest {
 
     public static void main(String[] args) {
         Player player = new Player();
-        ConsoleGameEngine adventureGame = new ConsoleGameEngine(player, start(player));
+        ConsoleGameEngine adventureGame = new ConsoleGameEngine(player, start());
         adventureGame.startGame();
     }
 
-    private static ExpositionalTextNode start(Player player) {
+    private static ExpositionalTextNode start() {
         ExpositionalTextNode node = new ExpositionalTextNode("** First Adventure: The Room **");
         node.then(new FreeTextInputNode("What is your name?", (p, str) -> p.setName(String.valueOf(str))))
             .then(new ExpositionalTextNode("Hello, $PLAYER_NAME. You are in a room."))
@@ -59,8 +59,8 @@ class AdventureGameTest {
 
     private static BranchNode leaveTheRoomEnding() {
         return new BranchNode(
-                new LinkedTextChoice("You leave the room with a useless orb. Maybe some day you can sell it.", p -> p.hasItem(orb)),
-                new LinkedTextChoice("You leave the room.")
+                new LinkedConditionalText("You leave the room with a useless orb. Maybe some day you can sell it.", p -> p.hasItem(orb)),
+                new LinkedConditionalText("You leave the room.")
         );
     }
 
@@ -92,8 +92,8 @@ class AdventureGameTest {
         ExpositionalTextNode node = new ExpositionalTextNode("The ogre laughs as you hobble over to him. You have very little energy because you are so exhausted.");
         node.then(
                 new BranchNode(
-                        new LinkedTextChoice("You throw the first punch, and the ogre is thrown back as if he was hit by a train. You are amazed at your newfound strength. It must be the orb...", null, p -> p.hasEffect(superStrength)),
-                        new LinkedTextChoice("You throw the first punch.", deathByOgre())
+                        new LinkedConditionalText("You throw the first punch, and the ogre is thrown back as if he was hit by a train. You are amazed at your newfound strength. It must be the orb...", null, p -> p.hasEffect(superStrength)),
+                        new LinkedConditionalText("You throw the first punch.", deathByOgre())
                 )
         );
         return node;
