@@ -1,7 +1,7 @@
 package com.github.jadamon42.adventure.model;
 
+import com.github.jadamon42.adventure.engine.ui.JavaFXGameEngine2;
 import com.github.jadamon42.adventure.node.*;
-import com.github.jadamon42.adventure.engine.ui.JavaFXGameEngine;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -15,9 +15,9 @@ public class GuiAdventureGameTest extends Application {
     }
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws Exception {
         Player player = new Player();
-        JavaFXGameEngine gameEngine = new JavaFXGameEngine(player, start(player));
+        JavaFXGameEngine2 gameEngine = new JavaFXGameEngine2(player, start(player));
         gameEngine.initialize(stage);
         gameEngine.startGame();
 //        gameEngine.loadGame("/Users/jdamon/Documents/Adventure/checkpoint.adch");

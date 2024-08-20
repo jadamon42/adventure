@@ -11,6 +11,10 @@ repositories {
 }
 
 dependencies {
+    implementation("com.jfoenix:jfoenix:9.0.10")
+    implementation("org.controlsfx:controlsfx:11.2.1")
+    implementation("de.jensd:fontawesomefx-commons:9.1.2")
+    implementation("de.jensd:fontawesomefx-fontawesome:4.7.0-9.1.2")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.assertj:assertj-core:3.26.0")
