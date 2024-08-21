@@ -5,7 +5,6 @@ import com.github.jadamon42.adventure.engine.GameStateManager;
 import com.github.jadamon42.adventure.model.*;
 import com.github.jadamon42.adventure.node.*;
 import com.github.jadamon42.adventure.util.SerializableBiFunction;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -53,11 +52,9 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
     }
 
     private void askToPlayAgain() {
-        Platform.runLater(() -> {
-            uiController.addChoiceButton("Play Again", e -> restartGame());
-            uiController.addChoiceButton("Exit Game", e -> Platform.exit());
-            uiController.showButtonInput();
-        });
+        uiController.addChoiceButton("Play Again", e -> restartGame());
+        uiController.addChoiceButton("Exit Game", e -> uiController.exit());
+        uiController.showButtonInput();
     }
 
     @Override
@@ -73,15 +70,12 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
 
     @Override
     public void saveGame(String saveFile) {
-        // TODO: this doesn't need to be run on the JavaFX thread right?
-        Platform.runLater(() -> {
-            try {
-                gameStateManager.saveGame(saveFile, gameState);
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-                Thread.currentThread().interrupt();
-            }
-        });
+        try {
+            gameStateManager.saveGame(saveFile, gameState);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            Thread.currentThread().interrupt();
+        }
     }
 
     private void loadGame(UUID messageId) {
@@ -173,7 +167,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
         try {
             latch.await();
         } catch (InterruptedException e) {
-            Platform.runLater(() -> Thread.currentThread().interrupt());
+            uiController.exit();
         }
 
         uiController.showReplayButtonFor(messageId);
@@ -197,7 +191,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
         try {
             latch.await();
         } catch (InterruptedException e) {
-            Platform.runLater(() -> Thread.currentThread().interrupt());
+            uiController.exit();
         }
 
         uiController.showReplayButtonFor(messageId);
@@ -227,6 +221,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
         checkpointDeltaBuilder.setCurrentMessageId(message.getId());
         checkpointDeltaBuilder.setCurrentNodeId(currentNode.getId());
         gameState.addCheckpoint(checkpointDeltaBuilder.build());
+        saveGame("checkpoint.adch");
         checkpointDeltaBuilder = CheckpointDelta.newBuilder();
         checkpointDeltaBuilder.addMessage(message);
 

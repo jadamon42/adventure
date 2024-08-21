@@ -50,6 +50,10 @@ public class UiController {
         hideButtonInput();
     }
 
+    public void exit() {
+        Platform.exit();
+    }
+
     public void hideTextInput() {
         Platform.runLater(() -> {
             textInput.clear();
@@ -77,6 +81,7 @@ public class UiController {
                 });
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
+                exit();
             }
         }).start();
     }

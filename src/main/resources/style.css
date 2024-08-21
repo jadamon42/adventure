@@ -72,6 +72,7 @@
 .choice-button:hover {
     -fx-background-color: #D8D8DC;
     -fx-cursor: hand;
+    -fx-font-weight: bold;
 }
 
 .replay-button {
