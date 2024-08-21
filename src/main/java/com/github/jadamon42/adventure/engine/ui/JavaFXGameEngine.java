@@ -6,18 +6,13 @@ import com.github.jadamon42.adventure.model.*;
 import com.github.jadamon42.adventure.node.*;
 import com.github.jadamon42.adventure.util.SerializableBiFunction;
 import javafx.application.Platform;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
 public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
@@ -26,9 +21,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
     private final GameStateManager gameStateManager;
     private CheckpointDelta.Builder checkpointDeltaBuilder;
     private GameState gameState;
-    private VBox messagePanel;
-    private TextField inputField;
-    private ScrollPane scrollPane;
+    private UiController uiController;
 
     public JavaFXGameEngine(Player player, StoryNode startNode) {
         this.player = player;
@@ -39,23 +32,13 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
         this.gameState = new GameState(checkpoint);
     }
 
-    public void initialize(Stage stage) {
+    public void initialize(Stage stage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui.fxml"));
+        Parent root = loader.load();
+        uiController = loader.getController();
+
+        stage.setScene(new Scene(root));
         stage.setTitle("Choose Your Own Adventure");
-
-        messagePanel = new VBox();
-        scrollPane = new ScrollPane(messagePanel);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-
-        inputField = new TextField();
-        inputField.setDisable(true);
-
-        VBox root = new VBox();
-        VBox.setVgrow(scrollPane, Priority.ALWAYS);
-        root.getChildren().addAll(scrollPane, inputField);
-        Scene scene = new Scene(root, 600, 400);
-
-        stage.setScene(scene);
         stage.show();
     }
 
@@ -71,24 +54,9 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
 
     private void askToPlayAgain() {
         Platform.runLater(() -> {
-            FlowPane buttonPane = new FlowPane();
-            buttonPane.setAlignment(Pos.CENTER_RIGHT);
-            buttonPane.setHgap(10);
-            buttonPane.setVgap(10);
-            buttonPane.setPrefWrapLength(600);
-
-            Button againButton = new Button("Play Again");
-            againButton.setOnAction(e -> restartGame());
-            againButton.setFocusTraversable(false);
-            buttonPane.getChildren().add(againButton);
-
-            Button exitButton = new Button("Exit Game");
-            exitButton.setOnAction(e -> Platform.exit());
-            exitButton.setFocusTraversable(false);
-            buttonPane.getChildren().add(exitButton);
-
-            messagePanel.getChildren().add(buttonPane);
-            scrollToBottom();
+            uiController.addChoiceButton("Play Again", e -> restartGame());
+            uiController.addChoiceButton("Exit Game", e -> Platform.exit());
+            uiController.showButtonInput();
         });
     }
 
@@ -105,6 +73,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
 
     @Override
     public void saveGame(String saveFile) {
+        // TODO: this doesn't need to be run on the JavaFX thread right?
         Platform.runLater(() -> {
             try {
                 gameStateManager.saveGame(saveFile, gameState);
@@ -126,7 +95,8 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
         this.player = checkpoint.getPlayer();
         this.currentNode = checkpoint.getCurrentNode();
         this.gameState.reset();
-        clearMessages();
+        checkpointDeltaBuilder = new CheckpointDelta.Builder();
+        uiController.clearMessages();
         startGame();
     }
 
@@ -137,36 +107,22 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
             replayMessages(checkpoint.getMessageHistory());
             for (TextMessage textMessage : checkpoint.getMessageHistory()) {
                 if (textMessage.isInteractable()) {
-                    makeReplayButtonVisibleFor(textMessage.getId());
+                    uiController.showReplayButtonFor(textMessage.getId());
                 }
             }
             startGame();
         }
     }
 
-    private void clearMessages() {
-        Platform.runLater(() -> messagePanel.getChildren().clear());
-    }
-
     private void replayMessages(MessageHistory messageHistory) {
-        clearMessages();
-        for (TextMessage textMessage : messageHistory) {
-            addMessageToPanel(textMessage);
-        }
-    }
-
-    private void makeReplayButtonVisibleFor(UUID messageId) {
-        Platform.runLater(() -> {
-            HBox hbox = (HBox) messagePanel.lookup("#" + messageId.toString());
-            if (hbox != null) {
-                for (Node child : hbox.getChildren()) {
-                    if (child instanceof Button && "Replay".equals(((Button) child).getText())) {
-                        child.setVisible(true);
-                        break;
-                    }
-                }
+        uiController.clearMessages();
+        for (TextMessage message : messageHistory) {
+            if (message.isPlayerMessage() || !message.isInteractable()) {
+                uiController.addImmediateMessage(message, player);
+            } else {
+                uiController.addImmediateMessage(message, player, e -> loadGame(message.getId()));
             }
-        });
+        }
     }
 
     @Override
@@ -201,22 +157,17 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
         UUID messageId = addInteractableGameMessage(node.getMessage());
 
         CountDownLatch latch = new CountDownLatch(1);
-        Platform.runLater(() -> {
-            inputField.setDisable(false);
-            inputField.requestFocus();
-            inputField.setOnAction(e -> {
-                String input = inputField.getText();
-                inputField.setText("");
-                inputField.setDisable(true);
-                SerializableBiFunction<Player, Object, PlayerDelta> textConsumer = node.getTextConsumer();
-                if (textConsumer != null) {
-                    PlayerDelta playerDelta = textConsumer.apply(player, input);
-                    checkpointDeltaBuilder.applyPlayerDelta(playerDelta);
-                }
-                addPlayerMessage(new TextMessage(input, true));
-                currentNode = node.getNextNode();
-                latch.countDown();
-            });
+        uiController.showTextInput(e -> {
+            String input = uiController.getTextInput();
+            SerializableBiFunction<Player, Object, PlayerDelta> textConsumer = node.getTextConsumer();
+            if (textConsumer != null) {
+                PlayerDelta playerDelta = textConsumer.apply(player, input);
+                checkpointDeltaBuilder.applyPlayerDelta(playerDelta);
+            }
+            addPlayerMessage(new TextMessage(input, true));
+            currentNode = node.getNextNode();
+            uiController.hideTextInput();
+            latch.countDown();
         });
 
         try {
@@ -225,7 +176,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
             Platform.runLater(() -> Thread.currentThread().interrupt());
         }
 
-        makeReplayButtonVisibleFor(messageId);
+        uiController.showReplayButtonFor(messageId);
     }
 
     @Override
@@ -233,34 +184,15 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
         UUID messageId = addInteractableGameMessage(node.getMessage());
 
         CountDownLatch latch = new CountDownLatch(1);
-        Platform.runLater(() -> {
-            FlowPane buttonPane = new FlowPane();
-            buttonPane.setAlignment(Pos.CENTER_RIGHT);
-            buttonPane.setHgap(10);
-            buttonPane.setVgap(10);
-            buttonPane.setPrefWrapLength(600);
-
-            List<Button> buttons = new ArrayList<>();
-            for (LinkedConditionalText choice : node.getChoices(player)) {
-                Button button = new Button(choice.getText());
-                button.setOnAction(e -> {
-                    currentNode = choice.getNextNode();
-//                    for (Button b : buttons) {
-//                        b.setDisable(true);
-//                    }
-//                    button.setStyle("-fx-background-color: grey;");
-                    messagePanel.getChildren().remove(buttonPane);
-                    addPlayerMessage(choice.getMessage());
-                    latch.countDown();
-                });
-                button.setFocusTraversable(false);
-                buttons.add(button);
-                buttonPane.getChildren().add(button);
-            }
-
-            messagePanel.getChildren().add(buttonPane);
-            scrollToBottom();
-        });
+        for (LinkedConditionalText choice : node.getChoices(player)) {
+            uiController.addChoiceButton(choice.getText(), e -> {
+                addPlayerMessage(choice.getMessage());
+                currentNode = choice.getNextNode();
+                uiController.hideButtonInput();
+                latch.countDown();
+            });
+        }
+        uiController.showButtonInput();
 
         try {
             latch.await();
@@ -268,7 +200,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
             Platform.runLater(() -> Thread.currentThread().interrupt());
         }
 
-        makeReplayButtonVisibleFor(messageId);
+        uiController.showReplayButtonFor(messageId);
     }
 
     @Override
@@ -285,57 +217,25 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
         currentNode = node.getNextNode();
     }
 
-    private void addMessageToPanel(TextMessage textMessage) {
-        Platform.runLater(() -> {
-            Label label = new Label(textMessage.getInterpolatedText(player));
-            label.setWrapText(true);
-
-            HBox hbox = new HBox();
-            hbox.setId(textMessage.getId().toString());
-            hbox.setAlignment(textMessage.isPlayerMessage() ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
-
-            if (textMessage.isInteractable()) {
-                Button replayButton = new Button("Replay");
-                replayButton.setFocusTraversable(false);
-                replayButton.setVisible(false);
-                replayButton.setOnAction(e -> loadGame(textMessage.getId()));
-                Region spacer = new Region();
-                HBox.setHgrow(spacer, Priority.ALWAYS);
-                hbox.getChildren().addAll(label, spacer, replayButton);
-            } else {
-                hbox.getChildren().add(label);
-            }
-
-            messagePanel.getChildren().add(hbox);
-            scrollToBottom();
-        });
+    private UUID addGameMessage(TextMessage message) {
+        uiController.addMessageWithTypingIndicator(message, player);
+        checkpointDeltaBuilder.addMessage(message);
+        return message.getId();
     }
 
-    private UUID addGameMessage(TextMessage textMessage) {
-        addMessageToPanel(textMessage);
-        checkpointDeltaBuilder.addMessage(textMessage);
-        return textMessage.getId();
-    }
-
-    private UUID addInteractableGameMessage(TextMessage textMessage) {
-        checkpointDeltaBuilder.setCurrentMessageId(textMessage.getId());
+    private UUID addInteractableGameMessage(TextMessage message) {
+        checkpointDeltaBuilder.setCurrentMessageId(message.getId());
         checkpointDeltaBuilder.setCurrentNodeId(currentNode.getId());
         gameState.addCheckpoint(checkpointDeltaBuilder.build());
         checkpointDeltaBuilder = CheckpointDelta.newBuilder();
-        checkpointDeltaBuilder.addMessage(textMessage);
+        checkpointDeltaBuilder.addMessage(message);
 
-        addMessageToPanel(textMessage);
-        return textMessage.getId();
+        uiController.addMessageWithTypingIndicator(message, player, e -> loadGame(message.getId()));
+        return message.getId();
     }
 
-    private void addPlayerMessage(TextMessage textMessage) {
-        addMessageToPanel(textMessage);
-        checkpointDeltaBuilder.addMessage(textMessage);
-    }
-
-    private void scrollToBottom() {
-        scrollPane.applyCss();
-        scrollPane.layout();
-        scrollPane.setVvalue(scrollPane.getVmax());
+    private void addPlayerMessage(TextMessage message) {
+        uiController.addImmediateMessage(message, player);
+        checkpointDeltaBuilder.addMessage(message);
     }
 }

@@ -1,6 +1,6 @@
 package com.github.jadamon42.adventure.model;
 
-import com.github.jadamon42.adventure.engine.ui.JavaFXGameEngine2;
+import com.github.jadamon42.adventure.engine.ui.JavaFXGameEngine;
 import com.github.jadamon42.adventure.node.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -17,13 +17,13 @@ public class GuiAdventureGameTest extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Player player = new Player();
-        JavaFXGameEngine2 gameEngine = new JavaFXGameEngine2(player, start(player));
+        JavaFXGameEngine gameEngine = new JavaFXGameEngine(player, start());
         gameEngine.initialize(stage);
         gameEngine.startGame();
 //        gameEngine.loadGame("/Users/jdamon/Documents/Adventure/checkpoint.adch");
     }
 
-    private static ExpositionalTextNode start(Player player) {
+    private static ExpositionalTextNode start() {
         ExpositionalTextNode node = new ExpositionalTextNode("** First Adventure: The Room **");
         node.then(new FreeTextInputNode("What is your name?", (p, str) -> p.setName(String.valueOf(str))))
             .then(playerNameAndExposition());
