@@ -1,15 +1,18 @@
 package com.github.jadamon42.adventure.node;
 
+import com.github.jadamon42.adventure.model.TextMessage;
 import com.github.jadamon42.adventure.model.Player;
 
 import java.util.List;
 
 public class ChoiceTextInputNode extends StoryTextNode {
     private final List<LinkedTextChoice> choices;
+    private final TextMessage message;
 
     public ChoiceTextInputNode(String prompt, LinkedTextChoice... choices) {
         super(prompt);
         this.choices = List.of(choices);
+        this.message = new TextMessage(this.getText(), false, true);
     }
 
     public List<LinkedTextChoice> getChoices(Player player) {
@@ -24,6 +27,11 @@ public class ChoiceTextInputNode extends StoryTextNode {
 
     public List<LinkedTextChoice> getAllChoices() {
         return choices;
+    }
+
+    @Override
+    public TextMessage getMessage() {
+        return message;
     }
 
     @Override

@@ -32,7 +32,7 @@ public class StoryNodeTraverser implements StoryNodeVisitor {
     @Override
     public void visit(ChoiceTextInputNode node) {
         storyNodeMap.put(node.getId(), node);
-        for (LinkedTextChoice choice : node.getAllChoices()) {
+        for (LinkedConditionalText choice : node.getAllChoices()) {
             visitNext(choice);
         }
     }
@@ -59,7 +59,7 @@ public class StoryNodeTraverser implements StoryNodeVisitor {
     @Override
     public void visit(BranchNode node) {
         storyNodeMap.put(node.getId(), node);
-        for (LinkedTextChoice choice : node.getAllChoices()) {
+        for (LinkedConditionalText choice : node.getAllChoices()) {
             visitNext(choice);
         }
     }

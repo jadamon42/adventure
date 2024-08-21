@@ -1,5 +1,7 @@
 package com.github.jadamon42.adventure.node;
 
+import com.github.jadamon42.adventure.model.TextMessage;
+
 public abstract class StoryTextNode extends StoryNode {
     private final String text;
 
@@ -8,7 +10,9 @@ public abstract class StoryTextNode extends StoryNode {
         this.text = text;
     }
 
-    public String getText() {
+    protected String getText() {
         return text;
     }
+
+    public abstract TextMessage getMessage();
 }

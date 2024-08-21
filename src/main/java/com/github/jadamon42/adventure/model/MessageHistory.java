@@ -6,45 +6,41 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public class MessageHistory implements Iterable<Message>, Serializable {
-    private final List<Message> messages;
+public class MessageHistory implements Iterable<TextMessage>, Serializable {
+    private final List<TextMessage> textMessages;
 
     public MessageHistory() {
-        this.messages = new ArrayList<>();
+        this.textMessages = new ArrayList<>();
     }
 
     public MessageHistory(MessageHistory messageHistory) {
-        this.messages = new ArrayList<>(messageHistory.messages);
+        this.textMessages = new ArrayList<>(messageHistory.textMessages);
     }
 
-    private MessageHistory(List<Message> messages) {
-        this.messages = new ArrayList<>(messages);
+    public void add(TextMessage textMessage) {
+        textMessages.add(textMessage);
     }
 
-    public void add(Message message) {
-        messages.add(message);
-    }
-
-    public void addAll(Message[] messages) {
-        this.messages.addAll(Arrays.asList(messages));
+    public void addAll(TextMessage[] textMessages) {
+        this.textMessages.addAll(Arrays.asList(textMessages));
     }
 
     @Override
-    public Iterator<Message> iterator() {
+    public Iterator<TextMessage> iterator() {
         return new MessageHistoryIterator();
     }
 
-    private class MessageHistoryIterator implements Iterator<Message> {
+    private class MessageHistoryIterator implements Iterator<TextMessage> {
         private int currentIndex = 0;
 
         @Override
         public boolean hasNext() {
-            return currentIndex < messages.size();
+            return currentIndex < textMessages.size();
         }
 
         @Override
-        public Message next() {
-            return messages.get(currentIndex++);
+        public TextMessage next() {
+            return textMessages.get(currentIndex++);
         }
     }
 }
