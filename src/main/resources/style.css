@@ -5,12 +5,10 @@
 
 .message-container {
     -fx-alignment: center-left;
-    -fx-spacing: 10px;
 }
 
 .user-message-container {
     -fx-alignment: center-right;
-    -fx-spacing: 10px;
 }
 
 .message {
@@ -68,16 +66,24 @@
     -fx-padding: 10px 20px;
     -fx-border-radius: 15px;
     -fx-background-radius: 14px;
+    -fx-focus-traversable: false;
 }
 
 .choice-button:hover {
     -fx-background-color: #D8D8DC;
+    -fx-cursor: hand;
 }
 
-.restart-icon {
-    -fx-text-alignment: center;
-    -fx-alignment: center;
+.replay-button {
+    -fx-focus-traversable: false;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
 }
+
+/*.replay-button:hover {*/
+/*    -fx-cursor: hand;*/
+/*}*/
 
 .typing-indicator-container {
     -fx-background-color: #E5E5EA;

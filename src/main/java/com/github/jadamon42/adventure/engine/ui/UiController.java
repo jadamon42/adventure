@@ -11,7 +11,6 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -20,8 +19,8 @@ import javafx.scene.layout.*;
 import com.jfoenix.controls.JFXButton;
 import javafx.util.Duration;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 public class UiController {
     @FXML
@@ -39,7 +38,11 @@ public class UiController {
     @FXML
     private FlowPane buttonInputContainer;
 
-    private TypingIndicator typingIndicator;
+    private final Queue<MessageContainer> messageQueue;
+
+    public UiController() {
+        this.messageQueue = new LinkedList<>();
+    }
 
     @FXML
     public void initialize() {
@@ -57,14 +60,25 @@ public class UiController {
     }
 
     public void showTextInput(EventHandler<ActionEvent> eventHandler) {
-        Platform.runLater(() -> {
-            hideButtonInput();
-            textInputContainer.setVisible(true);
-            textInputContainer.setManaged(true);
-            textInput.setOnAction(eventHandler);
-            textInput.requestFocus();
-            scrollToBottom();
-        });
+        CountDownLatch latch = new CountDownLatch(2);
+        List<String> messageContainerIds = hideAllReplayButtons(latch);
+        processMessageQueue(latch);
+        new Thread(() -> {
+            try {
+                latch.await();
+                showReplayButtonFor(messageContainerIds);
+                Platform.runLater(() -> {
+                    hideButtonInput();
+                    textInputContainer.setVisible(true);
+                    textInputContainer.setManaged(true);
+                    textInput.setOnAction(eventHandler);
+                    textInput.requestFocus();
+                    scrollToBottom();
+                });
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }).start();
     }
 
     public String getTextInput() {
@@ -81,12 +95,23 @@ public class UiController {
     }
 
     public void showButtonInput() {
-        Platform.runLater(() -> {
-            hideTextInput();
-            buttonInputContainer.setVisible(true);
-            buttonInputContainer.setManaged(true);
-            scrollToBottom();
-        });
+        CountDownLatch latch = new CountDownLatch(2);
+        List<String> messageContainerIds = hideAllReplayButtons(latch);
+        processMessageQueue(latch);
+        new Thread(() -> {
+            try {
+                latch.await();
+                showReplayButtonFor(messageContainerIds);
+                Platform.runLater(() -> {
+                    hideTextInput();
+                    buttonInputContainer.setVisible(true);
+                    buttonInputContainer.setManaged(true);
+                    scrollToBottom();
+                });
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }).start();
     }
 
     public void addChoiceButton(String text, EventHandler<ActionEvent> eventHandler) {
@@ -98,20 +123,7 @@ public class UiController {
         });
     }
 
-    private long getMillisToWait(String text) {
-        long minimum = 1000L;
-        long waitTime = text.split(" ").length * 150L;
-        return Math.max(minimum, waitTime);
-    }
-
-    public void addMessage(TextMessage message, Player player, EventHandler<ActionEvent> onReplay) {
-        showTypingIndicator();
-        try {
-            Thread.sleep(getMillisToWait(message.getText()));
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        hideTypingIndicator();
+    public void addImmediateMessage(TextMessage message, Player player, EventHandler<ActionEvent> onReplay) {
         Platform.runLater(() -> {
             MessageContainer messageContainer = new MessageContainer(message, player, onReplay);
             messagesContainer.getChildren().add(messageContainer);
@@ -119,9 +131,120 @@ public class UiController {
         });
     }
 
+    public void addImmediateMessage(TextMessage message, Player player) {
+        Platform.runLater(() -> {
+            MessageContainer messageContainer = new MessageContainer(message, player);
+            messagesContainer.getChildren().add(messageContainer);
+            scrollToBottom();
+        });
+    }
+
+    public void addMessageWithTypingIndicator(TextMessage message, Player player, EventHandler<ActionEvent> onReplay) {
+        MessageContainer messageContainer = new MessageContainer(message, player, onReplay);
+        messageQueue.add(messageContainer);
+    }
+
+    public void addMessageWithTypingIndicator(TextMessage message, Player player) {
+        MessageContainer messageContainer = new MessageContainer(message, player);
+        messageQueue.add(messageContainer);
+    }
+
+    public void clearMessages() {
+        hideTextInput();
+        hideButtonInput();
+        messageQueue.clear();
+        Platform.runLater(() -> messagesContainer.getChildren().clear());
+    }
+
+    public void showReplayButtonFor(UUID messageId) {
+        Platform.runLater(() -> {
+            messagesContainer.getChildren().stream()
+                             .filter(node -> node instanceof MessageContainer)
+                             .map(node -> (MessageContainer) node)
+                             .filter(messageContainer -> messageContainer.isInteractable() && Objects.equals(messageContainer.getId(), messageId.toString()))
+                             .map(messageContainer -> messageContainer.getChildren().stream()
+                                                                      .filter(child -> child instanceof ReplayButton)
+                                                                      .map(child -> (ReplayButton) child)
+                                                                      .findFirst()
+                                                                      .orElseThrow())
+                             .forEach(replayButton -> replayButton.setVisible(true));
+            scrollToBottom();
+        });
+    }
+
+    private List<String> hideAllReplayButtons(CountDownLatch latch) {
+        List<String> messageContainerIds = new ArrayList<>();
+        Platform.runLater(() -> {
+            messagesContainer.getChildren().stream()
+                             .filter(node -> node instanceof MessageContainer)
+                             .map(node -> (MessageContainer) node)
+                             .filter(MessageContainer::isInteractable)
+                             .forEach(messageContainer -> messageContainer.getChildren().stream()
+                                 .filter(child -> child instanceof ReplayButton)
+                                 .map(child -> (ReplayButton) child)
+                                 .findFirst()
+                                 .ifPresent(replayButton -> {
+                                    replayButton.setVisible(false);
+                                    messageContainerIds.add(messageContainer.getId());
+                             }));
+            scrollToBottom();
+            latch.countDown();
+        });
+        return messageContainerIds;
+    }
+
+    private void showReplayButtonFor(List<String> messageContainerIds) {
+        Platform.runLater(() -> {
+            messagesContainer.getChildren().stream()
+                             .filter(node -> node instanceof MessageContainer)
+                             .map(node -> (MessageContainer) node)
+                             .filter(messageContainer -> messageContainer.isInteractable() && messageContainerIds.contains(messageContainer.getId()))
+                             .map(messageContainer -> messageContainer.getChildren().stream()
+                                                                      .filter(child -> child instanceof ReplayButton)
+                                                                      .map(child -> (ReplayButton) child)
+                                                                      .findFirst()
+                                                                      .orElseThrow())
+                             .forEach(replayButton -> replayButton.setVisible(true));
+            scrollToBottom();
+        });
+    }
+
+    private long getMillisToWait(String text) {
+        long minimum = 1000L;
+        long waitTime = text.split(" ").length * 150L;
+        return Math.max(minimum, waitTime);
+    }
+
+    private void processMessageQueue(CountDownLatch latch) {
+        long keyFrameTime = 0L;
+        long waitTime;
+        Timeline timeline = new Timeline();
+
+        while (!messageQueue.isEmpty()) {
+            MessageContainer message = messageQueue.poll();
+            waitTime = 0L;
+            if (!message.isPlayerMessage()) {
+                waitTime = getMillisToWait(message.getText());
+            }
+
+            timeline.getKeyFrames().add(
+                    new KeyFrame(Duration.millis(keyFrameTime), e -> showTypingIndicator()));
+
+            keyFrameTime = keyFrameTime + waitTime;
+            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(keyFrameTime), e -> {
+                hideTypingIndicator();
+                messagesContainer.getChildren().add(message);
+                scrollToBottom();
+            }));
+        }
+
+        timeline.setOnFinished(e -> latch.countDown());
+        timeline.play();
+    }
+
     private void showTypingIndicator() {
         Platform.runLater(() -> {
-            typingIndicator = new TypingIndicator();
+            TypingIndicator typingIndicator = new TypingIndicator();
             typingIndicator.setId("typing-indicator");
             messagesContainer.getChildren().add(typingIndicator);
             scrollToBottom();
@@ -130,27 +253,7 @@ public class UiController {
 
     private void hideTypingIndicator() {
         Platform.runLater(() -> {
-            messagesContainer.getChildren().remove(typingIndicator);
-            scrollToBottom();
-        });
-    }
-
-    public void clearMessages() {
-        Platform.runLater(() -> messagesContainer.getChildren().clear());
-    }
-
-    public void makeReplayButtonVisibleFor(UUID messageId) {
-        Platform.runLater(() -> {
-            messagesContainer.getChildren().stream()
-                    .filter(node -> node instanceof MessageContainer)
-                    .map(node -> (MessageContainer) node)
-                    .filter(messageContainer -> Objects.equals(messageContainer.getId(), messageId.toString()))
-                    .map(messageContainer -> messageContainer.getChildren().stream()
-                            .filter(child -> child instanceof ReplayButton)
-                            .map(child -> (ReplayButton) child)
-                            .findFirst()
-                            .orElseThrow())
-                    .forEach(replayButton -> replayButton.setVisible(true));
+            messagesContainer.getChildren().removeIf(node -> node.getId().equals("typing-indicator"));
             scrollToBottom();
         });
     }
@@ -162,17 +265,37 @@ public class UiController {
     }
 
     private static class MessageContainer extends HBox {
+        private final boolean isPlayerMessage;
+        private final boolean isInteractable;
+
         public MessageContainer(TextMessage message, Player player, EventHandler<ActionEvent> onReplay) {
+            setId(message.getId().toString());
             addLabel(message, player);
             addReplayButton(message, onReplay);
+            this.isPlayerMessage = message.isPlayerMessage();
+            this.isInteractable = message.isInteractable();
         }
 
         public MessageContainer(TextMessage message, Player player) {
+            setId(message.getId().toString());
             addLabel(message, player);
+            this.isPlayerMessage = message.isPlayerMessage();
+            this.isInteractable = false;
+        }
+
+        public boolean isPlayerMessage() {
+            return isPlayerMessage;
+        }
+
+        public boolean isInteractable() {
+            return isInteractable;
+        }
+
+        public String getText() {
+            return ((Label) getChildren().getFirst()).getText();
         }
 
         private void addLabel(TextMessage message, Player player) {
-            setId(message.getId().toString());
             Label label = new Label(message.getInterpolatedText(player));
 
             if (message.isPlayerMessage()) {
@@ -193,16 +316,11 @@ public class UiController {
         }
     }
 
-
-
     private static class ReplayButton extends Button {
         public ReplayButton(EventHandler<ActionEvent> eventHandler) {
             FontAwesomeIconView icon = new FontAwesomeIconView(FontAwesomeIcon.ROTATE_LEFT);
-            setFocusTraversable(false);
-            setBackground(Background.EMPTY);
-            setBorder(Border.EMPTY);
+            getStyleClass().add("replay-button");
             setGraphic(icon);
-            setCursor(Cursor.HAND);
             setOnAction(eventHandler);
             setVisible(false);
         }

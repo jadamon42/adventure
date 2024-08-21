@@ -73,6 +73,7 @@ public class JavaFXGameEngine2 implements GameEngine, StoryNodeVisitor {
 
     @Override
     public void saveGame(String saveFile) {
+        // TODO: this doesn't need to be run on the JavaFX thread right?
         Platform.runLater(() -> {
             try {
                 gameStateManager.saveGame(saveFile, gameState);
@@ -103,12 +104,10 @@ public class JavaFXGameEngine2 implements GameEngine, StoryNodeVisitor {
         if (checkpoint != null) {
             this.player = checkpoint.getPlayer();
             this.currentNode = checkpoint.getCurrentNode();
-            uiController.hideButtonInput();
-            uiController.hideTextInput();
             replayMessages(checkpoint.getMessageHistory());
             for (TextMessage textMessage : checkpoint.getMessageHistory()) {
                 if (textMessage.isInteractable()) {
-                    uiController.makeReplayButtonVisibleFor(textMessage.getId());
+                    uiController.showReplayButtonFor(textMessage.getId());
                 }
             }
             startGame();
@@ -117,8 +116,12 @@ public class JavaFXGameEngine2 implements GameEngine, StoryNodeVisitor {
 
     private void replayMessages(MessageHistory messageHistory) {
         uiController.clearMessages();
-        for (TextMessage textMessage : messageHistory) {
-            uiController.addMessage(textMessage, player, e -> loadGame(textMessage.getId()));
+        for (TextMessage message : messageHistory) {
+            if (message.isPlayerMessage() || !message.isInteractable()) {
+                uiController.addImmediateMessage(message, player);
+            } else {
+                uiController.addImmediateMessage(message, player, e -> loadGame(message.getId()));
+            }
         }
     }
 
@@ -173,7 +176,7 @@ public class JavaFXGameEngine2 implements GameEngine, StoryNodeVisitor {
             Platform.runLater(() -> Thread.currentThread().interrupt());
         }
 
-        uiController.makeReplayButtonVisibleFor(messageId);
+        uiController.showReplayButtonFor(messageId);
     }
 
     @Override
@@ -197,7 +200,7 @@ public class JavaFXGameEngine2 implements GameEngine, StoryNodeVisitor {
             Platform.runLater(() -> Thread.currentThread().interrupt());
         }
 
-        uiController.makeReplayButtonVisibleFor(messageId);
+        uiController.showReplayButtonFor(messageId);
     }
 
     @Override
@@ -215,7 +218,7 @@ public class JavaFXGameEngine2 implements GameEngine, StoryNodeVisitor {
     }
 
     private UUID addGameMessage(TextMessage message) {
-        uiController.addMessage(message, player, e -> loadGame(message.getId()));
+        uiController.addMessageWithTypingIndicator(message, player);
         checkpointDeltaBuilder.addMessage(message);
         return message.getId();
     }
@@ -227,12 +230,12 @@ public class JavaFXGameEngine2 implements GameEngine, StoryNodeVisitor {
         checkpointDeltaBuilder = CheckpointDelta.newBuilder();
         checkpointDeltaBuilder.addMessage(message);
 
-        uiController.addMessage(message, player, e -> loadGame(message.getId()));
+        uiController.addMessageWithTypingIndicator(message, player, e -> loadGame(message.getId()));
         return message.getId();
     }
 
     private void addPlayerMessage(TextMessage message) {
-        uiController.addMessage(message, player, e -> loadGame(message.getId()));
+        uiController.addImmediateMessage(message, player);
         checkpointDeltaBuilder.addMessage(message);
     }
 }
