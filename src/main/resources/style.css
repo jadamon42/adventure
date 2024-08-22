@@ -80,11 +80,9 @@
     -fx-background-color: transparent;
     -fx-border-color: transparent;
     -fx-cursor: hand;
+    -fx-padding: 10px;
+    -fx-alignment: center;
 }
-
-/*.replay-button:hover {*/
-/*    -fx-cursor: hand;*/
-/*}*/
 
 .typing-indicator-container {
     -fx-background-color: #E5E5EA;

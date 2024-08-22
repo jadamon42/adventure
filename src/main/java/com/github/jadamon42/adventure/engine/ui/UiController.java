@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import com.jfoenix.controls.JFXButton;
 import javafx.util.Duration;
@@ -128,7 +129,7 @@ public class UiController {
         });
     }
 
-    public void addImmediateMessage(TextMessage message, Player player, EventHandler<ActionEvent> onReplay) {
+    public void addImmediateMessage(TextMessage message, Player player, EventHandler<MouseEvent> onReplay) {
         Platform.runLater(() -> {
             MessageContainer messageContainer = new MessageContainer(message, player, onReplay);
             messagesContainer.getChildren().add(messageContainer);
@@ -144,7 +145,7 @@ public class UiController {
         });
     }
 
-    public void addMessageWithTypingIndicator(TextMessage message, Player player, EventHandler<ActionEvent> onReplay) {
+    public void addMessageWithTypingIndicator(TextMessage message, Player player, EventHandler<MouseEvent> onReplay) {
         MessageContainer messageContainer = new MessageContainer(message, player, onReplay);
         messageQueue.add(messageContainer);
     }
@@ -273,7 +274,7 @@ public class UiController {
         private final boolean isPlayerMessage;
         private final boolean isInteractable;
 
-        public MessageContainer(TextMessage message, Player player, EventHandler<ActionEvent> onReplay) {
+        public MessageContainer(TextMessage message, Player player, EventHandler<MouseEvent> onReplay) {
             setId(message.getId().toString());
             addLabel(message, player);
             addReplayButton(message, onReplay);
@@ -314,19 +315,20 @@ public class UiController {
             getChildren().add(label);
         }
 
-        private void addReplayButton(TextMessage message, EventHandler<ActionEvent> onReplay) {
+        private void addReplayButton(TextMessage message, EventHandler<MouseEvent> onReplay) {
             if (message.isInteractable()) {
                 getChildren().add(new ReplayButton(onReplay));
             }
         }
     }
 
-    private static class ReplayButton extends Button {
-        public ReplayButton(EventHandler<ActionEvent> eventHandler) {
-            FontAwesomeIconView icon = new FontAwesomeIconView(FontAwesomeIcon.ROTATE_LEFT);
+    private static class ReplayButton extends HBox {
+        public ReplayButton(EventHandler<MouseEvent> eventHandler) {
             getStyleClass().add("replay-button");
-            setGraphic(icon);
-            setOnAction(eventHandler);
+            FontAwesomeIconView icon = new FontAwesomeIconView(FontAwesomeIcon.ROTATE_LEFT);
+            getChildren().add(icon);
+
+            setOnMouseClicked(eventHandler);
             setVisible(false);
         }
     }
