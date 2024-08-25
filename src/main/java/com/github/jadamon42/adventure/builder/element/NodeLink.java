@@ -5,7 +5,7 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Paint;
 
-class NodeLink extends HBox {
+public class NodeLink extends HBox {
     public NodeLink() {
         FontAwesomeIconView nodeLinkIcon = new FontAwesomeIconView(FontAwesomeIcon.CARET_SQUARE_ALT_RIGHT);
         nodeLinkIcon.setFill(Paint.valueOf("lightgrey"));

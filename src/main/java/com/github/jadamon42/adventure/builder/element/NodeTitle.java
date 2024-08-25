@@ -5,7 +5,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 
-class NodeTitle extends VBox {
+public class NodeTitle extends VBox {
     public NodeTitle(String defaultTitle, String nodeType) {
         getStyleClass().add("node-title-container");
         TextField nodeTitle = new TextField();

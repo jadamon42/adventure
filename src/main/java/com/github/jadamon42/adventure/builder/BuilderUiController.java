@@ -22,7 +22,7 @@ public class BuilderUiController {
     @FXML
     public Button addNodeButton;
 
-    private LinkedList<StoryNode> nodes;
+    private LinkedList<Node> nodes;
 
     @FXML
     public void initialize() {
@@ -38,6 +38,7 @@ public class BuilderUiController {
         AppState.getInstance().setMainBoardBounds(mainBoard.getLayoutBounds());
 
         nodes = new LinkedList<>();
+        nodes.add(new Start());
         nodes.add(new ExpositionalTextNode());
         nodes.add(new AcquireEffectTextNode());
         nodes.add(new AcquireItemTextNode());
@@ -73,7 +74,7 @@ public class BuilderUiController {
 
     @FXML
     private void addNode() {
-        StoryNode node = nodes.pop();
+        Node node = nodes.pop();
         mainBoard.getChildren().add(node);
         node.setLayoutX((mainBoard.getWidth() - node.getWidth()) / 2);
         node.setLayoutY((mainBoard.getHeight() - node.getHeight()) / 2);

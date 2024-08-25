@@ -6,7 +6,7 @@ import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 
-class Node extends VBox {
+public class Node extends VBox {
     private final DragContext dragContext;
 
     public Node() {
