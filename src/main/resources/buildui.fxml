@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.github.jadamon42.adventure.builder.element.ZoomableScrollPane?>
+
+<BorderPane
+        xmlns:fx="http://javafx.com/fxml"
+        fx:controller="com.github.jadamon42.adventure.builder.BuilderUiController"
+        prefHeight="700.0" prefWidth="1000.0"
+        stylesheets="@buildui.css"
+>
+    <top>
+        <MenuBar>
+            <Menu text="File">
+                <MenuItem text="Save" onAction="#handleSave"/>
+                <MenuItem text="Load" onAction="#handleLoad"/>
+                <MenuItem text="Export" onAction="#handleExport"/>
+            </Menu>
+        </MenuBar>
+    </top>
+    <left>
+        <VBox alignment="CENTER" spacing="10" style="-fx-padding: 10;">
+            <Button fx:id="addNodeButton" text="Add Node" />
+        </VBox>
+    </left>
+    <center>
+        <ZoomableScrollPane fx:id="zoomableScrollPane" fitToWidth="true" fitToHeight="true">
+            <Pane fx:id="mainBoard" style="-fx-background-color: lightgray;" minHeight="5000" minWidth="6000" />
+        </ZoomableScrollPane>
+    </center>
+</BorderPane>
