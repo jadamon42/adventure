@@ -26,11 +26,8 @@ public class ConditionalTextInput extends HBox {
         leftIcons.setAlignment(Pos.CENTER_LEFT);
         leftIcons.setSpacing(5);
         leftIcons.setPadding(new Insets(0, 0, 0, 5));
-        FontAwesomeIconView conditionConnectorIcon = new FontAwesomeIconView(FontAwesomeIcon.CIRCLE_THIN);
-        conditionConnectorIcon.setId(id + "-condition");
-        conditionConnectorIcon.setFill(Paint.valueOf("lightgrey"));
-        conditionConnectorIcon.setGlyphSize(12);
-        leftIcons.getChildren().add(conditionConnectorIcon);
+        AttachmentLink attachmentLink = new AttachmentLink(AttachmentLink.ObjectAttachmentType.CONDITION, AttachmentLink.GenderAttachmentType.FEMALE);
+        leftIcons.getChildren().add(attachmentLink);
         getChildren().add(leftIcons);
 
         textInput = new ExpandableTextInput(promptText);

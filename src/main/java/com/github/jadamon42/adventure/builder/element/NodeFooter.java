@@ -1,7 +1,5 @@
 package com.github.jadamon42.adventure.builder.element;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -25,31 +23,27 @@ public class NodeFooter extends HBox {
         getChildren().addAll(left, spacer, right);
     }
 
-    public void addAttachment(String text) {
+    public void addAttachment(String text, AttachmentLink.ObjectAttachmentType objectAttachmentType) {
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER_LEFT);
         hbox.setSpacing(5);
-        FontAwesomeIconView itemConnectorIcon = new FontAwesomeIconView(FontAwesomeIcon.CIRCLE_THIN);
-        itemConnectorIcon.setFill(Paint.valueOf("lightgrey"));
-        itemConnectorIcon.setGlyphSize(12);
+        AttachmentLink attachmentLink = new AttachmentLink(objectAttachmentType, AttachmentLink.GenderAttachmentType.FEMALE);
         Label label = new Label();
         label.setText(text);
         label.setTextFill(Paint.valueOf("lightgrey"));
-        hbox.getChildren().addAll(itemConnectorIcon, label);
+        hbox.getChildren().addAll(attachmentLink, label);
         left.getChildren().add(hbox);
     }
 
-    public void addAttacher() {
+    public void addAttacher(AttachmentLink.ObjectAttachmentType objectAttachmentType) {
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER_RIGHT);
         hbox.setSpacing(5);
-        FontAwesomeIconView itemConnectorIcon = new FontAwesomeIconView(FontAwesomeIcon.CIRCLE_THIN);
-        itemConnectorIcon.setFill(Paint.valueOf("lightgrey"));
-        itemConnectorIcon.setGlyphSize(12);
+        AttachmentLink attachmentLink = new AttachmentLink(objectAttachmentType, AttachmentLink.GenderAttachmentType.MALE);
         Label label = new Label();
         label.setText("Attach");
         label.setTextFill(Paint.valueOf("lightgrey"));
-        hbox.getChildren().addAll(label, itemConnectorIcon);
+        hbox.getChildren().addAll(label, attachmentLink);
         right.getChildren().add(hbox);
     }
 }

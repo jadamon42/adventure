@@ -1,5 +1,6 @@
 package com.github.jadamon42.adventure.builder.node;
 
+import com.github.jadamon42.adventure.builder.element.AttachmentLink;
 import com.github.jadamon42.adventure.builder.element.NodeFooter;
 import com.github.jadamon42.adventure.builder.element.NodeHeader;
 import com.github.jadamon42.adventure.builder.element.SubTypeSelector;
@@ -14,7 +15,7 @@ public class InputHandler extends StoryNode {
         );
         setSubTypeSelector(selector);
         NodeFooter footer = new NodeFooter();
-        footer.addAttacher();
+        footer.addAttacher(AttachmentLink.ObjectAttachmentType.HANDLER);
         setFooter(footer);
     }
 }
