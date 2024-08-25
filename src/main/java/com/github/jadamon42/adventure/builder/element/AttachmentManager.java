@@ -7,6 +7,7 @@ import java.util.List;
 public class AttachmentManager {
     private static AttachmentManager instance;
     private AttachmentLink selectedLink;
+    private AttachmentLine currentLine;
     private final List<AttachmentLine> attachmentLines = new ArrayList<>();
     private Pane commonParent;
 
@@ -30,13 +31,17 @@ public class AttachmentManager {
     public void handleAttachmentClick(AttachmentLink link) {
         if (selectedLink == null) {
             selectedLink = link;
-            selectedLink.startFollowingCursor();
+            currentLine = new AttachmentLine(link, null);
+            attachmentLines.add(currentLine);
+            commonParent.getChildren().add(currentLine);
+            selectedLink.startFollowingCursor(currentLine);
         } else {
             if (canAttach(selectedLink, link)) {
                 attachLinks(selectedLink, link);
             }
             selectedLink.stopFollowingCursor();
             selectedLink = null;
+            currentLine = null;
         }
     }
 
@@ -47,16 +52,23 @@ public class AttachmentManager {
 
     private void attachLinks(AttachmentLink link1, AttachmentLink link2) {
         if (link1.getGenderAttachmentType() == AttachmentLink.GenderAttachmentType.MALE) {
-            createAttachmentLine(link1, link2);
+            currentLine.setFemaleLink(link2);
         } else {
-            createAttachmentLine(link2, link1);
+            currentLine.setMaleLink(link2);
         }
+        currentLine.update();
+        link1.setIsConnected(true);
+        link2.setIsConnected(true);
     }
 
-    private void createAttachmentLine(AttachmentLink maleLink, AttachmentLink femaleLink) {
-        AttachmentLine line = new AttachmentLine(maleLink, femaleLink);
-        attachmentLines.add(line);
-        commonParent.getChildren().add(line);
+    public void cancelCurrentLine() {
+        if (selectedLink != null) {
+            selectedLink.stopFollowingCursor();
+            commonParent.getChildren().remove(currentLine);
+            attachmentLines.remove(currentLine);
+            selectedLink = null;
+            currentLine = null;
+        }
     }
 
     public void updateLines() {
