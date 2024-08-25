@@ -1,5 +1,6 @@
 package com.github.jadamon42.adventure.builder;
 
+import com.github.jadamon42.adventure.builder.element.AttachmentManager;
 import com.github.jadamon42.adventure.builder.element.ZoomableScrollPane;
 import com.github.jadamon42.adventure.builder.element.AppState;
 import com.github.jadamon42.adventure.builder.node.*;
@@ -38,23 +39,25 @@ public class BuilderUiController {
         AppState.getInstance().setMainBoardBounds(mainBoard.getLayoutBounds());
 
         nodes = new LinkedList<>();
-        nodes.add(new Start());
-        nodes.add(new ExpositionalTextNode());
-        nodes.add(new AcquireEffectTextNode());
+//        nodes.add(new Start());
+//        nodes.add(new ExpositionalTextNode());
+//        nodes.add(new AcquireEffectTextNode());
         nodes.add(new AcquireItemTextNode());
-        nodes.add(new BranchNode());
-        nodes.add(new ChoiceTextInputNode());
-        nodes.add(new FreeTextInputNode());
-        nodes.add(new SwitchNode());
-        nodes.add(new Effect());
+//        nodes.add(new BranchNode());
+//        nodes.add(new ChoiceTextInputNode());
+//        nodes.add(new FreeTextInputNode());
+//        nodes.add(new SwitchNode());
+//        nodes.add(new Effect());
         nodes.add(new Item());
-        nodes.add(new And());
-        nodes.add(new Or());
-        nodes.add(new EffectCondition());
-        nodes.add(new ItemCondition());
-        nodes.add(new NameCondition());
-        nodes.add(new InputHandler());
+//        nodes.add(new And());
+//        nodes.add(new Or());
+//        nodes.add(new EffectCondition());
+//        nodes.add(new ItemCondition());
+//        nodes.add(new NameCondition());
+//        nodes.add(new InputHandler());
         addNodeButton.setOnMouseClicked(mouseEvent -> addNode());
+
+        AttachmentManager.getInstance().setCommonParent(mainBoard);
     }
 
     @FXML

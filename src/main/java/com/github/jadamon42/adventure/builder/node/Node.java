@@ -1,6 +1,7 @@
 package com.github.jadamon42.adventure.builder.node;
 
 import com.github.jadamon42.adventure.builder.element.AppState;
+import com.github.jadamon42.adventure.builder.element.AttachmentManager;
 import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
@@ -36,6 +37,7 @@ public class Node extends VBox {
 
             setLayoutX(newX);
             setLayoutY(newY);
+            AttachmentManager.getInstance().updateLines();
         });
 
         setOnMouseReleased(mouseEvent -> getScene().setCursor(Cursor.DEFAULT));
