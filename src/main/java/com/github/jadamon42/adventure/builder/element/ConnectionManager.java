@@ -7,8 +7,8 @@ import java.util.List;
 public class ConnectionManager {
     private static ConnectionManager instance;
     private ConnectionPoint selectedConnectionPoint;
-    private Connection currentConnection;
-    private final List<Connection> connections = new ArrayList<>();
+    private ConnectionLine currentConnectionLine;
+    private final List<ConnectionLine> connectionLines = new ArrayList<>();
     private Pane commonParent;
 
     private ConnectionManager() {}
@@ -31,15 +31,23 @@ public class ConnectionManager {
     public void handleAttachmentClick(ConnectionPoint point) {
         if (selectedConnectionPoint == null) {
             selectedConnectionPoint = point;
-            currentConnection = new Connection(point, null);
-            connections.add(currentConnection);
-            commonParent.getChildren().add(currentConnection);
-            selectedConnectionPoint.startFollowingCursor(currentConnection);
+            currentConnectionLine = new ConnectionLine(point, null);
+            connectionLines.add(currentConnectionLine);
+            commonParent.getChildren().add(currentConnectionLine);
+            currentConnectionLine.startFollowingCursor();
         } else {
             if (canAttach(selectedConnectionPoint, point)) {
-                selectedConnectionPoint.stopFollowingCursor();
+                currentConnectionLine.stopFollowingCursor();
                 attachLinks(selectedConnectionPoint, point);
             }
+        }
+    }
+
+    public boolean canSelect(ConnectionPoint point) {
+        if (selectedConnectionPoint == null) {
+            return true;
+        } else {
+            return canAttach(selectedConnectionPoint, point);
         }
     }
 
@@ -50,27 +58,27 @@ public class ConnectionManager {
 
     private void attachLinks(ConnectionPoint link1, ConnectionPoint link2) {
         if (link1.getGender() == ConnectionGender.MALE) {
-            currentConnection.setFemaleLink(link2);
+            currentConnectionLine.setFemalePoint(link2);
         } else {
-            currentConnection.setMaleLink(link2);
+            currentConnectionLine.setMalePoint(link2);
         }
-        currentConnection.update();
+        currentConnectionLine.update();
         link1.setIsConnected(true);
         link2.setIsConnected(true);
     }
 
     public void cancelCurrentLine() {
-        if (selectedConnectionPoint != null) {
-            selectedConnectionPoint.stopFollowingCursor();
-            commonParent.getChildren().remove(currentConnection);
-            connections.remove(currentConnection);
+        if (currentConnectionLine != null) {
+            currentConnectionLine.stopFollowingCursor();
+            commonParent.getChildren().remove(currentConnectionLine);
+            connectionLines.remove(currentConnectionLine);
             selectedConnectionPoint = null;
-            currentConnection = null;
+            currentConnectionLine = null;
         }
     }
 
     public void updateLines() {
-        for (Connection line : connections) {
+        for (ConnectionLine line : connectionLines) {
             line.update();
         }
     }
