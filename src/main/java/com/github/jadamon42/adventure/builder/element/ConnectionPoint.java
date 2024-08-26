@@ -1,6 +1,8 @@
 package com.github.jadamon42.adventure.builder.element;
 
+import com.github.jadamon42.adventure.builder.node.Node;
 import javafx.scene.Cursor;
+import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 
@@ -25,10 +27,35 @@ public abstract class ConnectionPoint extends HBox {
     public abstract ConnectionType getType();
 
     public void setIsConnected(boolean isConnected) {
-        if (connectionGender == ConnectionGender.FEMALE) {
+        this.isConnected = isConnected;
+        if (!canConnect()) {
             setCursor(Cursor.DEFAULT);
         }
-        this.isConnected = isConnected;
+    }
+
+    public boolean canConnect() {
+        ConnectionType.ConnectionRelationship relationship = getType().getConfig().desiredRelationship();
+        boolean canConnect;
+        switch (relationship) {
+            case ONE_TO_ONE -> canConnect = !isConnected;
+            case ONE_TO_MANY -> canConnect = (connectionGender == ConnectionGender.FEMALE && !isConnected)
+                                          || (connectionGender == ConnectionGender.MALE);
+            default -> canConnect = false;
+        }
+        return canConnect;
+    }
+
+    public boolean canConnectTo(ConnectionPoint other) {
+        ConnectionType.ConnectionRelationship relationship = getType().getConfig().desiredRelationship();
+        boolean canConnect = getType() == other.getType()
+                          && getGender() != other.getGender();
+        switch (relationship) {
+            case ONE_TO_ONE -> canConnect &= !isConnected;
+            case ONE_TO_MANY -> canConnect &= (connectionGender == ConnectionGender.FEMALE && !isConnected)
+                                           || (connectionGender == ConnectionGender.MALE);
+            default -> canConnect = false;
+        }
+        return canConnect;
     }
 
     private void handleClick(MouseEvent event) {
@@ -43,5 +70,13 @@ public abstract class ConnectionPoint extends HBox {
         if (ConnectionManager.getInstance().canSelect(this)) {
             setCursor(Cursor.HAND);
         }
+    }
+
+    public Node getParentNode() {
+        Parent parent = getParent();
+        while (parent != null && !(parent instanceof Node)) {
+            parent = parent.getParent();
+        }
+        return (Node) parent;
     }
 }

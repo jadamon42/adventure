@@ -13,14 +13,12 @@ import javafx.scene.paint.Paint;
 import java.util.UUID;
 
 public class ConditionalTextInput extends HBox {
-    private final String id;
     private final HBox leftIcons;
     private final ExpandableTextInput textInput;
     private EventHandler<Event> onDelete;
 
     public ConditionalTextInput(String promptText, boolean linkable) {
-        id = UUID.randomUUID().toString();
-        setId(id);
+        setId(UUID.randomUUID().toString());
         leftIcons = new HBox();
         leftIcons.setPrefWidth(32);
         leftIcons.setAlignment(Pos.CENTER_LEFT);
@@ -47,11 +45,6 @@ public class ConditionalTextInput extends HBox {
         }
     }
 
-    public boolean isDeletable() {
-        return leftIcons.getChildren().stream()
-                        .anyMatch(child -> child.getId().equals(id + "-delete"));
-    }
-
     public void setDeletable(boolean deletable) {
         if (deletable) {
             addDeletableIcon();
@@ -63,15 +56,15 @@ public class ConditionalTextInput extends HBox {
     public void setOnDelete(EventHandler<Event> onDelete) {
         this.onDelete = onDelete;
         leftIcons.getChildren().stream()
-                .filter(child -> child.getId().equals(id + "-delete"))
+                .filter(child -> child.getId().equals(getId() + "-delete"))
                 .findFirst()
                 .ifPresent(delete -> delete.setOnMouseClicked(this.onDelete));
     }
 
     private void addDeletableIcon() {
-        if (leftIcons.getChildren().stream().noneMatch(child -> child.getId().equals(id + "-delete"))) {
+        if (leftIcons.getChildren().stream().noneMatch(child -> child.getId().equals(getId() + "-delete"))) {
             FontAwesomeIconView delete = new FontAwesomeIconView(FontAwesomeIcon.CLOSE);
-            delete.setId(id + "-delete");
+            delete.setId(getId() + "-delete");
             delete.setFill(Paint.valueOf("lightgrey"));
             delete.setCursor(Cursor.HAND);
             leftIcons.getChildren().add(delete);
@@ -79,7 +72,7 @@ public class ConditionalTextInput extends HBox {
     }
 
     private void removeDeletableIcon() {
-        leftIcons.getChildren().removeIf(child -> child.getId().equals(id + "-delete"));
+        leftIcons.getChildren().removeIf(child -> child.getId().equals(getId() + "-delete"));
     }
 
     public void setPromptText(String promptText) {

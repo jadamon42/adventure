@@ -1,9 +1,8 @@
 package com.github.jadamon42.adventure.builder.element;
 
 import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 public class ConnectionLine extends Line {
@@ -13,8 +12,8 @@ public class ConnectionLine extends Line {
     public ConnectionLine(ConnectionPoint malePoint, ConnectionPoint femalePoint) {
         this.malePoint = malePoint;
         this.femalePoint = femalePoint;
-        setStrokeWidth(3.0);
-        setStroke(Color.BLUE);
+        setStrokeWidth(this.malePoint.getType().getConfig().width());
+        setStroke(this.malePoint.getType().getConfig().color());
         setMouseTransparent(true);
         update();
     }
@@ -28,16 +27,13 @@ public class ConnectionLine extends Line {
     }
 
     public void update() {
-        Pane mainBoard = ConnectionManager.getInstance().getCommonParent();
         if (malePoint != null) {
-            Bounds maleBoundsInScene = malePoint.localToScene(malePoint.getBoundsInLocal());
-            Bounds maleBoundsInMainBoard = mainBoard.sceneToLocal(maleBoundsInScene);
+            Bounds maleBoundsInMainBoard = ConnectionManager.getInstance().getMainBoardBoundsOfNode(malePoint);
             setStartX(maleBoundsInMainBoard.getMinX() + maleBoundsInMainBoard.getWidth() / 2);
             setStartY(maleBoundsInMainBoard.getMinY() + maleBoundsInMainBoard.getHeight() / 2);
         }
         if (femalePoint != null) {
-            Bounds femaleBoundsInScene = femalePoint.localToScene(femalePoint.getBoundsInLocal());
-            Bounds femaleBoundsInMainBoard = mainBoard.sceneToLocal(femaleBoundsInScene);
+            Bounds femaleBoundsInMainBoard = ConnectionManager.getInstance().getMainBoardBoundsOfNode(femalePoint);
             setEndX(femaleBoundsInMainBoard.getMinX() + femaleBoundsInMainBoard.getWidth() / 2);
             setEndY(femaleBoundsInMainBoard.getMinY() + femaleBoundsInMainBoard.getHeight() / 2);
         }
@@ -50,19 +46,16 @@ public class ConnectionLine extends Line {
 
     public void startFollowingCursor() {
         ConnectionPoint singlePoint = malePoint != null ? malePoint : femalePoint;
-        Pane mainBoard = ConnectionManager.getInstance().getCommonParent();
-        Bounds pointBoundsInScene = singlePoint.localToScene(singlePoint.getBoundsInLocal());
-        Bounds pointBoundsInMainBoard = mainBoard.sceneToLocal(pointBoundsInScene);
+        Bounds pointBoundsInMainBoard = ConnectionManager.getInstance().getMainBoardBoundsOfNode(singlePoint);
         double startX = pointBoundsInMainBoard.getMinX() + pointBoundsInMainBoard.getWidth() / 2;
         double startY = pointBoundsInMainBoard.getMinY() + pointBoundsInMainBoard.getHeight() / 2;
         updateEnd(startX, startY);
 
         getScene().setOnMouseMoved(event -> {
-            double xInMainBoard = mainBoard.sceneToLocal(event.getSceneX(), event.getSceneY()).getX();
-            double yInMainBoard = mainBoard.sceneToLocal(event.getSceneX(), event.getSceneY()).getY();
-            singlePoint.setLayoutX(xInMainBoard);
-            singlePoint.setLayoutY(yInMainBoard);
-            updateEnd(xInMainBoard, yInMainBoard);
+            Point2D pointOnMainBoard = ConnectionManager.getInstance().getMainBoardPointFromScene(event.getSceneX(), event.getSceneY());
+            singlePoint.setLayoutX(pointOnMainBoard.getX());
+            singlePoint.setLayoutY(pointOnMainBoard.getY());
+            updateEnd(pointOnMainBoard.getX(), pointOnMainBoard.getY());
         });
 
         getScene().setOnKeyPressed(event -> {

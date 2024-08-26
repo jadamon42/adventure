@@ -14,6 +14,7 @@ public class AttachmentLink extends ConnectionPoint {
         FontAwesomeIconView icon = new FontAwesomeIconView(FontAwesomeIcon.CIRCLE_THIN);
         icon.setFill(Paint.valueOf("lightgrey"));
         icon.setGlyphSize(12);
+        getChildren().add(icon);
     }
 
     public ConnectionType getType() {

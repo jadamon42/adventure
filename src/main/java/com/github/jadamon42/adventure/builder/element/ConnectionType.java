@@ -1,5 +1,35 @@
 package com.github.jadamon42.adventure.builder.element;
 
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+
 public enum ConnectionType {
-    NODE, ITEM, EFFECT, CONDITION, HANDLER
+    NODE(new ConnectionConfig(Color.valueOf("blue"), 6.0, ConnectionRelationship.ONE_TO_ONE)),
+    ITEM(new ConnectionConfig(Color.web("#2980b9"), 3.0, ConnectionRelationship.ONE_TO_MANY)),
+    EFFECT(new ConnectionConfig(Color.web("#2980b9"), 3.0, ConnectionRelationship.ONE_TO_MANY)),
+    CONDITION(new ConnectionConfig(Color.web("#2980b9"), 3.0, ConnectionRelationship.ONE_TO_MANY)),
+    HANDLER(new ConnectionConfig(Color.web("#2980b9"), 3.0, ConnectionRelationship.ONE_TO_MANY));
+
+    private final ConnectionConfig config;
+
+    ConnectionType(ConnectionConfig config) {
+        this.config = config;
+    }
+
+    public ConnectionConfig getConfig() {
+        return config;
+    }
+
+    public record ConnectionConfig(Paint color, double width, ConnectionRelationship desiredRelationship) {
+    }
+
+    public enum ConnectionRelationship {
+        /*
+        Determine the relationship of male-to-female connections.
+        ONE_TO_ONE: 1 male to 1 female
+        ONE_TO_MANY: 1 male to many females
+         */
+        ONE_TO_ONE,
+        ONE_TO_MANY
+    }
 }

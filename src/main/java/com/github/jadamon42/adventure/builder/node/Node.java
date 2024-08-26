@@ -7,10 +7,13 @@ import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 
+import java.util.UUID;
+
 public class Node extends VBox {
     private final DragContext dragContext;
 
     public Node() {
+        setId(UUID.randomUUID().toString());
         dragContext = new DragContext();
         makeDraggable();
     }

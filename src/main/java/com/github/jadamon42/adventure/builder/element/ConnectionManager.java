@@ -1,5 +1,8 @@
 package com.github.jadamon42.adventure.builder.element;
 
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +27,13 @@ public class ConnectionManager {
         this.commonParent = commonParent;
     }
 
-    public Pane getCommonParent() {
-        return commonParent;
+    public Bounds getMainBoardBoundsOfNode(Node node) {
+        Bounds boundsInScene = node.localToScene(node.getBoundsInLocal());
+        return commonParent.sceneToLocal(boundsInScene);
+    }
+
+    public Point2D getMainBoardPointFromScene(double sceneX, double sceneY) {
+        return commonParent.sceneToLocal(sceneX, sceneY);
     }
 
     public void handleAttachmentClick(ConnectionPoint point) {
@@ -36,24 +44,21 @@ public class ConnectionManager {
             commonParent.getChildren().add(currentConnectionLine);
             currentConnectionLine.startFollowingCursor();
         } else {
-            if (canAttach(selectedConnectionPoint, point)) {
+            if (selectedConnectionPoint.canConnectTo(point)) {
                 currentConnectionLine.stopFollowingCursor();
                 attachLinks(selectedConnectionPoint, point);
+                currentConnectionLine = null;
+                selectedConnectionPoint = null;
             }
         }
     }
 
     public boolean canSelect(ConnectionPoint point) {
         if (selectedConnectionPoint == null) {
-            return true;
+            return point.canConnect();
         } else {
-            return canAttach(selectedConnectionPoint, point);
+            return selectedConnectionPoint.canConnectTo(point);
         }
-    }
-
-    private boolean canAttach(ConnectionPoint point1, ConnectionPoint point2) {
-        return point1.getType() == point2.getType() &&
-               point1.getGender() != point2.getGender();
     }
 
     private void attachLinks(ConnectionPoint link1, ConnectionPoint link2) {
