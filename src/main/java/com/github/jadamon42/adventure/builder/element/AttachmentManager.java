@@ -39,9 +39,6 @@ public class AttachmentManager {
             if (canAttach(selectedLink, link)) {
                 attachLinks(selectedLink, link);
             }
-            selectedLink.stopFollowingCursor();
-            selectedLink = null;
-            currentLine = null;
         }
     }
 
