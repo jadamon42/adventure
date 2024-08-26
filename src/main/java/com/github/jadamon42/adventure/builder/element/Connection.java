@@ -5,11 +5,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
-public class AttachmentLine extends Line {
-    private AttachmentLink maleLink;
-    private AttachmentLink femaleLink;
+public class Connection extends Line {
+    private ConnectionPoint maleLink;
+    private ConnectionPoint femaleLink;
 
-    public AttachmentLine(AttachmentLink maleLink, AttachmentLink femaleLink) {
+    public Connection(ConnectionPoint maleLink, ConnectionPoint femaleLink) {
         this.maleLink = maleLink;
         this.femaleLink = femaleLink;
         setStrokeWidth(3.0);
@@ -18,16 +18,16 @@ public class AttachmentLine extends Line {
         update();
     }
 
-    public void setMaleLink(AttachmentLink maleLink) {
+    public void setMaleLink(ConnectionPoint maleLink) {
         this.maleLink = maleLink;
     }
 
-    public void setFemaleLink(AttachmentLink femaleLink) {
+    public void setFemaleLink(ConnectionPoint femaleLink) {
         this.femaleLink = femaleLink;
     }
 
     public void update() {
-        Pane mainBoard = AttachmentManager.getInstance().getCommonParent();
+        Pane mainBoard = ConnectionManager.getInstance().getCommonParent();
         if (maleLink != null) {
             Bounds maleBoundsInScene = maleLink.localToScene(maleLink.getBoundsInLocal());
             Bounds maleBoundsInMainBoard = mainBoard.sceneToLocal(maleBoundsInScene);

@@ -1,9 +1,6 @@
 package com.github.jadamon42.adventure.builder.node;
 
-import com.github.jadamon42.adventure.builder.element.AttachmentLink;
-import com.github.jadamon42.adventure.builder.element.NodeFooter;
-import com.github.jadamon42.adventure.builder.element.NodeHeader;
-import com.github.jadamon42.adventure.builder.element.SubTypeSelector;
+import com.github.jadamon42.adventure.builder.element.*;
 
 public class NameCondition extends StoryNode {
     public NameCondition() {
@@ -27,7 +24,7 @@ public class NameCondition extends StoryNode {
         setSubTypeSelector(selector);
 
         NodeFooter footer = new NodeFooter();
-        footer.addAttacher(AttachmentLink.ObjectAttachmentType.CONDITION);
+        footer.addAttacher(ConnectionType.CONDITION);
         setFooter(footer);
     }
 }

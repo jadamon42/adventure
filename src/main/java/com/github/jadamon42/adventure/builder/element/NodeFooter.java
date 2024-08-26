@@ -23,11 +23,11 @@ public class NodeFooter extends HBox {
         getChildren().addAll(left, spacer, right);
     }
 
-    public void addAttachment(String text, AttachmentLink.ObjectAttachmentType objectAttachmentType) {
+    public void addAttachment(String text, ConnectionType connectionType) {
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER_LEFT);
         hbox.setSpacing(5);
-        AttachmentLink attachmentLink = new AttachmentLink(objectAttachmentType, AttachmentLink.GenderAttachmentType.FEMALE);
+        AttachmentLink attachmentLink = new AttachmentLink(connectionType, ConnectionGender.FEMALE);
         Label label = new Label();
         label.setText(text);
         label.setTextFill(Paint.valueOf("lightgrey"));
@@ -35,11 +35,11 @@ public class NodeFooter extends HBox {
         left.getChildren().add(hbox);
     }
 
-    public void addAttacher(AttachmentLink.ObjectAttachmentType objectAttachmentType) {
+    public void addAttacher(ConnectionType connectionType) {
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER_RIGHT);
         hbox.setSpacing(5);
-        AttachmentLink attachmentLink = new AttachmentLink(objectAttachmentType, AttachmentLink.GenderAttachmentType.MALE);
+        AttachmentLink attachmentLink = new AttachmentLink(connectionType, ConnectionGender.MALE);
         Label label = new Label();
         label.setText("Attach");
         label.setTextFill(Paint.valueOf("lightgrey"));

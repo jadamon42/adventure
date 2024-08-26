@@ -1,5 +1,6 @@
 package com.github.jadamon42.adventure.builder.node;
 
+import com.github.jadamon42.adventure.builder.element.ConnectionGender;
 import com.github.jadamon42.adventure.builder.element.DraggableIcon;
 import com.github.jadamon42.adventure.builder.element.NodeLink;
 import javafx.geometry.Pos;
@@ -30,7 +31,7 @@ public class Start extends Node {
         vbox.getChildren().add(nodeTitle);
         stackPane.getChildren().add(vbox);
 
-        NodeLink link = new NodeLink();
+        NodeLink link = new NodeLink(ConnectionGender.MALE);
         StackPane.setAlignment(link, Pos.CENTER_RIGHT);
         stackPane.getChildren().add(link);
 

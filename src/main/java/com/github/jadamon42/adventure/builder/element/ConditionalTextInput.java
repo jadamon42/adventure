@@ -26,7 +26,7 @@ public class ConditionalTextInput extends HBox {
         leftIcons.setAlignment(Pos.CENTER_LEFT);
         leftIcons.setSpacing(5);
         leftIcons.setPadding(new Insets(0, 0, 0, 5));
-        AttachmentLink attachmentLink = new AttachmentLink(AttachmentLink.ObjectAttachmentType.CONDITION, AttachmentLink.GenderAttachmentType.FEMALE);
+        AttachmentLink attachmentLink = new AttachmentLink(ConnectionType.CONDITION, ConnectionGender.FEMALE);
         leftIcons.getChildren().add(attachmentLink);
         getChildren().add(leftIcons);
 

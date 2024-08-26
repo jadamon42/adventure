@@ -18,13 +18,13 @@ public class NodeHeader extends HBox {
     }
 
     public void addPreviousNodeLink() {
-        NodeLink link = new NodeLink();
+        NodeLink link = new NodeLink(ConnectionGender.FEMALE);
         StackPane.setAlignment(link, Pos.CENTER_LEFT);
         stackPane.getChildren().add(link);
     }
 
     public void addNextNodeLink() {
-        NodeLink link = new NodeLink();
+        NodeLink link = new NodeLink(ConnectionGender.MALE);
         StackPane.setAlignment(link, Pos.CENTER_RIGHT);
         stackPane.getChildren().add(link);
     }
