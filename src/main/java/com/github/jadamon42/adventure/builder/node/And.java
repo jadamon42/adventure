@@ -4,7 +4,7 @@ import com.github.jadamon42.adventure.builder.element.NodeFooter;
 import com.github.jadamon42.adventure.builder.element.NodeHeader;
 import com.github.jadamon42.adventure.builder.element.ConnectionType;
 
-public class And extends StoryNode {
+public class And extends BasicNode {
     public And() {
         NodeHeader header = new NodeHeader("And", "And Condition");
         setHeader(header);

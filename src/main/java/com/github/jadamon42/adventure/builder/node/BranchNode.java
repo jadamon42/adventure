@@ -6,7 +6,7 @@ import com.github.jadamon42.adventure.builder.element.DefaultedConditionalTextIn
 import com.github.jadamon42.adventure.builder.element.NodeHeader;
 import javafx.scene.control.Label;
 
-public class BranchNode extends StoryNode {
+public class BranchNode extends BasicNode {
     public BranchNode() {
         NodeHeader header = new NodeHeader("Branch", "Branch Node");
         header.addPreviousNodeLink();

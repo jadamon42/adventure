@@ -4,7 +4,7 @@ import com.github.jadamon42.adventure.builder.element.NodeFooter;
 import com.github.jadamon42.adventure.builder.element.NodeHeader;
 import com.github.jadamon42.adventure.builder.element.ConnectionType;
 
-public class AcquireItemTextNode extends StoryNode {
+public class AcquireItemTextNode extends BasicNode {
     public AcquireItemTextNode() {
         NodeHeader header = new NodeHeader("Acquire Item", "Acquire Item Text Node");
         header.addPreviousNodeLink();

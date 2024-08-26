@@ -4,7 +4,7 @@ import com.github.jadamon42.adventure.builder.element.NodeFooter;
 import com.github.jadamon42.adventure.builder.element.NodeHeader;
 import com.github.jadamon42.adventure.builder.element.ConnectionType;
 
-public class EffectCondition extends StoryNode {
+public class EffectCondition extends BasicNode {
     public EffectCondition() {
         NodeHeader header = new NodeHeader("Has Effect", "Effect Condition");
         setHeader(header);

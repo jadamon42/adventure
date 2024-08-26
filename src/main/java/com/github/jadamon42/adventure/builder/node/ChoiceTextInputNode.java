@@ -6,7 +6,7 @@ import com.github.jadamon42.adventure.builder.element.DefaultedConditionalTextIn
 import com.github.jadamon42.adventure.builder.element.NodeHeader;
 import javafx.scene.control.Label;
 
-public class ChoiceTextInputNode extends StoryNode {
+public class ChoiceTextInputNode extends BasicNode {
     public ChoiceTextInputNode() {
         NodeHeader header = new NodeHeader("Choice Text Input", "Choice Text Input Node");
         header.addPreviousNodeLink();

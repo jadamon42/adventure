@@ -4,7 +4,7 @@ import com.github.jadamon42.adventure.builder.element.NodeFooter;
 import com.github.jadamon42.adventure.builder.element.NodeHeader;
 import com.github.jadamon42.adventure.builder.element.ConnectionType;
 
-public class Or extends StoryNode {
+public class Or extends BasicNode {
     public Or() {
         NodeHeader header = new NodeHeader("Or", "Or Condition");
         setHeader(header);

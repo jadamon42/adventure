@@ -4,7 +4,7 @@ import com.github.jadamon42.adventure.builder.element.NodeFooter;
 import com.github.jadamon42.adventure.builder.element.NodeHeader;
 import com.github.jadamon42.adventure.builder.element.ConnectionType;
 
-public class Item extends StoryNode {
+public class Item extends BasicNode {
     public Item() {
         NodeHeader header = new NodeHeader("New Item", "Item");
         setHeader(header);

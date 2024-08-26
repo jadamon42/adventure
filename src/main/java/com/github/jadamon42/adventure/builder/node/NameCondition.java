@@ -2,7 +2,7 @@ package com.github.jadamon42.adventure.builder.node;
 
 import com.github.jadamon42.adventure.builder.element.*;
 
-public class NameCondition extends StoryNode {
+public class NameCondition extends BasicNode {
     public NameCondition() {
         NodeHeader header = new NodeHeader("Has Name", "Name Condition");
         setHeader(header);

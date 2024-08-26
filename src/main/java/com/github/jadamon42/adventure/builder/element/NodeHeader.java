@@ -1,5 +1,6 @@
 package com.github.jadamon42.adventure.builder.element;
 
+import com.github.jadamon42.adventure.builder.node.Node;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -7,6 +8,8 @@ import javafx.scene.layout.StackPane;
 
 public class NodeHeader extends HBox {
     private final StackPane stackPane;
+    private final NodeTitle nodeTitle;
+    private NodeLink nextNodeLink;
 
     public NodeHeader(String defaultName, String nodeType) {
         getStyleClass().add("node-header");
@@ -14,7 +17,9 @@ public class NodeHeader extends HBox {
         HBox.setHgrow(stackPane, Priority.ALWAYS);
         getChildren().add(stackPane);
 
-        stackPane.getChildren().add(new NodeTitle(defaultName, nodeType));
+        nodeTitle = new NodeTitle(defaultName, nodeType);
+        stackPane.getChildren().add(nodeTitle);
+        nextNodeLink = null;
     }
 
     public void addPreviousNodeLink() {
@@ -24,8 +29,20 @@ public class NodeHeader extends HBox {
     }
 
     public void addNextNodeLink() {
-        NodeLink link = new NodeLink(ConnectionGender.MALE);
-        StackPane.setAlignment(link, Pos.CENTER_RIGHT);
-        stackPane.getChildren().add(link);
+        nextNodeLink = new NodeLink(ConnectionGender.MALE);
+        StackPane.setAlignment(nextNodeLink, Pos.CENTER_RIGHT);
+        stackPane.getChildren().add(nextNodeLink);
+    }
+
+    public String getTitle() {
+        return nodeTitle.getTitle();
+    }
+
+    public Node getNextNode() {
+        Node next = null;
+        if (nextNodeLink != null) {
+            next = nextNodeLink.getParentNode();
+        }
+        return next;
     }
 }

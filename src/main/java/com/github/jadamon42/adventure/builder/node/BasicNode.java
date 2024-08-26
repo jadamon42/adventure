@@ -5,12 +5,21 @@ import com.github.jadamon42.adventure.builder.element.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StoryNode extends Node {
+public abstract class BasicNode extends Node {
     private ExpandableTextInput textInput;
+    private NodeFooter footer;
 
-    public StoryNode() {
+    public BasicNode() {
         getStyleClass().add("node");
         getChildren().add(new DraggableIcon());
+    }
+
+    public String getText() {
+        String text = null;
+        if (textInput != null) {
+            text = textInput.getText();
+        }
+        return text;
     }
 
     public void setHeader(NodeHeader header) {
@@ -42,9 +51,14 @@ public class StoryNode extends Node {
     }
 
     public void setFooter(NodeFooter footer) {
+        this.footer = footer;
         getChildren().removeIf(element -> element instanceof NodeFooter);
         getChildren().add(footer);
         orderChildren();
+    }
+
+    public NodeFooter getFooter() {
+        return footer;
     }
 
     private void orderChildren() {

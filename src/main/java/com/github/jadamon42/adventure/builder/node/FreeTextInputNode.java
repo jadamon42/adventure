@@ -4,7 +4,7 @@ import com.github.jadamon42.adventure.builder.element.NodeFooter;
 import com.github.jadamon42.adventure.builder.element.NodeHeader;
 import com.github.jadamon42.adventure.builder.element.ConnectionType;
 
-public class FreeTextInputNode extends StoryNode {
+public class FreeTextInputNode extends BasicNode {
     public FreeTextInputNode() {
         NodeHeader header = new NodeHeader("Free Text Input", "Free Text Input Node");
         header.addNextNodeLink();

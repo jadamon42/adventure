@@ -2,7 +2,7 @@ package com.github.jadamon42.adventure.builder.node;
 
 import com.github.jadamon42.adventure.builder.element.*;
 
-public class InputHandler extends StoryNode {
+public class InputHandler extends BasicNode {
     public InputHandler() {
         NodeHeader header = new NodeHeader("Handle Input", "Input Handler");
         setHeader(header);

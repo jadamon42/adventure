@@ -6,13 +6,15 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 
 public class NodeTitle extends VBox {
+    private final TextField nodeTitleTextField;
+
     public NodeTitle(String defaultTitle, String nodeType) {
         getStyleClass().add("node-title-container");
-        TextField nodeTitle = new TextField();
-        nodeTitle.getStyleClass().add("node-title");
-        nodeTitle.setText(defaultTitle);
-        nodeTitle.setFocusTraversable(false);
-        nodeTitle.setOnKeyPressed(event -> {
+        nodeTitleTextField = new TextField();
+        nodeTitleTextField.getStyleClass().add("node-title");
+        nodeTitleTextField.setText(defaultTitle);
+        nodeTitleTextField.setFocusTraversable(false);
+        nodeTitleTextField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.ESCAPE) {
                 getScene().getRoot().requestFocus();
             }
@@ -20,6 +22,10 @@ public class NodeTitle extends VBox {
         Label nodeTypeLabel = new Label();
         nodeTypeLabel.getStyleClass().add("node-type");
         nodeTypeLabel.setText(nodeType);
-        getChildren().addAll(nodeTitle, nodeTypeLabel);
+        getChildren().addAll(nodeTitleTextField, nodeTypeLabel);
+    }
+
+    public String getTitle() {
+        return nodeTitleTextField.getText();
     }
 }
