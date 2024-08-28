@@ -1,6 +1,6 @@
 package com.github.jadamon42.adventure.builder.element.condition;
 
-import com.github.jadamon42.adventure.builder.element.ConnectionGender;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionGender;
 import com.github.jadamon42.adventure.builder.element.NodeLink;
 import com.github.jadamon42.adventure.builder.element.StoryNodeTranslator;
 import com.github.jadamon42.adventure.builder.node.Node;

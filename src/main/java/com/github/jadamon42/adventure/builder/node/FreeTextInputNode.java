@@ -2,11 +2,10 @@ package com.github.jadamon42.adventure.builder.node;
 
 import com.github.jadamon42.adventure.builder.element.NodeFooter;
 import com.github.jadamon42.adventure.builder.element.NodeHeader;
-import com.github.jadamon42.adventure.builder.element.ConnectionType;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import com.github.jadamon42.adventure.builder.element.StoryNodeTranslator;
 import com.github.jadamon42.adventure.model.Player;
 import com.github.jadamon42.adventure.model.PlayerDelta;
-import com.github.jadamon42.adventure.node.StoryNode;
 import com.github.jadamon42.adventure.util.PlayerDeltaBiFunction;
 
 public class FreeTextInputNode extends BasicNode implements StoryNodeTranslator {

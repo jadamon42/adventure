@@ -1,6 +1,6 @@
 package com.github.jadamon42.adventure.builder;
 
-import com.github.jadamon42.adventure.builder.element.ConnectionManager;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionManager;
 import com.github.jadamon42.adventure.builder.element.ZoomableScrollPane;
 import com.github.jadamon42.adventure.builder.element.AppState;
 import com.github.jadamon42.adventure.builder.node.*;

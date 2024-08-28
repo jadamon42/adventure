@@ -1,6 +1,7 @@
 package com.github.jadamon42.adventure.builder.node;
 
 import com.github.jadamon42.adventure.builder.element.*;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionGender;
 import com.github.jadamon42.adventure.node.StoryNode;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

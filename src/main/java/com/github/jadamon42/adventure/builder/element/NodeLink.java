@@ -1,5 +1,8 @@
 package com.github.jadamon42.adventure.builder.element;
 
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionGender;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionPoint;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import com.github.jadamon42.adventure.builder.node.Node;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;

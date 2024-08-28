@@ -1,5 +1,7 @@
 package com.github.jadamon42.adventure.builder.element;
 
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionGender;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import com.github.jadamon42.adventure.builder.node.Node;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;

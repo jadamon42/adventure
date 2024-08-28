@@ -1,10 +1,9 @@
 package com.github.jadamon42.adventure.builder.node;
 
 import com.github.jadamon42.adventure.builder.element.*;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import com.github.jadamon42.adventure.model.Player;
 import com.github.jadamon42.adventure.util.PlayerDeltaBiFunction;
-
-import java.util.function.Function;
 
 public class InputHandler extends BasicNode {
     private PlayerDeltaBiFunction<Player, Object> handler;

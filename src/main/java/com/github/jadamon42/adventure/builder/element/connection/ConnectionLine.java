@@ -1,5 +1,6 @@
-package com.github.jadamon42.adventure.builder.element;
+package com.github.jadamon42.adventure.builder.element.connection;
 
+import com.github.jadamon42.adventure.builder.element.DraggableChild;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Line;

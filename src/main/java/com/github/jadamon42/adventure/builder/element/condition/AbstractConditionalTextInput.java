@@ -1,10 +1,10 @@
 package com.github.jadamon42.adventure.builder.element.condition;
 
 import com.github.jadamon42.adventure.builder.element.AttachmentLink;
-import com.github.jadamon42.adventure.builder.element.ConnectionGender;
-import com.github.jadamon42.adventure.builder.element.ConnectionType;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionGender;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import com.github.jadamon42.adventure.builder.element.ExpandableTextInput;
-import com.github.jadamon42.adventure.builder.node.ConditionTranslator;
+import com.github.jadamon42.adventure.builder.element.ConditionTranslator;
 import com.github.jadamon42.adventure.builder.node.Node;
 import com.github.jadamon42.adventure.model.Player;
 import com.github.jadamon42.adventure.util.BooleanFunction;

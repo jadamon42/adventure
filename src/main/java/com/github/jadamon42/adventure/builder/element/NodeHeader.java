@@ -1,5 +1,6 @@
 package com.github.jadamon42.adventure.builder.element;
 
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionGender;
 import com.github.jadamon42.adventure.builder.node.Node;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -7,9 +8,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
-
-import java.awt.event.ActionEvent;
-import java.util.List;
 
 public class NodeHeader extends HBox implements DraggableChild {
     private final StackPane stackPane;

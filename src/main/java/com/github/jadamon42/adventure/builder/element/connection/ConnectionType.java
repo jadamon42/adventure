@@ -1,4 +1,4 @@
-package com.github.jadamon42.adventure.builder.element;
+package com.github.jadamon42.adventure.builder.element.connection;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;

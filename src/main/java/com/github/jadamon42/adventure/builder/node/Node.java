@@ -1,9 +1,7 @@
 package com.github.jadamon42.adventure.builder.node;
 
 import com.github.jadamon42.adventure.builder.element.AppState;
-import com.github.jadamon42.adventure.builder.element.ConnectionManager;
 import com.github.jadamon42.adventure.builder.element.DraggableChild;
-import com.github.jadamon42.adventure.model.Effect;
 import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;

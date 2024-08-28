@@ -1,6 +1,7 @@
 package com.github.jadamon42.adventure.builder.node;
 
 import com.github.jadamon42.adventure.builder.element.*;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import com.github.jadamon42.adventure.model.Player;
 import com.github.jadamon42.adventure.util.BooleanFunction;
 
@@ -8,11 +9,10 @@ import java.util.Objects;
 import java.util.function.Function;
 
 public class NameCondition extends BasicNode implements ConditionTranslator {
-    private NodeHeader header;
     private Function<String, BooleanFunction<Player>> conditionCreator;
 
     public NameCondition() {
-        header = new NodeHeader("Has Name", "Name Condition");
+        NodeHeader header = new NodeHeader("Has Name", "Name Condition");
         setHeader(header);
 
         setGameMessageInput("");

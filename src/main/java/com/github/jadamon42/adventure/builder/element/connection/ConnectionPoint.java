@@ -1,5 +1,6 @@
-package com.github.jadamon42.adventure.builder.element;
+package com.github.jadamon42.adventure.builder.element.connection;
 
+import com.github.jadamon42.adventure.builder.element.DraggableChild;
 import com.github.jadamon42.adventure.builder.node.Node;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;

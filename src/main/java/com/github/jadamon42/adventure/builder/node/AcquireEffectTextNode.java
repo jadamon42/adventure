@@ -1,8 +1,7 @@
 package com.github.jadamon42.adventure.builder.node;
 
 import com.github.jadamon42.adventure.builder.element.*;
-
-import java.util.List;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 
 public class AcquireEffectTextNode extends BasicNode implements StoryNodeTranslator {
     public AcquireEffectTextNode() {
