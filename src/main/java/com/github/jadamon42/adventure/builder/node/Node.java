@@ -2,6 +2,7 @@ package com.github.jadamon42.adventure.builder.node;
 
 import com.github.jadamon42.adventure.builder.element.AppState;
 import com.github.jadamon42.adventure.builder.element.ConnectionManager;
+import com.github.jadamon42.adventure.builder.element.DraggableChild;
 import com.github.jadamon42.adventure.model.Effect;
 import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
@@ -41,10 +42,18 @@ public class Node extends VBox {
 
             setLayoutX(newX);
             setLayoutY(newY);
-            ConnectionManager.getInstance().updateLines();
+            notifyChildrenOfDrag();
         });
 
         setOnMouseReleased(mouseEvent -> getScene().setCursor(Cursor.DEFAULT));
+    }
+
+    private void notifyChildrenOfDrag() {
+        getChildren().forEach(child -> {
+            if (child instanceof DraggableChild draggableChild) {
+                draggableChild.onParentDragged();
+            }
+        });
     }
 
     private static class DragContext {

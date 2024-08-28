@@ -1,8 +1,10 @@
 package com.github.jadamon42.adventure.builder.element;
 
+import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 
 public class NodeTitle extends VBox {
@@ -27,5 +29,9 @@ public class NodeTitle extends VBox {
 
     public String getTitle() {
         return nodeTitleTextField.getText();
+    }
+
+    public void setChildOnKeyTyped(EventHandler<? super KeyEvent> eventHandler) {
+        nodeTitleTextField.setOnKeyTyped(eventHandler);
     }
 }

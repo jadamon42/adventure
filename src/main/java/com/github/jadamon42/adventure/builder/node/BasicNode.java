@@ -1,12 +1,14 @@
 package com.github.jadamon42.adventure.builder.node;
 
 import com.github.jadamon42.adventure.builder.element.*;
+import com.github.jadamon42.adventure.builder.element.condition.ConditionalTextInputContainer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BasicNode extends Node {
     private ExpandableTextInput textInput;
+    private NodeHeader header;
     private NodeFooter footer;
 
     public BasicNode() {
@@ -23,9 +25,14 @@ public abstract class BasicNode extends Node {
     }
 
     public void setHeader(NodeHeader header) {
+        this.header = header;
         getChildren().removeIf(element -> element instanceof NodeHeader);
         getChildren().add(header);
         orderChildren();
+    }
+
+    public NodeHeader getHeader() {
+        return header;
     }
 
     public void setSubTypeSelector(SubTypeSelector selector) {
@@ -59,6 +66,18 @@ public abstract class BasicNode extends Node {
 
     public NodeFooter getFooter() {
         return footer;
+    }
+
+    public Node getNextNode() {
+        return header.getNextNode();
+    }
+
+    public List<Node> getAttachmentNodes() {
+        return footer.getAttachmentNodes();
+    }
+
+    public List<Node> getAttacherNodes() {
+        return footer.getAttacherNodes();
     }
 
     private void orderChildren() {

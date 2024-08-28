@@ -12,7 +12,7 @@ import javafx.scene.paint.Paint;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NodeFooter extends HBox {
+public class NodeFooter extends HBox implements DraggableChild {
     private final VBox left;
     private final List<AttachmentLink> leftAttachments;
     private final VBox right;
@@ -60,11 +60,29 @@ public class NodeFooter extends HBox {
     public List<Node> getAttachmentNodes() {
         List<Node> nodes = new ArrayList<>();
         for (AttachmentLink link : leftAttachments) {
-            Node parentNode = link.getParentNode();
-            if (parentNode != null) {
-                nodes.add(parentNode);
+            List<Node> linkedNodes = link.getConnectedNodes();
+            if (!linkedNodes.isEmpty()) {
+                nodes.add(linkedNodes.getFirst());
             }
         }
         return nodes;
+    }
+
+    public List<Node> getAttacherNodes() {
+        List<Node> nodes = new ArrayList<>();
+        for (AttachmentLink link : rightAttachments) {
+            nodes.addAll(link.getConnectedNodes());
+        }
+        return nodes;
+    }
+
+    @Override
+    public void onParentDragged() {
+        for (AttachmentLink link : leftAttachments) {
+            link.onParentDragged();
+        }
+        for (AttachmentLink link : rightAttachments) {
+            link.onParentDragged();
+        }
     }
 }

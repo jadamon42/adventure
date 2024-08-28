@@ -1,14 +1,20 @@
 package com.github.jadamon42.adventure.builder.element;
 
 import com.github.jadamon42.adventure.builder.node.Node;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 
-public class NodeHeader extends HBox {
+import java.awt.event.ActionEvent;
+import java.util.List;
+
+public class NodeHeader extends HBox implements DraggableChild {
     private final StackPane stackPane;
     private final NodeTitle nodeTitle;
+    private NodeLink previousNodeLink;
     private NodeLink nextNodeLink;
 
     public NodeHeader(String defaultName, String nodeType) {
@@ -23,9 +29,9 @@ public class NodeHeader extends HBox {
     }
 
     public void addPreviousNodeLink() {
-        NodeLink link = new NodeLink(ConnectionGender.FEMALE);
-        StackPane.setAlignment(link, Pos.CENTER_LEFT);
-        stackPane.getChildren().add(link);
+        previousNodeLink = new NodeLink(ConnectionGender.FEMALE);
+        StackPane.setAlignment(previousNodeLink, Pos.CENTER_LEFT);
+        stackPane.getChildren().add(previousNodeLink);
     }
 
     public void addNextNodeLink() {
@@ -41,8 +47,22 @@ public class NodeHeader extends HBox {
     public Node getNextNode() {
         Node next = null;
         if (nextNodeLink != null) {
-            next = nextNodeLink.getParentNode();
+            next = nextNodeLink.getLinkedNode();
         }
         return next;
+    }
+
+    @Override
+    public void onParentDragged() {
+        if (previousNodeLink != null) {
+            previousNodeLink.onParentDragged();
+        }
+        if (nextNodeLink != null) {
+            nextNodeLink.onParentDragged();
+        }
+    }
+
+    public void setChildOnKeyTyped(EventHandler<? super KeyEvent> eventHandler) {
+        nodeTitle.setChildOnKeyTyped(eventHandler);
     }
 }

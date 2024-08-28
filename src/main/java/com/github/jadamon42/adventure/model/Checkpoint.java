@@ -30,7 +30,7 @@ public class Checkpoint implements Serializable {
     }
 
     public Player getPlayer() {
-        return player;
+        return new Player(player);
     }
 
     public UUID getCurrentNodeId() {
@@ -42,17 +42,17 @@ public class Checkpoint implements Serializable {
     }
 
     public MessageHistory getMessageHistory() {
-        return messageHistory;
+        return new MessageHistory(messageHistory);
     }
 
     public Checkpoint apply(CheckpointDelta checkpointDelta) {
-        Builder builder = new Builder(player, messageHistory);
+        Builder builder = new Builder(player, messageHistory, currentNodeId);
         builder.apply(checkpointDelta);
         return builder.build();
     }
 
     public Checkpoint applyAll(List<CheckpointDelta> checkpointDeltas) {
-        Builder builder = new Builder(player, messageHistory);
+        Builder builder = new Builder(player, messageHistory, currentNodeId);
         for (CheckpointDelta checkpointDelta : checkpointDeltas) {
             builder.apply(checkpointDelta);
         }
@@ -64,9 +64,10 @@ public class Checkpoint implements Serializable {
         private UUID currentNodeId;
         private final MessageHistory messageHistory;
 
-        public Builder(Player player, MessageHistory messageHistory) {
+        public Builder(Player player, MessageHistory messageHistory, UUID currentNodeId) {
             this.player = new Player(player);
             this.messageHistory = new MessageHistory(messageHistory);
+            this.currentNodeId = currentNodeId;
         }
 
         public void apply(CheckpointDelta checkpointDelta) {

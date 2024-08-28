@@ -20,8 +20,7 @@ public class AcquireEffectTextNode extends BasicNode implements StoryNodeTransla
     public com.github.jadamon42.adventure.node.AcquireEffectTextNode toStoryNode() {
         String text = getText();
         com.github.jadamon42.adventure.model.Effect effect = null;
-        List<Node> attachmentNodes = getFooter().getAttachmentNodes();
-        for (Node node : attachmentNodes) {
+        for (Node node : getAttachmentNodes()) {
             if (node instanceof Effect effectNode) {
                 effect = effectNode.getEffectModel();
             }
@@ -30,7 +29,10 @@ public class AcquireEffectTextNode extends BasicNode implements StoryNodeTransla
             throw new RuntimeException("Not connected to effect node");
         }
         var retval = new com.github.jadamon42.adventure.node.AcquireEffectTextNode(text, effect);
-//        retval.then()
+        Node nextNode = getNextNode();
+        if (nextNode instanceof StoryNodeTranslator nextStoryNode) {
+            retval.then(nextStoryNode.toStoryNode());
+        }
         return retval;
     }
 }

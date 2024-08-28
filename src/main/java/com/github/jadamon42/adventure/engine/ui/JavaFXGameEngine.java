@@ -4,7 +4,7 @@ import com.github.jadamon42.adventure.engine.GameEngine;
 import com.github.jadamon42.adventure.engine.GameStateManager;
 import com.github.jadamon42.adventure.model.*;
 import com.github.jadamon42.adventure.node.*;
-import com.github.jadamon42.adventure.util.SerializableBiFunction;
+import com.github.jadamon42.adventure.util.PlayerDeltaBiFunction;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -153,7 +153,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
         CountDownLatch latch = new CountDownLatch(1);
         uiController.showTextInput(e -> {
             String input = uiController.getTextInput();
-            SerializableBiFunction<Player, Object, PlayerDelta> textConsumer = node.getTextConsumer();
+            PlayerDeltaBiFunction<Player, Object> textConsumer = node.getTextConsumer();
             if (textConsumer != null) {
                 PlayerDelta playerDelta = textConsumer.apply(player, input);
                 checkpointDeltaBuilder.applyPlayerDelta(playerDelta);

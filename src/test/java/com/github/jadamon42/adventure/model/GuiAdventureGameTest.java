@@ -19,8 +19,8 @@ public class GuiAdventureGameTest extends Application {
         Player player = new Player();
         JavaFXGameEngine gameEngine = new JavaFXGameEngine(player, start());
         gameEngine.initialize(stage);
-        gameEngine.startGame();
-//        gameEngine.loadGame("/Users/jdamon/Documents/Adventure/checkpoint.adch");
+//        gameEngine.startGame();
+        gameEngine.loadGame("/Users/jdamon/Documents/Adventure/adv.adv");
     }
 
     private static ExpositionalTextNode start() {

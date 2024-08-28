@@ -2,14 +2,14 @@ package com.github.jadamon42.adventure.node;
 
 import com.github.jadamon42.adventure.model.TextMessage;
 import com.github.jadamon42.adventure.model.Player;
-import com.github.jadamon42.adventure.util.SerializableFunction;
+import com.github.jadamon42.adventure.util.BooleanFunction;
 
 import java.io.Serializable;
 
 public class ConditionalText implements Serializable {
     private final String text;
     private final TextMessage message;
-    private final SerializableFunction<Player, Boolean> condition;
+    private final BooleanFunction<Player> condition;
 
     public ConditionalText(String text) {
         this.text = text;
@@ -17,7 +17,7 @@ public class ConditionalText implements Serializable {
         this.message = createMessage();
     }
 
-    public ConditionalText(String text, SerializableFunction<Player, Boolean> condition) {
+    public ConditionalText(String text, BooleanFunction<Player> condition) {
         this.text = text;
         this.condition = condition;
         this.message = createMessage();

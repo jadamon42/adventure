@@ -3,7 +3,7 @@ package com.github.jadamon42.adventure.engine.console;
 import com.github.jadamon42.adventure.engine.GameEngine;
 import com.github.jadamon42.adventure.model.*;
 import com.github.jadamon42.adventure.node.*;
-import com.github.jadamon42.adventure.util.SerializableBiFunction;
+import com.github.jadamon42.adventure.util.PlayerDeltaBiFunction;
 
 import java.util.*;
 
@@ -80,7 +80,7 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
         handleInteractableOutputNode(node);
 
         String input = inputHandler.getFreeTextInput();
-        SerializableBiFunction<Player, Object, PlayerDelta> textConsumer = node.getTextConsumer();
+        PlayerDeltaBiFunction<Player, Object> textConsumer = node.getTextConsumer();
         if (textConsumer != null) {
             textConsumer.apply(player, input);
         }

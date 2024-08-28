@@ -34,6 +34,12 @@ public class PlayerDelta implements Serializable {
         this.effects = new Effect[] {effect};
     }
 
+    public PlayerDelta() {
+        this.name = null;
+        this.items = new Item[0];
+        this.effects = new Effect[0];
+    }
+
     public String getName() {
         return name;
     }

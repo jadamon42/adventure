@@ -6,12 +6,12 @@ import com.github.jadamon42.adventure.builder.element.ConnectionType;
 
 public class Effect extends BasicNode {
     private com.github.jadamon42.adventure.model.Effect effect;
-    private NodeHeader header;
+    private final NodeHeader header;
 
     public Effect() {
         header = new NodeHeader("New Effect", "Effect");
         setHeader(header);
-        header.setOnKeyTyped(event -> {
+        header.setChildOnKeyTyped(event -> {
             effect = new com.github.jadamon42.adventure.model.Effect(header.getTitle());
         });
         NodeFooter footer = new NodeFooter();

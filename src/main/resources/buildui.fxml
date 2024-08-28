@@ -27,7 +27,7 @@
     </left>
     <center>
         <ZoomableScrollPane fx:id="zoomableScrollPane" fitToWidth="true" fitToHeight="true">
-            <Pane fx:id="mainBoard" style="-fx-background-color: lightgray;" minHeight="5000" minWidth="6000" />
+            <Pane fx:id="mainBoard" style="-fx-background-color: lightgray;" minHeight="5000" minWidth="7000" />
         </ZoomableScrollPane>
     </center>
 </BorderPane>

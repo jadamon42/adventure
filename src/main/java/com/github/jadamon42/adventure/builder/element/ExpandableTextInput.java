@@ -28,9 +28,7 @@ public class ExpandableTextInput extends HBox {
         textField.setPromptText(promptText);
         textField.setFocusTraversable(false);
         textField.setOnKeyTyped(event -> {
-            if (textField.getText().isEmpty()) {
-                text = "";
-            }
+            text = textField.getText();
         });
         textField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.ESCAPE) {

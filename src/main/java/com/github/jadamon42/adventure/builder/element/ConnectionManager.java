@@ -4,14 +4,11 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ConnectionManager {
     private static ConnectionManager instance;
     private ConnectionPoint selectedConnectionPoint;
     private ConnectionLine currentConnectionLine;
-    private final List<ConnectionLine> connectionLines = new ArrayList<>();
     private Pane commonParent;
 
     private ConnectionManager() {}
@@ -27,9 +24,12 @@ public class ConnectionManager {
         this.commonParent = commonParent;
     }
 
-    public Bounds getMainBoardBoundsOfNode(Node node) {
+    public Point2D getMainBoardPointFromNode(Node node) {
         Bounds boundsInScene = node.localToScene(node.getBoundsInLocal());
-        return commonParent.sceneToLocal(boundsInScene);
+        double centerX = boundsInScene.getMinX() + boundsInScene.getWidth() / 2;
+        double centerY = boundsInScene.getMinY() + boundsInScene.getHeight() / 2;
+        return getMainBoardPointFromScene(centerX, centerY);
+
     }
 
     public Point2D getMainBoardPointFromScene(double sceneX, double sceneY) {
@@ -39,8 +39,7 @@ public class ConnectionManager {
     public void handleAttachmentClick(ConnectionPoint point) {
         if (selectedConnectionPoint == null) {
             selectedConnectionPoint = point;
-            currentConnectionLine = new ConnectionLine(point, null);
-            connectionLines.add(currentConnectionLine);
+            currentConnectionLine = new ConnectionLine(point);
             commonParent.getChildren().add(currentConnectionLine);
             currentConnectionLine.startFollowingCursor();
         } else {
@@ -68,23 +67,16 @@ public class ConnectionManager {
             currentConnectionLine.setMalePoint(link2);
         }
         currentConnectionLine.update();
-        link1.setIsConnected(true);
-        link2.setIsConnected(true);
+        link1.addConnection(currentConnectionLine);
+        link2.addConnection(currentConnectionLine);
     }
 
     public void cancelCurrentLine() {
         if (currentConnectionLine != null) {
             currentConnectionLine.stopFollowingCursor();
             commonParent.getChildren().remove(currentConnectionLine);
-            connectionLines.remove(currentConnectionLine);
             selectedConnectionPoint = null;
             currentConnectionLine = null;
-        }
-    }
-
-    public void updateLines() {
-        for (ConnectionLine line : connectionLines) {
-            line.update();
         }
     }
 }
