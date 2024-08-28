@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public enum ConnectionType {
-    NODE(new ConnectionConfig(Color.valueOf("blue"), 6.0, ConnectionRelationship.MANY_TO_ONE)),
+    NODE(new ConnectionConfig(Color.web("white"), 6.0, ConnectionRelationship.MANY_TO_ONE)),
     ITEM(new ConnectionConfig(Color.web("#2980b9"), 3.0, ConnectionRelationship.ONE_TO_MANY)),
     EFFECT(new ConnectionConfig(Color.web("#2980b9"), 3.0, ConnectionRelationship.ONE_TO_MANY)),
     CONDITION(new ConnectionConfig(Color.web("#2980b9"), 3.0, ConnectionRelationship.ONE_TO_MANY)),

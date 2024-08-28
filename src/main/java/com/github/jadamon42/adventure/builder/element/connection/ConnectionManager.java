@@ -79,4 +79,8 @@ public class ConnectionManager {
             currentConnectionLine = null;
         }
     }
+
+    public void removeConnectionLine(ConnectionLine line) {
+        commonParent.getChildren().remove(line);
+    }
 }
