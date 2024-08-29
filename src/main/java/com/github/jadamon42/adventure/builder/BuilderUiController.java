@@ -1,9 +1,11 @@
 package com.github.jadamon42.adventure.builder;
 
+import com.github.jadamon42.adventure.builder.state.MainBoardState;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionManager;
 import com.github.jadamon42.adventure.builder.element.ZoomableScrollPane;
 import com.github.jadamon42.adventure.builder.element.AppState;
 import com.github.jadamon42.adventure.builder.node.*;
+import com.github.jadamon42.adventure.builder.state.MainBoardStateManager;
 import com.github.jadamon42.adventure.engine.GameStateManager;
 import com.github.jadamon42.adventure.model.Checkpoint;
 import com.github.jadamon42.adventure.model.GameState;
@@ -45,22 +47,22 @@ public class BuilderUiController {
         mainBoard.setStyle("-fx-background-color: lightgray;");
         zoomableScrollPane.setTarget(mainBoard);
 
-        AppState.getInstance().setMainBoardBounds(mainBoard.getLayoutBounds());
+        AppState.getInstance().setMainBoard(mainBoard);
 
         nodes = new LinkedList<>();
         nodes.add(Start.getInstance());
         nodes.add(new ExpositionalTextNode());
         nodes.add(new AcquireEffectTextNode());
-//        nodes.add(new AcquireItemTextNode());
+        nodes.add(new AcquireItemTextNode());
         nodes.add(new BranchNode());
-//        nodes.add(new ChoiceTextInputNode());
+        nodes.add(new ChoiceTextInputNode());
         nodes.add(new FreeTextInputNode());
-//        nodes.add(new SwitchNode());
+        nodes.add(new SwitchNode());
         nodes.add(new Effect());
-//        nodes.add(new Item());
-//        nodes.add(new And());
-//        nodes.add(new Or());
-//        nodes.add(new ItemCondition());
+        nodes.add(new Item());
+        nodes.add(new And());
+        nodes.add(new Or());
+        nodes.add(new ItemCondition());
         nodes.add(new EffectCondition());
         nodes.add(new NameCondition());
         nodes.add(new InputHandler());
@@ -70,28 +72,61 @@ public class BuilderUiController {
     }
 
     @FXML
-    private void handleSave() {
-        // Implement save functionality
+    private void handleSave() throws IOException {
+        MainBoardState state = AppState.getInstance().getMainBoardState();
+        File save = getSaveFileFromUser();
+        if (save != null) {
+            MainBoardStateManager manager = new MainBoardStateManager();
+            manager.saveGame(save, state);
+        }
     }
 
     @FXML
-    private void handleLoad() {
-        // Implement load functionality
+    private void handleLoad() throws IOException, ClassNotFoundException {
+        File save = getLoadFileFromUser();
+        if (save != null) {
+            mainBoard.getChildren().clear();
+            MainBoardStateManager manager = new MainBoardStateManager();
+            MainBoardState state = manager.loadGame(save);
+            state.applyTo(mainBoard);
+            mainBoard.layout();
+        }
     }
 
     @FXML
     private void handleExport() throws IOException {
-        File save = getSaveFileFromUser();
-        StoryNode adventure = Start.getInstance().getAdventure();
-        Checkpoint start = new Checkpoint(new Player(), adventure);
-        GameState startingState = new GameState(start);
-        GameStateManager manager = new GameStateManager();
-        manager.saveGame(save, startingState);
+        File save = getExportFileFromUser();
+        if (save != null) {
+            StoryNode adventure = Start.getInstance().getAdventure();
+            Checkpoint start = new Checkpoint(new Player(), adventure);
+            GameState startingState = new GameState(start);
+            GameStateManager manager = new GameStateManager();
+            manager.saveGame(save, startingState);
+        }
+    }
+
+    @FXML
+    public void handleClear() {
+        mainBoard.getChildren().clear();
     }
 
     private File getSaveFileFromUser() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Adventure");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Adventure Builder Files", "*.advb"));
+        return fileChooser.showSaveDialog(new Stage());
+    }
+
+    private File getLoadFileFromUser() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load Adventure");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Adventure Builder Files", "*.advb"));
+        return fileChooser.showOpenDialog(new Stage());
+    }
+
+    private File getExportFileFromUser() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Export Adventure");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Adventure Files", "*.adv"));
         return fileChooser.showSaveDialog(new Stage());
     }

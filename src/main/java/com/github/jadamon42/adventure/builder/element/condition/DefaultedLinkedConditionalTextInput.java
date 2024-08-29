@@ -19,4 +19,9 @@ public class DefaultedLinkedConditionalTextInput extends LinkedConditionalTextIn
         }
         return new LinkedConditionalText(getText(), next);
     }
+
+    @Override
+    public boolean isDefaulted() {
+        return true;
+    }
 }

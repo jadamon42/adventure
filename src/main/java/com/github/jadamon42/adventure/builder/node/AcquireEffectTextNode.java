@@ -1,17 +1,20 @@
 package com.github.jadamon42.adventure.builder.node;
 
 import com.github.jadamon42.adventure.builder.element.*;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 
-public class AcquireEffectTextNode extends BasicNode implements StoryNodeTranslator {
+public class AcquireEffectTextNode extends BasicNode implements StoryNodeTranslator, VisitableNode {
+    private final AttachmentLink effectLink;
+
     public AcquireEffectTextNode() {
         NodeHeader header = new NodeHeader("Acquire Effect", "Acquire Effect Text Node");
-        header.addPreviousNodeLink();
-        header.addNextNodeLink();
+        header.addPreviousNodeConnection();
+        header.setNextNodeConnection();
         setHeader(header);
         setGameMessageInput("Enter game message");
         NodeFooter footer = new NodeFooter();
-        footer.addAttachment("Attach Effect", ConnectionType.EFFECT);
+        effectLink = footer.addAttachment("Attach Effect", ConnectionType.EFFECT);
         setFooter(footer);
     }
 
@@ -33,5 +36,18 @@ public class AcquireEffectTextNode extends BasicNode implements StoryNodeTransla
             retval.then(nextStoryNode.toStoryNode());
         }
         return retval;
+    }
+
+    @Override
+    public void accept(NodeVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    public String getEffectConnectionId() {
+        return getFirst(getFooter().getAttachmentConnectionIds());
+    }
+
+    public void setEffectConnection(ConnectionLine connectionLine) {
+        effectLink.addConnection(connectionLine);
     }
 }

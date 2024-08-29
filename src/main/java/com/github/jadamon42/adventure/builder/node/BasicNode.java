@@ -10,10 +10,21 @@ public abstract class BasicNode extends Node {
     private ExpandableTextInput textInput;
     private NodeHeader header;
     private NodeFooter footer;
+    private SubtypeSelector subTypeSelector;
 
     public BasicNode() {
         getStyleClass().add("node");
         getChildren().add(new DraggableIcon());
+        this.textInput = null;
+        this.header = null;
+        this.footer = null;
+        this.subTypeSelector = null;
+    }
+
+    public void setText(String text) {
+        if (textInput != null) {
+            textInput.setText(text);
+        }
     }
 
     public String getText() {
@@ -22,6 +33,15 @@ public abstract class BasicNode extends Node {
             text = textInput.getText();
         }
         return text;
+    }
+
+    public void setTitle(String title) {
+        header.setTitle(title);
+    }
+
+    @Override
+    public String getTitle() {
+        return header.getTitle();
     }
 
     public void setHeader(NodeHeader header) {
@@ -35,10 +55,15 @@ public abstract class BasicNode extends Node {
         return header;
     }
 
-    public void setSubTypeSelector(SubTypeSelector selector) {
-        getChildren().removeIf(element -> element instanceof SubTypeSelector);
+    public void setSubtypeSelector(SubtypeSelector selector) {
+        this.subTypeSelector = selector;
+        getChildren().removeIf(element -> element instanceof SubtypeSelector);
         getChildren().add(selector);
         orderChildren();
+    }
+
+    public SubtypeSelector getSubtypeSelector() {
+        return subTypeSelector;
     }
 
     public void setGameMessageInput(String promptText) {
@@ -51,7 +76,7 @@ public abstract class BasicNode extends Node {
         orderChildren();
     }
 
-    public void setConditionals(ConditionalTextInputContainer options) {
+    public void setConditionals(ConditionalTextInputContainer<?> options) {
         getChildren().removeIf(element -> element instanceof ConditionalTextInputContainer);
         getChildren().add(options);
         orderChildren();
@@ -72,12 +97,16 @@ public abstract class BasicNode extends Node {
         return header.getNextNode();
     }
 
-    public List<Node> getAttachmentNodes() {
-        return footer.getAttachmentNodes();
+    public String getNextNodeConnectionId() {
+        return header.getNextNodeConnectionId();
     }
 
-    public List<Node> getAttacherNodes() {
-        return footer.getAttacherNodes();
+    public List<String> getPreviousNodeConnectionIds() {
+        return header.getPreviousNodeConnectionIds();
+    }
+
+    public List<Node> getAttachmentNodes() {
+        return footer.getAttachmentNodes();
     }
 
     private void orderChildren() {
@@ -91,9 +120,9 @@ public abstract class BasicNode extends Node {
                 return -1;
             } else if (node2 instanceof NodeHeader) {
                 return 1;
-            } else if (node1 instanceof SubTypeSelector) {
+            } else if (node1 instanceof SubtypeSelector) {
                 return -1;
-            } else if (node2 instanceof SubTypeSelector) {
+            } else if (node2 instanceof SubtypeSelector) {
                 return 1;
             } else if (node1 instanceof ExpandableTextInput) {
                 return -1;

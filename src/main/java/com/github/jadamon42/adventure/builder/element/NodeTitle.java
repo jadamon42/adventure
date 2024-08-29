@@ -9,9 +9,11 @@ import javafx.scene.layout.VBox;
 
 public class NodeTitle extends VBox {
     private final TextField nodeTitleTextField;
+    private EventHandler<? super KeyEvent> eventHandler;
 
     public NodeTitle(String defaultTitle, String nodeType) {
         getStyleClass().add("node-title-container");
+        eventHandler = event -> {};
         nodeTitleTextField = new TextField();
         nodeTitleTextField.getStyleClass().add("node-title");
         nodeTitleTextField.setText(defaultTitle);
@@ -27,11 +29,17 @@ public class NodeTitle extends VBox {
         getChildren().addAll(nodeTitleTextField, nodeTypeLabel);
     }
 
+    public void setTitle(String title) {
+        nodeTitleTextField.setText(title);
+        eventHandler.handle(new KeyEvent(KeyEvent.KEY_TYPED, "", "", KeyCode.UNDEFINED, false, false, false, false));
+    }
+
     public String getTitle() {
         return nodeTitleTextField.getText();
     }
 
     public void setChildOnKeyTyped(EventHandler<? super KeyEvent> eventHandler) {
+        this.eventHandler = eventHandler;
         nodeTitleTextField.setOnKeyTyped(eventHandler);
     }
 }

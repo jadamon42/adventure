@@ -33,7 +33,7 @@ public class NodeFooter extends HBox implements DraggableChild {
         getChildren().addAll(left, spacer, right);
     }
 
-    public void addAttachment(String text, ConnectionType connectionType) {
+    public AttachmentLink addAttachment(String text, ConnectionType connectionType) {
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER_LEFT);
         hbox.setSpacing(5);
@@ -44,9 +44,10 @@ public class NodeFooter extends HBox implements DraggableChild {
         hbox.getChildren().addAll(attachmentLink, label);
         left.getChildren().add(hbox);
         leftAttachments.add(attachmentLink);
+        return attachmentLink;
     }
 
-    public void addAttacher(ConnectionType connectionType) {
+    public AttachmentLink addAttacher(ConnectionType connectionType) {
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER_RIGHT);
         hbox.setSpacing(5);
@@ -57,6 +58,7 @@ public class NodeFooter extends HBox implements DraggableChild {
         hbox.getChildren().addAll(label, attachmentLink);
         right.getChildren().add(hbox);
         rightAttachments.add(attachmentLink);
+        return attachmentLink;
     }
 
     public List<Node> getAttachmentNodes() {
@@ -70,12 +72,20 @@ public class NodeFooter extends HBox implements DraggableChild {
         return nodes;
     }
 
-    public List<Node> getAttacherNodes() {
-        List<Node> nodes = new ArrayList<>();
-        for (AttachmentLink link : rightAttachments) {
-            nodes.addAll(link.getConnectedNodes());
+    public List<String> getAttachmentConnectionIds() {
+        List<String> connectionIds = new ArrayList<>();
+        for (AttachmentLink link : leftAttachments) {
+            connectionIds.addAll(link.getConnectionIds());
         }
-        return nodes;
+        return connectionIds;
+    }
+
+    public List<String> getAttacherConnectionIds() {
+        List<String> connectionIds = new ArrayList<>();
+        for (AttachmentLink link : rightAttachments) {
+            connectionIds.addAll(link.getConnectionIds());
+        }
+        return connectionIds;
     }
 
     @Override

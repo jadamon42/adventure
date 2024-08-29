@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public abstract class ConnectionPoint extends HBox implements DraggableChild {
     private final List<ConnectionLine> connections;
@@ -16,6 +17,7 @@ public abstract class ConnectionPoint extends HBox implements DraggableChild {
     private boolean isConnected;
 
     public ConnectionPoint(ConnectionGender gender) {
+        setId(UUID.randomUUID().toString());
         this.connections = new ArrayList<>();
         this.gender = gender;
         this.isConnected = false;
@@ -33,14 +35,25 @@ public abstract class ConnectionPoint extends HBox implements DraggableChild {
 
     public abstract ConnectionType getType();
 
-    public List<ConnectionLine> getConnections() {
-        return connections;
+    public List<String> getConnectionIds() {
+        List<String> connectionIds = new ArrayList<>();
+        for (ConnectionLine connection : connections) {
+            connectionIds.add(connection.getId());
+        }
+        return connectionIds;
     }
 
     public void addConnection(ConnectionLine line) {
-        if (!connections.contains(line)) {
+        if (line != null && !connections.contains(line)) {
             connections.add(line);
             setIsConnected(true);
+
+            if (gender == ConnectionGender.MALE) {
+                line.setMalePoint(this);
+            } else {
+                line.setFemalePoint(this);
+            }
+            line.update();
         }
     }
 

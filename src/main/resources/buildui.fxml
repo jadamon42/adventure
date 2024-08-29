@@ -17,6 +17,7 @@
                 <MenuItem text="Save" onAction="#handleSave"/>
                 <MenuItem text="Load" onAction="#handleLoad"/>
                 <MenuItem text="Export" onAction="#handleExport"/>
+                <MenuItem text="Clear" onAction="#handleClear"/>
             </Menu>
         </MenuBar>
     </top>

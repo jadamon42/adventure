@@ -1,6 +1,7 @@
 package com.github.jadamon42.adventure.builder.element;
 
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionGender;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.node.Node;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -8,6 +9,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
+
+import java.util.List;
 
 public class NodeHeader extends HBox implements DraggableChild {
     private final StackPane stackPane;
@@ -26,16 +29,34 @@ public class NodeHeader extends HBox implements DraggableChild {
         nextNodeLink = null;
     }
 
-    public void addPreviousNodeLink() {
+    public void addPreviousNodeConnection() {
         previousNodeLink = new NodeLink(ConnectionGender.FEMALE);
         StackPane.setAlignment(previousNodeLink, Pos.CENTER_LEFT);
         stackPane.getChildren().add(previousNodeLink);
     }
 
-    public void addNextNodeLink() {
+    public void addPreviousNodeConnection(ConnectionLine connectionLine) {
+        if (previousNodeLink == null) {
+            addPreviousNodeConnection();
+        }
+        previousNodeLink.addConnection(connectionLine);
+    }
+
+    public void setNextNodeConnection() {
         nextNodeLink = new NodeLink(ConnectionGender.MALE);
         StackPane.setAlignment(nextNodeLink, Pos.CENTER_RIGHT);
         stackPane.getChildren().add(nextNodeLink);
+    }
+
+    public void setNextNodeConnection(ConnectionLine connectionLine) {
+        if (nextNodeLink == null) {
+            setNextNodeConnection();
+        }
+        nextNodeLink.addConnection(connectionLine);
+    }
+
+    public void setTitle(String title) {
+        nodeTitle.setTitle(title);
     }
 
     public String getTitle() {
@@ -48,6 +69,14 @@ public class NodeHeader extends HBox implements DraggableChild {
             next = nextNodeLink.getLinkedNode();
         }
         return next;
+    }
+
+    public String getNextNodeConnectionId() {
+        return getFirst(nextNodeLink.getConnectionIds());
+    }
+
+    public List<String> getPreviousNodeConnectionIds() {
+        return previousNodeLink.getConnectionIds();
     }
 
     @Override

@@ -7,15 +7,24 @@ import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 
+import java.util.List;
 import java.util.UUID;
 
-public class Node extends VBox {
+public abstract class Node extends VBox {
     private final DragContext dragContext;
 
     public Node() {
         setId(UUID.randomUUID().toString());
         dragContext = new DragContext();
         makeDraggable();
+    }
+
+    public <T> T getFirst(List<T> list) {
+        return list.isEmpty() ? null : list.getFirst();
+    }
+
+    public <T> T getLast(List<T> list) {
+        return list.isEmpty() ? null : list.getLast();
     }
 
     private void makeDraggable() {
@@ -72,4 +81,8 @@ public class Node extends VBox {
             return (sceneY / scaleFactor) - offsetY;
         }
     }
+
+    public abstract String getTitle();
+
+    public abstract void setTitle(String title);
 }

@@ -1,20 +1,25 @@
 package com.github.jadamon42.adventure.builder.node;
 
-import com.github.jadamon42.adventure.builder.element.ConditionTranslator;
-import com.github.jadamon42.adventure.builder.element.NodeFooter;
-import com.github.jadamon42.adventure.builder.element.NodeHeader;
+import com.github.jadamon42.adventure.builder.element.*;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import com.github.jadamon42.adventure.model.Player;
 import com.github.jadamon42.adventure.util.BooleanFunction;
 
-public class Or extends BasicNode implements ConditionTranslator {
+import java.util.List;
+
+public class Or extends BasicNode implements ConditionTranslator, VisitableNode {
+    private final AttachmentLink condition1Link;
+    private final AttachmentLink condition2Link;
+    private final AttachmentLink conditionLink;
+
     public Or() {
         NodeHeader header = new NodeHeader("Or", "Or Condition");
         setHeader(header);
         NodeFooter footer = new NodeFooter();
-        footer.addAttacher(ConnectionType.CONDITION);
-        footer.addAttachment("Condition 1", ConnectionType.CONDITION);
-        footer.addAttachment("Condition 2", ConnectionType.CONDITION);
+        conditionLink = footer.addAttacher(ConnectionType.CONDITION);
+        condition1Link = footer.addAttachment("Condition 1", ConnectionType.CONDITION);
+        condition2Link = footer.addAttachment("Condition 2", ConnectionType.CONDITION);
         setFooter(footer);
     }
 
@@ -30,5 +35,34 @@ public class Or extends BasicNode implements ConditionTranslator {
         }
 
         return combinedCondition;
+    }
+
+    @Override
+    public void accept(NodeVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    public String getCondition1ConnectionId() {
+        return getFirst(getFooter().getAttachmentConnectionIds());
+    }
+
+    public String getCondition2ConnectionId() {
+        return getLast(getFooter().getAttachmentConnectionIds());
+    }
+
+    public List<String> getConditionConnectionIds() {
+        return getFooter().getAttacherConnectionIds();
+    }
+
+    public void setCondition1Connection(ConnectionLine connectionLine) {
+        condition1Link.addConnection(connectionLine);
+    }
+
+    public void setCondition2Connection(ConnectionLine connectionLine) {
+        condition2Link.addConnection(connectionLine);
+    }
+
+    public void addConditionConnection(ConnectionLine connectionLine) {
+        conditionLink.addConnection(connectionLine);
     }
 }

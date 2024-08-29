@@ -2,19 +2,19 @@ package com.github.jadamon42.adventure.builder.node;
 
 import com.github.jadamon42.adventure.builder.element.*;
 import com.github.jadamon42.adventure.builder.element.condition.*;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.node.LinkedTextChoice;
-import com.github.jadamon42.adventure.node.StoryNode;
 import javafx.scene.control.Label;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChoiceTextInputNode extends BasicNode implements StoryNodeTranslator {
+public class ChoiceTextInputNode extends BasicNode implements StoryNodeTranslator, VisitableNode {
     private final Choices choices;
 
     public ChoiceTextInputNode() {
         NodeHeader header = new NodeHeader("Choice Text Input", "Choice Text Input Node");
-        header.addPreviousNodeLink();
+        header.addPreviousNodeConnection();
         setHeader(header);
         setGameMessageInput("Enter choice prompt");
         choices = new Choices();
@@ -30,7 +30,43 @@ public class ChoiceTextInputNode extends BasicNode implements StoryNodeTranslato
         return new com.github.jadamon42.adventure.node.ChoiceTextInputNode(getText(), choices.toArray(new LinkedTextChoice[0]));
     }
 
-    private static class Choices extends ConditionalTextInputContainer<LinkedTextChoiceInput> {
+    @Override
+    public void accept(NodeVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    public Choices getChoices() {
+        return choices;
+    }
+
+    public void setChoice(
+            int index,
+            String promptText,
+            String text,
+            ConnectionLine nextConnection,
+            ConnectionLine conditionConnection,
+            boolean isDefault) {
+        if (isDefault) {
+            LinkedTextChoiceInput existingChoice = choices.getConditionalTextInputs().getLast();
+            existingChoice.setPromptText(promptText);
+            existingChoice.setText(text);
+            existingChoice.setNextNodeConnection(nextConnection);
+        } else if (index < choices.getConditionalTextInputs().size() - 1) {
+            LinkedTextChoiceInput existingChoice = choices.getConditionalTextInputs().get(index);
+            existingChoice.setPromptText(promptText);
+            existingChoice.setText(text);
+            existingChoice.setNextNodeConnection(nextConnection);
+            existingChoice.setConditionConnection(conditionConnection);
+        } else {
+            LinkedTextChoiceInput newChoice = new LinkedTextChoiceInput(promptText);
+            newChoice.setText(text);
+            newChoice.setNextNodeConnection(nextConnection);
+            newChoice.setConditionConnection(conditionConnection);
+            choices.addNew(newChoice);
+        }
+    }
+
+    public static class Choices extends ConditionalTextInputContainer<LinkedTextChoiceInput> {
         public Choices() {
             super();
             Label newLabel = new Label("+ New Choice");

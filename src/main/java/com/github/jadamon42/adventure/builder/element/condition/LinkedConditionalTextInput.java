@@ -3,6 +3,7 @@ package com.github.jadamon42.adventure.builder.element.condition;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionGender;
 import com.github.jadamon42.adventure.builder.element.NodeLink;
 import com.github.jadamon42.adventure.builder.element.StoryNodeTranslator;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.node.Node;
 import com.github.jadamon42.adventure.node.LinkedConditionalText;
 import com.github.jadamon42.adventure.node.StoryNode;
@@ -41,5 +42,20 @@ public class LinkedConditionalTextInput extends AbstractConditionalTextInput imp
             next = nextStoryNode.toStoryNode();
         }
         return new LinkedConditionalText(getText(), next, getCondition());
+    }
+
+    @Override
+    public String getNextConnectionId() {
+        return getFirst(nodeLink.getConnectionIds());
+    }
+
+    public void setNextNodeConnection(ConnectionLine connection) {
+        nodeLink.addConnection(connection);
+    }
+
+    @Override
+    public void onParentDragged() {
+        notifyConditionLinkOfParentDrag();
+        nodeLink.onParentDragged();
     }
 }

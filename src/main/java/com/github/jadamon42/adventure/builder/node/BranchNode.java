@@ -2,21 +2,21 @@ package com.github.jadamon42.adventure.builder.node;
 
 import com.github.jadamon42.adventure.builder.element.*;
 import com.github.jadamon42.adventure.builder.element.condition.ConditionalTextInputContainer;
-import com.github.jadamon42.adventure.builder.element.condition.DefaultedConditionalTextInput;
 import com.github.jadamon42.adventure.builder.element.condition.DefaultedLinkedConditionalTextInput;
 import com.github.jadamon42.adventure.builder.element.condition.LinkedConditionalTextInput;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.node.LinkedConditionalText;
 import javafx.scene.control.Label;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BranchNode extends BasicNode implements StoryNodeTranslator {
+public class BranchNode extends BasicNode implements StoryNodeTranslator, VisitableNode {
     private final Branches branches;
 
     public BranchNode() {
         NodeHeader header = new NodeHeader("Branch", "Branch Node");
-        header.addPreviousNodeLink();
+        header.addPreviousNodeConnection();
         setHeader(header);
         branches = new Branches();
         setConditionals(branches);
@@ -31,7 +31,43 @@ public class BranchNode extends BasicNode implements StoryNodeTranslator {
         return new com.github.jadamon42.adventure.node.BranchNode(branches.toArray(new LinkedConditionalText[0]));
     }
 
-    private static class Branches extends ConditionalTextInputContainer<LinkedConditionalTextInput> {
+    @Override
+    public void accept(NodeVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    public Branches getBranches() {
+        return branches;
+    }
+
+    public void setBranch(
+            int index,
+            String promptText,
+            String text,
+            ConnectionLine nextConnection,
+            ConnectionLine conditionConnection,
+            boolean isDefault) {
+        if (isDefault) {
+            LinkedConditionalTextInput existingBranch = branches.getConditionalTextInputs().getLast();
+            existingBranch.setPromptText(promptText);
+            existingBranch.setText(text);
+            existingBranch.setNextNodeConnection(nextConnection);
+        } else if (index < branches.getConditionalTextInputs().size() - 1) {
+            LinkedConditionalTextInput existingBranch = branches.getConditionalTextInputs().get(index);
+            existingBranch.setPromptText(promptText);
+            existingBranch.setText(text);
+            existingBranch.setNextNodeConnection(nextConnection);
+            existingBranch.setConditionConnection(conditionConnection);
+        } else {
+            LinkedConditionalTextInput newBranch = new LinkedConditionalTextInput(promptText);
+            newBranch.setText(text);
+            newBranch.setNextNodeConnection(nextConnection);
+            newBranch.setConditionConnection(conditionConnection);
+            branches.addNew(newBranch);
+        }
+    }
+
+    public static class Branches extends ConditionalTextInputContainer<LinkedConditionalTextInput> {
         public Branches() {
             super();
             Label newLabel = new Label("+ New Branch");

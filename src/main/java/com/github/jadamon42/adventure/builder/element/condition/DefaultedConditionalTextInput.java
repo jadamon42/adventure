@@ -11,4 +11,9 @@ public class DefaultedConditionalTextInput extends ConditionalTextInput {
     public ConditionalText toConditionalText() {
         return new ConditionalText(getText());
     }
+
+    @Override
+    public boolean isDefaulted() {
+        return true;
+    }
 }

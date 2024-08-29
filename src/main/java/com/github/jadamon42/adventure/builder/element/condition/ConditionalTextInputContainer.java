@@ -1,13 +1,15 @@
 package com.github.jadamon42.adventure.builder.element.condition;
 
+import com.github.jadamon42.adventure.builder.element.DraggableChild;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public abstract class ConditionalTextInputContainer<T extends AbstractConditionalTextInput> extends VBox {
+public abstract class ConditionalTextInputContainer<T extends AbstractConditionalTextInput> extends VBox implements Iterable<T>, DraggableChild {
     private final List<T> conditionalTextInputs;
 
     public ConditionalTextInputContainer() {
@@ -44,7 +46,7 @@ public abstract class ConditionalTextInputContainer<T extends AbstractConditiona
         }
     }
 
-    protected void addNew(T newCondition) {
+    public void addNew(T newCondition) {
         if (getChildren().getFirst() instanceof AbstractConditionalTextInput condition1) {
             condition1.setDeletable(true);
             condition1.setOnDelete(event -> {
@@ -58,7 +60,19 @@ public abstract class ConditionalTextInputContainer<T extends AbstractConditiona
             getChildren().removeIf(child -> child == newCondition);
             reconfigureOptions();
         });
-        conditionalTextInputs.add(newCondition);
+        conditionalTextInputs.add(conditionalTextInputs.size() - 1, newCondition);
         getChildren().add(getChildren().size() - 2, newCondition);
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return conditionalTextInputs.iterator();
+    }
+
+    @Override
+    public void onParentDragged() {
+        for (T condition : conditionalTextInputs) {
+            condition.onParentDragged();
+        }
     }
 }

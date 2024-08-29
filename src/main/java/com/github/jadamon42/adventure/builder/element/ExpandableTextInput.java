@@ -27,9 +27,7 @@ public class ExpandableTextInput extends HBox {
         textField.getStyleClass().add("node-text-input");
         textField.setPromptText(promptText);
         textField.setFocusTraversable(false);
-        textField.setOnKeyTyped(event -> {
-            text = textField.getText();
-        });
+        textField.setOnKeyTyped(event -> text = textField.getText());
         textField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.ESCAPE) {
                 getScene().getRoot().requestFocus();
@@ -53,12 +51,20 @@ public class ExpandableTextInput extends HBox {
         getChildren().add(stackPane);
     }
 
+    public void setText(String text) {
+        textField.setText(text);
+    }
+
     public String getText() {
         return text;
     }
 
     public void setPromptText(String promptText) {
         textField.setPromptText(promptText);
+    }
+
+    public String getPromptText() {
+        return textField.getPromptText();
     }
 
     private void openDialog(TextField textField) {

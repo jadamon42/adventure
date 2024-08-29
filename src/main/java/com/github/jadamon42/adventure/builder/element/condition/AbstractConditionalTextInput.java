@@ -1,7 +1,9 @@
 package com.github.jadamon42.adventure.builder.element.condition;
 
 import com.github.jadamon42.adventure.builder.element.AttachmentLink;
+import com.github.jadamon42.adventure.builder.element.DraggableChild;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionGender;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import com.github.jadamon42.adventure.builder.element.ExpandableTextInput;
 import com.github.jadamon42.adventure.builder.element.ConditionTranslator;
@@ -20,9 +22,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Paint;
 
+import java.util.List;
 import java.util.UUID;
 
-public abstract class AbstractConditionalTextInput extends HBox {
+public abstract class AbstractConditionalTextInput extends HBox implements DraggableChild {
     private final HBox leftIcons;
     private final ExpandableTextInput textInput;
     private EventHandler<Event> onDelete;
@@ -93,16 +96,55 @@ public abstract class AbstractConditionalTextInput extends HBox {
         textInput.setPromptText(promptText);
     }
 
+    public void setText(String text) {
+        textInput.setText(text);
+    }
+
     public String getText() {
         return textInput.getText();
     }
 
     public BooleanFunction<Player> getCondition() {
         BooleanFunction<Player> condition = player -> true;
-        Node connectedNode = conditionLink.getConnectedNodes().getFirst();
+        Node connectedNode = getFirst(conditionLink.getConnectedNodes());
         if (connectedNode instanceof ConditionTranslator conditionNode) {
             condition = conditionNode.getCondition();
         }
         return condition;
+    }
+
+    public String getPromptText() {
+        return textInput.getPromptText();
+    }
+
+    public boolean isDefaulted() {
+        return false;
+    }
+
+    public String getConditionConnectionId() {
+        String id = null;
+        if (conditionLink != null) {
+            id = getFirst(conditionLink.getConnectionIds());
+        }
+        return id;
+    }
+
+    public String getNextConnectionId() {
+        return null;
+    }
+
+    public void setConditionConnection(ConnectionLine connection) {
+        conditionLink.addConnection(connection);
+    }
+
+    @Override
+    public void onParentDragged() {
+        notifyConditionLinkOfParentDrag();
+    }
+
+    void notifyConditionLinkOfParentDrag() {
+        if (conditionLink != null) {
+            conditionLink.onParentDragged();
+        }
     }
 }

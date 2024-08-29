@@ -19,4 +19,9 @@ public class DefaultedLinkedTextChoiceInput extends LinkedTextChoiceInput {
         }
         return new LinkedTextChoice(getText(), next);
     }
+
+    @Override
+    public boolean isDefaulted() {
+        return true;
+    }
 }

@@ -1,19 +1,23 @@
 package com.github.jadamon42.adventure.builder.node;
 
-import com.github.jadamon42.adventure.builder.element.ConditionTranslator;
-import com.github.jadamon42.adventure.builder.element.NodeFooter;
-import com.github.jadamon42.adventure.builder.element.NodeHeader;
+import com.github.jadamon42.adventure.builder.element.*;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import com.github.jadamon42.adventure.model.Player;
 import com.github.jadamon42.adventure.util.BooleanFunction;
 
-public class ItemCondition extends BasicNode implements ConditionTranslator {
+import java.util.List;
+
+public class ItemCondition extends BasicNode implements ConditionTranslator, VisitableNode {
+    private final AttachmentLink itemLink;
+    private final AttachmentLink conditionLink;
+
     public ItemCondition() {
         NodeHeader header = new NodeHeader("Has Item", "Item Condition");
         setHeader(header);
         NodeFooter footer = new NodeFooter();
-        footer.addAttacher(ConnectionType.CONDITION);
-        footer.addAttachment("Attach Item", ConnectionType.ITEM);
+        conditionLink = footer.addAttacher(ConnectionType.CONDITION);
+        itemLink = footer.addAttachment("Attach Item", ConnectionType.ITEM);
         setFooter(footer);
     }
 
@@ -31,5 +35,26 @@ public class ItemCondition extends BasicNode implements ConditionTranslator {
             hasItem = player -> player.hasItem(itemName);
         }
         return hasItem;
+    }
+
+    @Override
+    public void accept(NodeVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    public String getItemConnectionId() {
+        return getFirst(getFooter().getAttachmentConnectionIds());
+    }
+
+    public List<String> getConditionConnectionIds() {
+        return getFooter().getAttacherConnectionIds();
+    }
+
+    public void setItemConnection(ConnectionLine connectionLine) {
+        itemLink.addConnection(connectionLine);
+    }
+
+    public void addConditionConnection(ConnectionLine connectionLine) {
+        conditionLink.addConnection(connectionLine);
     }
 }

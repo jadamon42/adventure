@@ -10,23 +10,33 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
+import java.util.UUID;
+
 public class ConnectionLine extends Line implements DraggableChild {
     private ConnectionPoint malePoint;
     private ConnectionPoint femalePoint;
-    private final Color focusColor;
-    private final double focusWidth;
-    private final Color originalColor;
-    private final double startingWidth;
+    private Color focusColor;
+    private double focusWidth;
+    private Color originalColor;
+    private double startingWidth;
 
+    public ConnectionLine() {}
 
     public ConnectionLine(ConnectionPoint startingPoint) {
+        setId(UUID.randomUUID().toString());
         if (startingPoint.getGender() == ConnectionGender.MALE) {
             malePoint = startingPoint;
         } else {
             femalePoint = startingPoint;
         }
-        originalColor = (Color) startingPoint.getType().getConfig().color();
-        startingWidth = startingPoint.getType().getConfig().width();
+        init();
+    }
+
+    public void init() {
+        ConnectionType type = getType();
+        setId(UUID.randomUUID().toString());
+        originalColor = (Color) type.getConfig().color();
+        startingWidth = type.getConfig().width();
         focusColor = Color.web("#5a3d6b");
         focusWidth = startingWidth + 2.0;
         setStrokeWidth(startingWidth);
@@ -82,6 +92,10 @@ public class ConnectionLine extends Line implements DraggableChild {
 
     public ConnectionPoint getFemalePoint() {
         return femalePoint;
+    }
+
+    public ConnectionType getType() {
+        return malePoint != null ? malePoint.getType() : femalePoint.getType();
     }
 
     public void update() {

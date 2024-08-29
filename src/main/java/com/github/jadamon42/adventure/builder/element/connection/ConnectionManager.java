@@ -61,12 +61,6 @@ public class ConnectionManager {
     }
 
     private void attachLinks(ConnectionPoint link1, ConnectionPoint link2) {
-        if (link1.getGender() == ConnectionGender.MALE) {
-            currentConnectionLine.setFemalePoint(link2);
-        } else {
-            currentConnectionLine.setMalePoint(link2);
-        }
-        currentConnectionLine.update();
         link1.addConnection(currentConnectionLine);
         link2.addConnection(currentConnectionLine);
     }

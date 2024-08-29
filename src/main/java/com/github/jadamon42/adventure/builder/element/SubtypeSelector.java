@@ -8,11 +8,11 @@ import javafx.scene.layout.HBox;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SubTypeSelector extends HBox {
+public class SubtypeSelector extends HBox {
     private final ComboBox<String> comboBox = new ComboBox<>();
     private final Map<String, EventHandler<ActionEvent>> eventHandlers = new HashMap<>();
 
-    public SubTypeSelector(String defaultLabel, EventHandler<ActionEvent> defaultEventHandler) {
+    public SubtypeSelector(String defaultLabel, EventHandler<ActionEvent> defaultEventHandler) {
         getStyleClass().add("node-subtype-selector-container");
         comboBox.getStyleClass().add("node-subtype-selector");
         comboBox.setOnAction(event -> handleSelectionChange());
@@ -33,5 +33,13 @@ public class SubTypeSelector extends HBox {
         if (handler != null) {
             handler.handle(new ActionEvent(comboBox, null));
         }
+    }
+
+    public String getSelectedOption() {
+        return comboBox.getValue();
+    }
+
+    public void setSelectedOption(String option) {
+        comboBox.setValue(option);
     }
 }

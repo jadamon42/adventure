@@ -1,23 +1,39 @@
 package com.github.jadamon42.adventure.builder.node;
 
-import com.github.jadamon42.adventure.builder.element.NodeFooter;
-import com.github.jadamon42.adventure.builder.element.NodeHeader;
+import com.github.jadamon42.adventure.builder.element.*;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 
-public class Item extends BasicNode {
+import java.util.List;
+
+public class Item extends BasicNode implements VisitableNode {
     private com.github.jadamon42.adventure.model.Item item;
+    private final AttachmentLink itemLink;
 
     public Item() {
         NodeHeader header = new NodeHeader("New Item", "Item");
         setHeader(header);
-        header.setChildOnKeyTyped(event -> item = new com.github.jadamon42.adventure.model.Item(header.getTitle()));
+        header.setChildOnKeyTyped(event -> item = new com.github.jadamon42.adventure.model.Item(getTitle()));
         NodeFooter footer = new NodeFooter();
-        footer.addAttacher(ConnectionType.ITEM);
+        itemLink = footer.addAttacher(ConnectionType.ITEM);
         setFooter(footer);
-        item = new com.github.jadamon42.adventure.model.Item(header.getTitle());
+        item = new com.github.jadamon42.adventure.model.Item(getTitle());
     }
 
     public com.github.jadamon42.adventure.model.Item getItemModel() {
         return item;
+    }
+
+    @Override
+    public void accept(NodeVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    public List<String> getItemConnectionIds() {
+        return getFooter().getAttacherConnectionIds();
+    }
+
+    public void addItemConnection(ConnectionLine connectionLine) {
+        itemLink.addConnection(connectionLine);
     }
 }

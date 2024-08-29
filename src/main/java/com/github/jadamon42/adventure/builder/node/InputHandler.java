@@ -1,28 +1,53 @@
 package com.github.jadamon42.adventure.builder.node;
 
 import com.github.jadamon42.adventure.builder.element.*;
+import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import com.github.jadamon42.adventure.model.Player;
 import com.github.jadamon42.adventure.util.PlayerDeltaBiFunction;
 
-public class InputHandler extends BasicNode {
+import java.util.List;
+
+public class InputHandler extends BasicNode implements VisitableNode {
     private PlayerDeltaBiFunction<Player, Object> handler;
+    private final AttachmentLink inputHandlerLink;
 
     public InputHandler() {
         NodeHeader header = new NodeHeader("Handle Input", "Input Handler");
         setHeader(header);
-        SubTypeSelector selector = new SubTypeSelector(
+        SubtypeSelector selector = new SubtypeSelector(
                 "Set Name",
                 event -> handler = (player, obj) -> player.setName(obj.toString())
         );
         handler = (player, obj) -> player.setName(obj.toString());
-        setSubTypeSelector(selector);
+        setSubtypeSelector(selector);
         NodeFooter footer = new NodeFooter();
-        footer.addAttacher(ConnectionType.HANDLER);
+        inputHandlerLink = footer.addAttacher(ConnectionType.HANDLER);
         setFooter(footer);
     }
 
     public PlayerDeltaBiFunction<Player, Object> getHandler() {
         return handler;
+    }
+
+    @Override
+    public void accept(NodeVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    public void setSubtype(String subtype) {
+        getSubtypeSelector().setSelectedOption(subtype);
+    }
+
+    public String getSubtype() {
+        return getSubtypeSelector().getSelectedOption();
+    }
+
+    public List<String> getInputHandlerConnectionIds() {
+        return getFooter().getAttacherConnectionIds();
+    }
+
+    public void addInputHandlerConnection(ConnectionLine connectionLine) {
+        inputHandlerLink.addConnection(connectionLine);
     }
 }
