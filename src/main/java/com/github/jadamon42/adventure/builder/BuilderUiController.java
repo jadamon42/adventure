@@ -1,5 +1,6 @@
 package com.github.jadamon42.adventure.builder;
 
+import com.github.jadamon42.adventure.builder.element.NodeIconButton;
 import com.github.jadamon42.adventure.builder.state.MainBoardState;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionManager;
 import com.github.jadamon42.adventure.builder.element.ZoomableScrollPane;
@@ -12,16 +13,18 @@ import com.github.jadamon42.adventure.model.GameState;
 import com.github.jadamon42.adventure.model.Player;
 import com.github.jadamon42.adventure.node.StoryNode;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
 
 public class BuilderUiController {
 
@@ -32,9 +35,16 @@ public class BuilderUiController {
     private Pane mainBoard;
 
     @FXML
-    public Button addNodeButton;
+    private FlowPane storyDriversBox;
 
-    private LinkedList<Node> nodes;
+    @FXML
+    private FlowPane conditionsBox;
+
+    @FXML
+    private FlowPane modelsBox;
+
+    @FXML
+    private FlowPane handlersBox;
 
     @FXML
     public void initialize() {
@@ -48,27 +58,58 @@ public class BuilderUiController {
         zoomableScrollPane.setTarget(mainBoard);
 
         AppState.getInstance().setMainBoard(mainBoard);
-
-        nodes = new LinkedList<>();
-        nodes.add(Start.getInstance());
-        nodes.add(new ExpositionalTextNode());
-        nodes.add(new AcquireEffectTextNode());
-        nodes.add(new AcquireItemTextNode());
-        nodes.add(new BranchNode());
-        nodes.add(new ChoiceTextInputNode());
-        nodes.add(new FreeTextInputNode());
-        nodes.add(new SwitchNode());
-        nodes.add(new Effect());
-        nodes.add(new Item());
-        nodes.add(new And());
-        nodes.add(new Or());
-        nodes.add(new ItemCondition());
-        nodes.add(new EffectCondition());
-        nodes.add(new NameCondition());
-        nodes.add(new InputHandler());
-        addNodeButton.setOnMouseClicked(mouseEvent -> addNode());
-
         ConnectionManager.getInstance().setCommonParent(mainBoard);
+
+        Start start = Start.getInstance();
+        start.setLayoutX((mainBoard.getWidth() - start.getWidth()) / 2);
+        start.setLayoutY((mainBoard.getHeight() - start.getHeight()) / 2);
+        mainBoard.getChildren().add(start);
+
+        addDraggableNodeButton(storyDriversBox, ChoiceTextInputNode.class);
+        addDraggableNodeButton(storyDriversBox, FreeTextInputNode.class);
+        addDraggableNodeButton(storyDriversBox, AcquireEffectTextNode.class);
+        addDraggableNodeButton(storyDriversBox, AcquireItemTextNode.class);
+        addDraggableNodeButton(storyDriversBox, BranchNode.class);
+        addDraggableNodeButton(storyDriversBox, SwitchNode.class);
+        addDraggableNodeButton(storyDriversBox, ExpositionalTextNode.class);
+        addDraggableNodeButton(conditionsBox, ItemCondition.class);
+        addDraggableNodeButton(conditionsBox, EffectCondition.class);
+        addDraggableNodeButton(conditionsBox, NameCondition.class);
+        addDraggableNodeButton(conditionsBox, And.class);
+        addDraggableNodeButton(conditionsBox, Or.class);
+        addDraggableNodeButton(modelsBox, Item.class);
+        addDraggableNodeButton(modelsBox, Effect.class);
+        addDraggableNodeButton(handlersBox, InputHandler.class);
+    }
+
+    private void addDraggableNodeButton(FlowPane box, Class<? extends Node> nodeClass) {
+        NodeIconButton button = new NodeIconButton(nodeClass);
+
+        mainBoard.setOnDragOver(event -> {
+            if (event.getGestureSource() != mainBoard && event.getDragboard().hasString()) {
+                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            }
+            event.consume();
+        });
+
+        mainBoard.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasString()) {
+                Node newNode = NodeFactory.createNode(db.getString());
+                WritableImage snapshot = NodeFactory.getNodeSnapshot(db.getString());
+                mainBoard.getChildren().add(newNode);
+                double centerX = event.getX() - snapshot.getWidth() / 2;
+                double centerY = event.getY() - snapshot.getHeight() / 2;
+                newNode.setLayoutX(centerX);
+                newNode.setLayoutY(centerY);
+                success = true;
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        });
+
+        box.getChildren().add(button);
     }
 
     @FXML
@@ -82,7 +123,7 @@ public class BuilderUiController {
     }
 
     @FXML
-    private void handleLoad() throws IOException, ClassNotFoundException {
+    private void handleLoad() throws IOException {
         File save = getLoadFileFromUser();
         if (save != null) {
             mainBoard.getChildren().clear();
@@ -129,14 +170,5 @@ public class BuilderUiController {
         fileChooser.setTitle("Export Adventure");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Adventure Files", "*.adv"));
         return fileChooser.showSaveDialog(new Stage());
-    }
-
-    @FXML
-    private void addNode() {
-        Node node = nodes.pop();
-        mainBoard.getChildren().add(node);
-        node.setLayoutX((mainBoard.getWidth() - node.getWidth()) / 2);
-        node.setLayoutY((mainBoard.getHeight() - node.getHeight()) / 2);
-        mainBoard.layout();
     }
 }
