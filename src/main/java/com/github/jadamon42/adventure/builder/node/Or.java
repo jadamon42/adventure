@@ -25,7 +25,7 @@ public class Or extends BasicNode implements ConditionTranslator, VisitableNode 
 
     @Override
     public BooleanFunction<Player> getCondition() {
-        BooleanFunction<Player> combinedCondition = player -> true;
+        BooleanFunction<Player> combinedCondition = player -> false;
 
         for (Node attachment : getAttachmentNodes()) {
             if (attachment instanceof ConditionTranslator conditionNode) {

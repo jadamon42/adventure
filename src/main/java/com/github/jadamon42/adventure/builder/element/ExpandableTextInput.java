@@ -52,6 +52,7 @@ public class ExpandableTextInput extends HBox {
     }
 
     public void setText(String text) {
+        this.text = text;
         textField.setText(text);
     }
 

@@ -13,7 +13,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 public class Start extends Node implements VisitableNode {
-    private static final Start instance = new Start();
+    private static Start instance = new Start();
     private final StartHeader header;
 
     public Start() {
@@ -40,6 +40,10 @@ public class Start extends Node implements VisitableNode {
 
     public static Start getInstance() {
         return instance;
+    }
+
+    public static void setInstance(Start start) {
+        instance = start;
     }
 
     public StoryNode getAdventure() {

@@ -19,18 +19,18 @@ public class AcquireItemTextNode extends BasicNode  implements StoryNodeTranslat
     }
 
     @Override
-    public com.github.jadamon42.adventure.node.AcquireEffectTextNode toStoryNode() {
+    public com.github.jadamon42.adventure.node.AcquireItemTextNode toStoryNode() {
         String text = getText();
-        com.github.jadamon42.adventure.model.Effect effect = null;
+        com.github.jadamon42.adventure.model.Item item = null;
         for (Node node : getAttachmentNodes()) {
-            if (node instanceof Effect effectNode) {
-                effect = effectNode.getEffectModel();
+            if (node instanceof Item effectNode) {
+                item = effectNode.getItemModel();
             }
         }
-        if (effect == null) {
-            throw new RuntimeException("Not connected to effect node");
+        if (item == null) {
+            throw new RuntimeException("Not connected to item node");
         }
-        var retval = new com.github.jadamon42.adventure.node.AcquireEffectTextNode(text, effect);
+        var retval = new com.github.jadamon42.adventure.node.AcquireItemTextNode(text, item);
         Node nextNode = getNextNode();
         if (nextNode instanceof StoryNodeTranslator nextStoryNode) {
             retval.then(nextStoryNode.toStoryNode());

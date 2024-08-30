@@ -13,6 +13,7 @@ import com.github.jadamon42.adventure.model.GameState;
 import com.github.jadamon42.adventure.model.Player;
 import com.github.jadamon42.adventure.node.StoryNode;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.Dragboard;
@@ -60,11 +61,6 @@ public class BuilderUiController {
         AppState.getInstance().setMainBoard(mainBoard);
         ConnectionManager.getInstance().setCommonParent(mainBoard);
 
-        Start start = Start.getInstance();
-        start.setLayoutX((mainBoard.getWidth() - start.getWidth()) / 2);
-        start.setLayoutY((mainBoard.getHeight() - start.getHeight()) / 2);
-        mainBoard.getChildren().add(start);
-
         addDraggableNodeButton(storyDriversBox, ChoiceTextInputNode.class);
         addDraggableNodeButton(storyDriversBox, FreeTextInputNode.class);
         addDraggableNodeButton(storyDriversBox, AcquireEffectTextNode.class);
@@ -80,6 +76,15 @@ public class BuilderUiController {
         addDraggableNodeButton(modelsBox, Item.class);
         addDraggableNodeButton(modelsBox, Effect.class);
         addDraggableNodeButton(handlersBox, InputHandler.class);
+
+        addStartNode();
+    }
+
+    private void addStartNode() {
+        Start start = Start.getInstance();
+        start.setLayoutX((mainBoard.getWidth() - start.getWidth()) / 2);
+        start.setLayoutY((mainBoard.getHeight() - start.getHeight()) / 2);
+        mainBoard.getChildren().add(start);
     }
 
     private void addDraggableNodeButton(FlowPane box, Class<? extends Node> nodeClass) {
@@ -131,14 +136,33 @@ public class BuilderUiController {
             MainBoardState state = manager.loadGame(save);
             state.applyTo(mainBoard);
             mainBoard.layout();
+            for (javafx.scene.Node node : mainBoard.getChildren()) {
+                if (node instanceof Start start) {
+                    Start.setInstance(start);
+                }
+            }
         }
     }
 
     @FXML
     private void handleExport() throws IOException {
+        StoryNode adventure = Start.getInstance().getAdventure();
+        if (adventure != null) {
+            export(adventure);
+        } else {
+            alertUser("Export Failed", "Adventure must have at least one node.");
+        }
+    }
+
+    @FXML
+    public void handleClear() {
+        mainBoard.getChildren().clear();
+        addStartNode();
+    }
+
+    private void export(StoryNode adventure) throws IOException {
         File save = getExportFileFromUser();
         if (save != null) {
-            StoryNode adventure = Start.getInstance().getAdventure();
             Checkpoint start = new Checkpoint(new Player(), adventure);
             GameState startingState = new GameState(start);
             GameStateManager manager = new GameStateManager();
@@ -146,9 +170,12 @@ public class BuilderUiController {
         }
     }
 
-    @FXML
-    public void handleClear() {
-        mainBoard.getChildren().clear();
+    private void alertUser(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     private File getSaveFileFromUser() {

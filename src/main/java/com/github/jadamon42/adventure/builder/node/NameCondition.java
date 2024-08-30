@@ -5,13 +5,13 @@ import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import com.github.jadamon42.adventure.model.Player;
 import com.github.jadamon42.adventure.util.BooleanFunction;
+import com.github.jadamon42.adventure.util.SerializableFunction;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 
 public class NameCondition extends BasicNode implements ConditionTranslator, VisitableNode {
-    private Function<String, BooleanFunction<Player>> conditionCreator;
+    private SerializableFunction<String, BooleanFunction<Player>> conditionCreator;
     private final AttachmentLink conditionLink;
 
     public NameCondition() {
@@ -24,14 +24,14 @@ public class NameCondition extends BasicNode implements ConditionTranslator, Vis
                 "Name Equals",
                 event -> {
                     setGameMessageInput("Player Name");
-                    conditionCreator = string -> (player -> Objects.equals(player.getName(), string));
+                    conditionCreator = string -> (player -> player.getName().equalsIgnoreCase(string));
                 }
         );
         selector.addOption(
                 "Name Contains",
                 event -> {
                     setGameMessageInput("Substring");
-                    conditionCreator = string -> (player -> player.getName().contains(string));
+                    conditionCreator = string -> (player -> player.getName().toLowerCase().contains(string.toLowerCase()));
                 }
         );
         selector.addOption(
@@ -51,7 +51,9 @@ public class NameCondition extends BasicNode implements ConditionTranslator, Vis
 
     @Override
     public BooleanFunction<Player> getCondition() {
-        return player -> conditionCreator.apply(getText()).apply(player);
+        String text = getText();
+        SerializableFunction<String, BooleanFunction<Player>> creator = conditionCreator;
+        return player -> creator.apply(text).apply(player);
     }
 
     @Override
