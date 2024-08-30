@@ -4,6 +4,7 @@ import com.github.jadamon42.adventure.builder.node.Node;
 import com.github.jadamon42.adventure.builder.node.NodeFactory;
 import com.github.jadamon42.adventure.util.ImageUtils;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,6 +20,7 @@ public class NodeIconButton extends VBox {
 
         setSpacing(5);
         setAlignment(Pos.CENTER);
+        setCursor(Cursor.HAND);
 
         WritableImage icon = NodeFactory.getNodeSnapshot(nodeClass.getSimpleName());
         ImageView imageView = new ImageView(icon);
@@ -32,6 +34,7 @@ public class NodeIconButton extends VBox {
 
         setOnDragDetected(this::onDragDetected);
         setOnDragDone(this::onDragDone);
+        setOnMouseClicked(this::onMouseClicked);
     }
 
     private void onDragDetected(MouseEvent event) {
@@ -54,5 +57,13 @@ public class NodeIconButton extends VBox {
     private void onDragDone(DragEvent event) {
         setOpacity(1.0);
         event.consume();
+    }
+
+    private void onMouseClicked(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            Node newNode = NodeFactory.createNode(nodeClass.getSimpleName());
+
+            AppState.getInstance().addChildToMainBoard(newNode);
+        }
     }
 }

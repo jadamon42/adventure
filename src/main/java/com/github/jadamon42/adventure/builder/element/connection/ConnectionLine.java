@@ -1,5 +1,6 @@
 package com.github.jadamon42.adventure.builder.element.connection;
 
+import com.github.jadamon42.adventure.builder.element.AppState;
 import com.github.jadamon42.adventure.builder.element.DraggableChild;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
@@ -100,12 +101,12 @@ public class ConnectionLine extends Line implements DraggableChild {
 
     public void update() {
         if (malePoint != null) {
-            Point2D malePointInMainBoard = ConnectionManager.getInstance().getMainBoardPointFromNode(malePoint);
+            Point2D malePointInMainBoard = AppState.getInstance().getMainBoardPointFromNode(malePoint);
             setStartX(malePointInMainBoard.getX());
             setStartY(malePointInMainBoard.getY());
         }
         if (femalePoint != null) {
-            Point2D femalePointInMainBoard = ConnectionManager.getInstance().getMainBoardPointFromNode(femalePoint);
+            Point2D femalePointInMainBoard = AppState.getInstance().getMainBoardPointFromNode(femalePoint);
             setEndX(femalePointInMainBoard.getX());
             setEndY(femalePointInMainBoard.getY());
         }
@@ -113,13 +114,13 @@ public class ConnectionLine extends Line implements DraggableChild {
 
     public void startFollowingCursor() {
         ConnectionPoint singlePoint = malePoint != null ? malePoint : femalePoint;
-        Point2D startPointOnMainBoard = ConnectionManager.getInstance().getMainBoardPointFromNode(singlePoint);
+        Point2D startPointOnMainBoard = AppState.getInstance().getMainBoardPointFromNode(singlePoint);
         updateOtherEnd(startPointOnMainBoard.getX(), startPointOnMainBoard.getY());
 
         final double offset = 5.0;
 
         getScene().setOnMouseMoved(event -> {
-            Point2D endPointOnMainBoard = ConnectionManager.getInstance().getMainBoardPointFromScene(event.getSceneX(), event.getSceneY());
+            Point2D endPointOnMainBoard = AppState.getInstance().getMainBoardPointFromScene(event.getSceneX(), event.getSceneY());
 
             double deltaX = endPointOnMainBoard.getX() - startPointOnMainBoard.getX();
             double deltaY = endPointOnMainBoard.getY() - startPointOnMainBoard.getY();

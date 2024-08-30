@@ -25,11 +25,6 @@ public class ZoomableScrollPane extends ScrollPane {
         setFitToWidth(true);
     }
 
-    public ZoomableScrollPane(Node target) {
-        this();
-        setTarget(target);
-    }
-
     public void setTarget(Node target) {
         this.target = target;
         this.zoomNode = new Group(target);
@@ -57,7 +52,7 @@ public class ZoomableScrollPane extends ScrollPane {
     private void updateScale() {
         target.setScaleX(scaleValue.get());
         target.setScaleY(scaleValue.get());
-        AppState.getInstance().setScaleFactor(scaleValue.get());
+//        AppState.getInstance().setScaleFactor(scaleValue.get());
     }
 
     private void onZoom(ZoomEvent event) {

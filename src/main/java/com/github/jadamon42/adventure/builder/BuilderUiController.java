@@ -2,7 +2,6 @@ package com.github.jadamon42.adventure.builder;
 
 import com.github.jadamon42.adventure.builder.element.NodeIconButton;
 import com.github.jadamon42.adventure.builder.state.MainBoardState;
-import com.github.jadamon42.adventure.builder.element.connection.ConnectionManager;
 import com.github.jadamon42.adventure.builder.element.ZoomableScrollPane;
 import com.github.jadamon42.adventure.builder.element.AppState;
 import com.github.jadamon42.adventure.builder.node.*;
@@ -59,7 +58,7 @@ public class BuilderUiController {
         zoomableScrollPane.setTarget(mainBoard);
 
         AppState.getInstance().setMainBoard(mainBoard);
-        ConnectionManager.getInstance().setCommonParent(mainBoard);
+        AppState.getInstance().setZoomableScrollPane(zoomableScrollPane);
 
         addDraggableNodeButton(storyDriversBox, ChoiceTextInputNode.class);
         addDraggableNodeButton(storyDriversBox, FreeTextInputNode.class);
@@ -82,9 +81,8 @@ public class BuilderUiController {
 
     private void addStartNode() {
         Start start = Start.getInstance();
-        start.setLayoutX((mainBoard.getWidth() - start.getWidth()) / 2);
-        start.setLayoutY((mainBoard.getHeight() - start.getHeight()) / 2);
         mainBoard.getChildren().add(start);
+        AppState.getInstance().centerNode(start);
     }
 
     private void addDraggableNodeButton(FlowPane box, Class<? extends Node> nodeClass) {
