@@ -20,7 +20,7 @@ public class GuiAdventureGameTest extends Application {
         JavaFXGameEngine gameEngine = new JavaFXGameEngine(player, start());
         gameEngine.initialize(stage);
 //        gameEngine.startGame();
-        gameEngine.loadGame("/Users/jdamon/Documents/Adventure/sampleGame.adv");
+        gameEngine.loadGame("/Users/jdamon/Documents/Adventure/hannahsGame.adv");
     }
 
     private static ExpositionalTextNode start() {

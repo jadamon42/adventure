@@ -64,6 +64,7 @@ public class NodeIconButton extends VBox {
             Node newNode = NodeFactory.createNode(nodeClass.getSimpleName());
 
             AppState.getInstance().addChildToMainBoard(newNode);
+            AppState.getInstance().centerNode(newNode);
         }
     }
 }

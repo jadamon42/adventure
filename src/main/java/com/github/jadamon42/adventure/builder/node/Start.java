@@ -13,7 +13,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 public class Start extends Node implements VisitableNode {
-    private static Start instance = new Start();
     private final StartHeader header;
 
     public Start() {
@@ -36,14 +35,6 @@ public class Start extends Node implements VisitableNode {
     @Override
     void sceneListener(ObservableValue<? extends Scene> obs, javafx.scene.Scene oldScene, javafx.scene.Scene newScene) {
         // Do nothing
-    }
-
-    public static Start getInstance() {
-        return instance;
-    }
-
-    public static void setInstance(Start start) {
-        instance = start;
     }
 
     public StoryNode getAdventure() {

@@ -46,6 +46,8 @@ public class BuilderUiController {
     @FXML
     private FlowPane handlersBox;
 
+    private Start start;
+
     @FXML
     public void initialize() {
         zoomableScrollPane.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
@@ -80,7 +82,7 @@ public class BuilderUiController {
     }
 
     private void addStartNode() {
-        Start start = Start.getInstance();
+        start = new Start();
         mainBoard.getChildren().add(start);
         AppState.getInstance().centerNode(start);
     }
@@ -135,8 +137,8 @@ public class BuilderUiController {
             state.applyTo(mainBoard);
             mainBoard.layout();
             for (javafx.scene.Node node : mainBoard.getChildren()) {
-                if (node instanceof Start start) {
-                    Start.setInstance(start);
+                if (node instanceof Start startNode) {
+                    start = startNode;
                 }
             }
         }
@@ -144,7 +146,7 @@ public class BuilderUiController {
 
     @FXML
     private void handleExport() throws IOException {
-        StoryNode adventure = Start.getInstance().getAdventure();
+        StoryNode adventure = start.getAdventure();
         if (adventure != null) {
             export(adventure);
         } else {
