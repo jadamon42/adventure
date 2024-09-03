@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.github.jadamon42.adventure.builder.state.serialize.SerializableNode;
 import javafx.scene.layout.Pane;
 
 import java.util.List;
+
 
 @JsonSerialize
 @JsonDeserialize

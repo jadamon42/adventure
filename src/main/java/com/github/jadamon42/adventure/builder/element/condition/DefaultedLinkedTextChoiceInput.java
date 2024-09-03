@@ -2,8 +2,8 @@ package com.github.jadamon42.adventure.builder.element.condition;
 
 import com.github.jadamon42.adventure.builder.element.StoryNodeTranslator;
 import com.github.jadamon42.adventure.builder.node.Node;
-import com.github.jadamon42.adventure.node.LinkedTextChoice;
-import com.github.jadamon42.adventure.node.StoryNode;
+import com.github.jadamon42.adventure.common.node.LinkedTextChoice;
+import com.github.jadamon42.adventure.common.node.StoryNode;
 
 public class DefaultedLinkedTextChoiceInput extends LinkedTextChoiceInput {
     public DefaultedLinkedTextChoiceInput(String promptText) {

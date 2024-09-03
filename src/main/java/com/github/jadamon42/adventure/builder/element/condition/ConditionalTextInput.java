@@ -1,6 +1,6 @@
 package com.github.jadamon42.adventure.builder.element.condition;
 
-import com.github.jadamon42.adventure.node.ConditionalText;
+import com.github.jadamon42.adventure.common.node.ConditionalText;
 
 public class ConditionalTextInput extends AbstractConditionalTextInput implements ConditionalTextTranslator<ConditionalText> {
     public ConditionalTextInput(String promptText) {

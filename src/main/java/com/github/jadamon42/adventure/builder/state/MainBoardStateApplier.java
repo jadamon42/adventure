@@ -2,6 +2,7 @@ package com.github.jadamon42.adventure.builder.state;
 
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.node.*;
+import com.github.jadamon42.adventure.builder.state.serialize.*;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 
@@ -71,7 +72,7 @@ class MainBoardStateApplier implements SerializableNodeVisitor {
         BranchNode node = new BranchNode();
         setPropertiesWithPreviousLinks(serializableNode, node);
         int i = 0;
-        for (SerializableOption branch : serializableNode.branches()) {
+        for (SerializableConditional branch : serializableNode.branches()) {
             node.setBranch(
                     i,
                     branch.promptText(),
@@ -91,7 +92,7 @@ class MainBoardStateApplier implements SerializableNodeVisitor {
         setPropertiesWithPreviousLinks(serializableNode, node);
         node.setText(serializableNode.text());
         int i = 0;
-        for (SerializableOption choice : serializableNode.choices()) {
+        for (SerializableConditional choice : serializableNode.choices()) {
             node.setChoice(
                     i,
                     choice.promptText(),
@@ -224,7 +225,7 @@ class MainBoardStateApplier implements SerializableNodeVisitor {
         SwitchNode node = new SwitchNode();
         setFullyLinkedProperties(serializableNode, node);
         int i = 0;
-        for (SerializableOption case_ : serializableNode.cases()) {
+        for (SerializableConditional case_ : serializableNode.cases()) {
             node.setCase(
                     i,
                     case_.promptText(),

@@ -8,8 +8,8 @@ import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import com.github.jadamon42.adventure.builder.element.ExpandableTextInput;
 import com.github.jadamon42.adventure.builder.element.ConditionTranslator;
 import com.github.jadamon42.adventure.builder.node.Node;
-import com.github.jadamon42.adventure.model.Player;
-import com.github.jadamon42.adventure.util.BooleanFunction;
+import com.github.jadamon42.adventure.common.model.Player;
+import com.github.jadamon42.adventure.common.util.BooleanFunction;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.Event;
@@ -22,7 +22,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Paint;
 
-import java.util.List;
 import java.util.UUID;
 
 public abstract class AbstractConditionalTextInput extends HBox implements DraggableChild {

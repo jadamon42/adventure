@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.FlowPane?>
+
+<AnchorPane stylesheets="@runnerui.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.jadamon42.adventure.runner.ui.UiController">
+    <VBox prefHeight="400.0" prefWidth="550.0">
+        <ScrollPane fx:id="messagesScrollPane" fitToWidth="true" prefHeight="550">
+            <VBox fx:id="messagesContainer" spacing="10" style="-fx-padding: 10;">
+            </VBox>
+        </ScrollPane>
+        <HBox fx:id="textInputContainer" prefHeight="50" styleClass="text-input-container" visible="false" managed="false">
+            <TextField fx:id="textInput" promptText="Type your response..." styleClass="text-input" HBox.hgrow="ALWAYS" />
+        </HBox>
+        <FlowPane fx:id="buttonInputContainer" styleClass="button-input-container" visible="false" managed="false">
+        </FlowPane>
+    </VBox>
+</AnchorPane>

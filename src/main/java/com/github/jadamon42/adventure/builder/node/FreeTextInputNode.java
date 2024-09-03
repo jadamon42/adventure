@@ -3,8 +3,8 @@ package com.github.jadamon42.adventure.builder.node;
 import com.github.jadamon42.adventure.builder.element.*;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
-import com.github.jadamon42.adventure.model.PlayerDelta;
-import com.github.jadamon42.adventure.util.PlayerDeltaBiFunction;
+import com.github.jadamon42.adventure.common.state.PlayerDelta;
+import com.github.jadamon42.adventure.common.util.PlayerDeltaBiFunction;
 
 public class FreeTextInputNode extends BasicNode implements StoryNodeTranslator, VisitableNode {
     private final AttachmentLink inputHandlerLink;
@@ -21,13 +21,13 @@ public class FreeTextInputNode extends BasicNode implements StoryNodeTranslator,
     }
 
     @Override
-    public com.github.jadamon42.adventure.node.FreeTextInputNode toStoryNode() {
+    public com.github.jadamon42.adventure.common.node.FreeTextInputNode toStoryNode() {
         PlayerDeltaBiFunction<Object> handler = (player, obj) -> new PlayerDelta();
         Node node = getFirst(getAttachmentNodes());
         if (node instanceof InputHandler handlerNode) {
             handler = handlerNode.getHandler();
         }
-        var retval = new com.github.jadamon42.adventure.node.FreeTextInputNode(getText(), handler);
+        var retval = new com.github.jadamon42.adventure.common.node.FreeTextInputNode(getText(), handler);
         Node nextNode = getNextNode();
         if (nextNode instanceof StoryNodeTranslator nextStoryNode) {
             retval.then(nextStoryNode.toStoryNode());

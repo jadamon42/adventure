@@ -5,6 +5,7 @@ import com.github.jadamon42.adventure.builder.element.condition.ConditionalTextI
 import com.github.jadamon42.adventure.builder.element.condition.LinkedConditionalTextInput;
 import com.github.jadamon42.adventure.builder.element.condition.LinkedTextChoiceInput;
 import com.github.jadamon42.adventure.builder.node.*;
+import com.github.jadamon42.adventure.builder.state.serialize.*;
 
 import java.util.*;
 
@@ -59,9 +60,9 @@ public class MainBoardStateBuilder implements NodeVisitor {
 
     @Override
     public void visit(BranchNode branchNode) {
-        List<SerializableOption> serializableOptions = new ArrayList<>();
+        List<SerializableConditional> serializableConditionals = new ArrayList<>();
         for (LinkedConditionalTextInput branch : branchNode.getBranches()) {
-            serializableOptions.add(new SerializableOption(
+            serializableConditionals.add(new SerializableConditional(
                     branch.getText(),
                     branch.getPromptText(),
                     branch.getConditionConnectionId(),
@@ -74,14 +75,14 @@ public class MainBoardStateBuilder implements NodeVisitor {
                 branchNode.getLayoutY(),
                 branchNode.getTitle(),
                 branchNode.getPreviousNodeConnectionIds(),
-                serializableOptions));
+                serializableConditionals));
     }
 
     @Override
     public void visit(ChoiceTextInputNode choiceTextInputNode) {
-        List<SerializableOption> serializableOptions = new ArrayList<>();
+        List<SerializableConditional> serializableConditionals = new ArrayList<>();
         for (LinkedTextChoiceInput choice : choiceTextInputNode.getChoices()) {
-            serializableOptions.add(new SerializableOption(
+            serializableConditionals.add(new SerializableConditional(
                     choice.getText(),
                     choice.getPromptText(),
                     choice.getConditionConnectionId(),
@@ -95,7 +96,7 @@ public class MainBoardStateBuilder implements NodeVisitor {
                 choiceTextInputNode.getTitle(),
                 choiceTextInputNode.getText(),
                 choiceTextInputNode.getPreviousNodeConnectionIds(),
-                serializableOptions));
+                serializableConditionals));
     }
 
     @Override
@@ -212,9 +213,9 @@ public class MainBoardStateBuilder implements NodeVisitor {
 
     @Override
     public void visit(SwitchNode switchNode) {
-        List<SerializableOption> serializableOptions = new ArrayList<>();
+        List<SerializableConditional> serializableConditionals = new ArrayList<>();
         for (ConditionalTextInput case_ : switchNode.getCases()) {
-            serializableOptions.add(new SerializableOption(
+            serializableConditionals.add(new SerializableConditional(
                     case_.getText(),
                     case_.getPromptText(),
                     case_.getConditionConnectionId(),
@@ -228,6 +229,6 @@ public class MainBoardStateBuilder implements NodeVisitor {
                 switchNode.getTitle(),
                 switchNode.getPreviousNodeConnectionIds(),
                 switchNode.getNextNodeConnectionId(),
-                serializableOptions));
+                serializableConditionals));
     }
 }

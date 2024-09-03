@@ -1,6 +1,6 @@
 package com.github.jadamon42.adventure.builder.node;
 
-import com.github.jadamon42.adventure.builder.element.AppState;
+import com.github.jadamon42.adventure.builder.AppState;
 import com.github.jadamon42.adventure.builder.element.DraggableChild;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;

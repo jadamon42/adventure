@@ -8,7 +8,7 @@ import com.github.jadamon42.adventure.builder.element.condition.ConditionalTextI
 import com.github.jadamon42.adventure.builder.element.condition.DefaultedConditionalTextInput;
 import com.github.jadamon42.adventure.builder.element.NodeHeader;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
-import com.github.jadamon42.adventure.node.ConditionalText;
+import com.github.jadamon42.adventure.common.node.ConditionalText;
 import javafx.scene.control.Label;
 
 import java.util.ArrayList;
@@ -27,12 +27,12 @@ public class SwitchNode extends BasicNode implements StoryNodeTranslator, Visita
     }
 
     @Override
-    public com.github.jadamon42.adventure.node.SwitchNode toStoryNode() {
+    public com.github.jadamon42.adventure.common.node.SwitchNode toStoryNode() {
         List<ConditionalText> cases = new ArrayList<>();
         for (ConditionalTextInput conditionInput : this.cases.getConditionalTextInputs()) {
             cases.add(conditionInput.toConditionalText());
         }
-        var retval = new com.github.jadamon42.adventure.node.SwitchNode(cases.toArray(new ConditionalText[0]));
+        var retval = new com.github.jadamon42.adventure.common.node.SwitchNode(cases.toArray(new ConditionalText[0]));
         Node nextNode = getNextNode();
         if (nextNode instanceof StoryNodeTranslator nextStoryNode) {
             retval.then(nextStoryNode.toStoryNode());

@@ -15,8 +15,8 @@ public class ExpositionalTextNode extends BasicNode implements StoryNodeTranslat
     }
 
     @Override
-    public com.github.jadamon42.adventure.node.ExpositionalTextNode toStoryNode() {
-        var retval = new com.github.jadamon42.adventure.node.ExpositionalTextNode(getText());
+    public com.github.jadamon42.adventure.common.node.ExpositionalTextNode toStoryNode() {
+        var retval = new com.github.jadamon42.adventure.common.node.ExpositionalTextNode(getText());
         Node nextNode = getNextNode();
         if (nextNode instanceof StoryNodeTranslator nextStoryNode) {
             retval.then(nextStoryNode.toStoryNode());

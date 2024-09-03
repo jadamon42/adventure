@@ -7,20 +7,20 @@ import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import java.util.List;
 
 public class Item extends BasicNode implements VisitableNode {
-    private com.github.jadamon42.adventure.model.Item item;
+    private com.github.jadamon42.adventure.common.model.Item item;
     private final AttachmentLink itemLink;
 
     public Item() {
         NodeHeader header = new NodeHeader("New Item", "Item");
         setHeader(header);
-        header.setChildOnKeyTyped(event -> item = new com.github.jadamon42.adventure.model.Item(getTitle()));
+        header.setChildOnKeyTyped(event -> item = new com.github.jadamon42.adventure.common.model.Item(getTitle()));
         NodeFooter footer = new NodeFooter();
         itemLink = footer.addAttacher(ConnectionType.ITEM);
         setFooter(footer);
-        item = new com.github.jadamon42.adventure.model.Item(getTitle());
+        item = new com.github.jadamon42.adventure.common.model.Item(getTitle());
     }
 
-    public com.github.jadamon42.adventure.model.Item getItemModel() {
+    public com.github.jadamon42.adventure.common.model.Item getItemModel() {
         return item;
     }
 

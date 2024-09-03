@@ -5,7 +5,7 @@ import com.github.jadamon42.adventure.builder.element.condition.ConditionalTextI
 import com.github.jadamon42.adventure.builder.element.condition.DefaultedLinkedConditionalTextInput;
 import com.github.jadamon42.adventure.builder.element.condition.LinkedConditionalTextInput;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
-import com.github.jadamon42.adventure.node.LinkedConditionalText;
+import com.github.jadamon42.adventure.common.node.LinkedConditionalText;
 import javafx.scene.control.Label;
 
 import java.util.ArrayList;
@@ -23,12 +23,12 @@ public class BranchNode extends BasicNode implements StoryNodeTranslator, Visita
     }
 
     @Override
-    public com.github.jadamon42.adventure.node.BranchNode toStoryNode() {
+    public com.github.jadamon42.adventure.common.node.BranchNode toStoryNode() {
         List<LinkedConditionalText> branches = new ArrayList<>();
         for (LinkedConditionalTextInput conditionInput : this.branches.getConditionalTextInputs()) {
             branches.add(conditionInput.toConditionalText());
         }
-        return new com.github.jadamon42.adventure.node.BranchNode(branches.toArray(new LinkedConditionalText[0]));
+        return new com.github.jadamon42.adventure.common.node.BranchNode(branches.toArray(new LinkedConditionalText[0]));
     }
 
     @Override

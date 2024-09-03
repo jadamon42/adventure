@@ -1,6 +1,6 @@
 package com.github.jadamon42.adventure.builder.element.connection;
 
-import com.github.jadamon42.adventure.builder.element.AppState;
+import com.github.jadamon42.adventure.builder.AppState;
 
 public class ConnectionManager {
     private static ConnectionManager instance;

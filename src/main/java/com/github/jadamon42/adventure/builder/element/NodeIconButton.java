@@ -1,8 +1,9 @@
 package com.github.jadamon42.adventure.builder.element;
 
+import com.github.jadamon42.adventure.builder.AppState;
 import com.github.jadamon42.adventure.builder.node.Node;
 import com.github.jadamon42.adventure.builder.node.NodeFactory;
-import com.github.jadamon42.adventure.util.ImageUtils;
+import com.github.jadamon42.adventure.common.util.ImageUtils;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;

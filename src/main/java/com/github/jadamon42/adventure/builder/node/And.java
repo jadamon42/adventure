@@ -3,8 +3,8 @@ package com.github.jadamon42.adventure.builder.node;
 import com.github.jadamon42.adventure.builder.element.*;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
-import com.github.jadamon42.adventure.model.Player;
-import com.github.jadamon42.adventure.util.BooleanFunction;
+import com.github.jadamon42.adventure.common.model.Player;
+import com.github.jadamon42.adventure.common.util.BooleanFunction;
 
 import java.util.List;
 

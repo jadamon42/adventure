@@ -3,7 +3,7 @@ package com.github.jadamon42.adventure.builder.node;
 import com.github.jadamon42.adventure.builder.element.*;
 import com.github.jadamon42.adventure.builder.element.condition.*;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
-import com.github.jadamon42.adventure.node.LinkedTextChoice;
+import com.github.jadamon42.adventure.common.node.LinkedTextChoice;
 import javafx.scene.control.Label;
 
 import java.util.ArrayList;
@@ -22,12 +22,12 @@ public class ChoiceTextInputNode extends BasicNode implements StoryNodeTranslato
     }
 
     @Override
-    public com.github.jadamon42.adventure.node.ChoiceTextInputNode toStoryNode() {
+    public com.github.jadamon42.adventure.common.node.ChoiceTextInputNode toStoryNode() {
         List<LinkedTextChoice> choices = new ArrayList<>();
         for (LinkedTextChoiceInput conditionInput : this.choices.getConditionalTextInputs()) {
             choices.add(conditionInput.toConditionalText());
         }
-        return new com.github.jadamon42.adventure.node.ChoiceTextInputNode(getText(), choices.toArray(new LinkedTextChoice[0]));
+        return new com.github.jadamon42.adventure.common.node.ChoiceTextInputNode(getText(), choices.toArray(new LinkedTextChoice[0]));
     }
 
     @Override

@@ -3,8 +3,8 @@ package com.github.jadamon42.adventure.builder.node;
 import com.github.jadamon42.adventure.builder.element.*;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
-import com.github.jadamon42.adventure.model.Player;
-import com.github.jadamon42.adventure.util.BooleanFunction;
+import com.github.jadamon42.adventure.common.model.Player;
+import com.github.jadamon42.adventure.common.util.BooleanFunction;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class EffectCondition extends BasicNode implements ConditionTranslator, V
     @Override
     public BooleanFunction<Player> getCondition() {
         BooleanFunction<Player> hasEffect = player -> false;
-        com.github.jadamon42.adventure.model.Effect effect = null;
+        com.github.jadamon42.adventure.common.model.Effect effect = null;
         for (Node node : getAttachmentNodes()) {
             if (node instanceof Effect effectNode) {
                 effect = effectNode.getEffectModel();
