@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.github.jadamon42.adventure.common.state.serialize.*;
 
 import java.io.*;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class GameStateManager {
     private final static ObjectMapper objectMapper;
@@ -37,11 +39,19 @@ public class GameStateManager {
     }
 
     public void saveGame(File saveFile, GameState gameState) throws IOException {
-        objectMapper.writeValue(saveFile, gameState);
+        try (FileOutputStream fileOut = new FileOutputStream(saveFile);
+             GZIPOutputStream gzipOut = new GZIPOutputStream(fileOut);
+             OutputStreamWriter writer = new OutputStreamWriter(gzipOut)) {
+            objectMapper.writeValue(writer, gameState);
+        }
     }
 
     public GameState loadGame(File saveFile) throws IOException {
-        return objectMapper.readValue(saveFile, GameState.class);
+        try (FileInputStream fileIn = new FileInputStream(saveFile);
+             GZIPInputStream gzipIn = new GZIPInputStream(fileIn);
+             InputStreamReader reader = new InputStreamReader(gzipIn)) {
+            return objectMapper.readValue(reader, GameState.class);
+        }
     }
 }
 
