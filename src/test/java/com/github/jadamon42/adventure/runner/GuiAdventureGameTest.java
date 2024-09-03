@@ -8,6 +8,8 @@ import com.github.jadamon42.adventure.runner.ui.JavaFXGameEngine;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.io.File;
+
 public class GuiAdventureGameTest extends Application {
 
     private final static Effect superStrength = new Effect("super strength");
@@ -25,8 +27,9 @@ public class GuiAdventureGameTest extends Application {
 //        gameEngine.startGame();
 //        gameEngine.saveGame("/Users/jdamon/Documents/Adventure/blah.json");
 //        gameEngine.loadGame("/Users/jdamon/Documents/Adventure/blah.json");
-        gameEngine.loadGame("/Users/jdamon/Documents/Adventure/newSampleGame.adv");
-
+//        gameEngine.loadGame("/Users/jdamon/Documents/Adventure/sampleBuilderExport.adv");
+        File file = new File(getClass().getResource("/samples/sampleBuilderExport.adv").getFile());
+        gameEngine.loadGame(file.getAbsolutePath());
 
     }
 

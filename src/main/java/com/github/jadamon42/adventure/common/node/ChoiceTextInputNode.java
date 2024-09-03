@@ -6,6 +6,7 @@ import com.github.jadamon42.adventure.common.state.serialize.GameStateDeserializ
 import com.github.jadamon42.adventure.common.state.serialize.SerializableChoiceTextInputNode;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ChoiceTextInputNode extends StoryTextNode {
     private final List<LinkedTextChoice> choices;
@@ -17,8 +18,8 @@ public class ChoiceTextInputNode extends StoryTextNode {
         this.message = new TextMessage(this.getText(), false, true);
     }
 
-    private ChoiceTextInputNode(TextMessage message, List<LinkedTextChoice> choices) {
-        super(message.getText());
+    private ChoiceTextInputNode(UUID id, TextMessage message, List<LinkedTextChoice> choices) {
+        super(id, message.getText());
         this.choices = choices;
         this.message = message;
     }
@@ -32,7 +33,7 @@ public class ChoiceTextInputNode extends StoryTextNode {
                     return linkedTextChoice;
                 })
                 .toList();
-        return new ChoiceTextInputNode(textMessage, choices);
+        return new ChoiceTextInputNode(serialized.id(), textMessage, choices);
     }
 
     public List<LinkedTextChoice> getChoices(Player player) {

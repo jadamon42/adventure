@@ -9,6 +9,10 @@ public abstract class StoryNode {
         id = UUID.randomUUID();
     }
 
+    protected StoryNode(UUID id) {
+        this.id = id;
+    }
+
     public UUID getId() {
         return id;
     }

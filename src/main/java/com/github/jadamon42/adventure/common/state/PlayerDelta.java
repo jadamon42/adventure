@@ -53,6 +53,10 @@ public class PlayerDelta {
         return effects;
     }
 
+    public boolean hasChanges() {
+        return name != null || !items.isEmpty() || !effects.isEmpty();
+    }
+
     public static PlayerDelta.Builder newBuilder() {
         return new Builder();
     }

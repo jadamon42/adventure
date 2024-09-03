@@ -80,9 +80,9 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
     }
 
     private void loadGame(UUID messageId) {
-        loadGame(gameState.getCheckpointForMessageId(messageId));
         gameState.resetToCheckpoint(messageId);
         checkpointDeltaBuilder = new CheckpointDelta.Builder();
+        loadGame(gameState.getCheckpointForMessageId(messageId));
     }
 
     private void restartGame() {
@@ -222,7 +222,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
         checkpointDeltaBuilder.setCurrentMessageId(message.getId());
         checkpointDeltaBuilder.setCurrentNodeId(currentNode.getId());
         gameState.addCheckpoint(checkpointDeltaBuilder.build());
-        saveGame("checkpoint.adch");
+        saveGame("sampleRunnerSave.adv");
         checkpointDeltaBuilder = CheckpointDelta.newBuilder();
         checkpointDeltaBuilder.addMessage(message);
 

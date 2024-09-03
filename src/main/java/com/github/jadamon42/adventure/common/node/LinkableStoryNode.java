@@ -1,10 +1,16 @@
 package com.github.jadamon42.adventure.common.node;
 
+import java.util.UUID;
+
 public abstract class LinkableStoryNode extends StoryNode implements Linkable {
     private StoryNode nextNode;
 
     protected LinkableStoryNode() {
         super();
+    }
+
+    protected LinkableStoryNode(UUID id) {
+        super(id);
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.github.jadamon42.adventure.common.state.serialize.GameStateDeserializ
 import com.github.jadamon42.adventure.common.state.serialize.SerializableSwitchNode;
 
 import java.util.List;
+import java.util.UUID;
 
 public class SwitchNode extends LinkableStoryNode {
     private final List<ConditionalText> choices;
@@ -19,11 +20,16 @@ public class SwitchNode extends LinkableStoryNode {
         this.choices = List.of(options);
     }
 
+    private SwitchNode(UUID id, ConditionalText... options) {
+        super(id);
+        this.choices = List.of(options);
+    }
+
     public static SwitchNode fromSerialized(SerializableSwitchNode serialized, GameStateDeserializer data) {
         ConditionalText[] choices = serialized.choices().stream()
                 .map((serializedChoice) -> ConditionalText.fromSerialized(serializedChoice, data))
                 .toArray(ConditionalText[]::new);
-        return new SwitchNode(choices);
+        return new SwitchNode(serialized.id(), choices);
     }
 
     public ConditionalText getCase(Player player) {

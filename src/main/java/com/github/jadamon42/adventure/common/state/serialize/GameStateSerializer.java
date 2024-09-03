@@ -20,6 +20,10 @@ public class GameStateSerializer extends JsonSerializer<GameState> implements St
     List<SerializableCheckpointDelta> serializableCheckpointDeltas;
 
     public GameStateSerializer() {
+        init();
+    }
+
+    public void init() {
         this.itemMap = new HashMap<>();
         this.effectMap = new HashMap<>();
         this.nodeMap = new HashMap<>();
@@ -30,6 +34,8 @@ public class GameStateSerializer extends JsonSerializer<GameState> implements St
 
     @Override
     public void serialize(GameState gameState, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+        // TODO: separate these objects out, this init thing isn't right
+        init();
         gameState.getInitialCheckpoint().getCurrentNode().accept(this);
         buildSerializedCheckpointDeltas(gameState.getCheckpointDeltas());
         initialNodeId = gameState.getInitialCheckpoint().getCurrentNodeId();
@@ -167,6 +173,12 @@ public class GameStateSerializer extends JsonSerializer<GameState> implements St
         for (CheckpointDelta delta : checkpointDeltas) {
             List<UUID> messageIds = new ArrayList<>();
             for (TextMessage message : delta.getMessages()) {
+                if (!messageMap.containsKey(message.getId())) {
+                    // capture all user input messages
+                    // TODO: better way to do this?
+                    // if we separate text from messages, message IDs won't align with nodes and checkpoints. I think this is a required evil
+                    messageMap.put(message.getId(), message);
+                }
                 messageIds.add(message.getId());
             }
             List<UUID> itemIds = new ArrayList<>();

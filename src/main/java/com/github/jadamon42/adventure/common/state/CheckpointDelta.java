@@ -41,6 +41,10 @@ public class CheckpointDelta {
         return currentMessageId;
     }
 
+    public boolean hasChanges() {
+        return !textMessages.isEmpty() || playerDelta.hasChanges();
+    }
+
     public static class Builder {
         private final List<TextMessage> textMessages;
         private final PlayerDelta.Builder playerDeltaBuilder;

@@ -4,6 +4,8 @@ import com.github.jadamon42.adventure.common.model.TextMessage;
 import com.github.jadamon42.adventure.common.state.serialize.GameStateDeserializer;
 import com.github.jadamon42.adventure.common.state.serialize.SerializableExpositionalTextNode;
 
+import java.util.UUID;
+
 public class ExpositionalTextNode extends LinkableStoryTextNode {
     private final TextMessage message;
 
@@ -12,14 +14,14 @@ public class ExpositionalTextNode extends LinkableStoryTextNode {
         this.message = new TextMessage(this.getText(), false);
     }
 
-    private ExpositionalTextNode(TextMessage message) {
-        super(message.getText());
+    private ExpositionalTextNode(UUID id, TextMessage message) {
+        super(id, message.getText());
         this.message = message;
     }
 
     public static ExpositionalTextNode fromSerialized(SerializableExpositionalTextNode serialized, GameStateDeserializer data) {
         TextMessage message = data.getMessageMap().get(serialized.messageId());
-        return new ExpositionalTextNode(message);
+        return new ExpositionalTextNode(serialized.id(), message);
     }
 
     @Override

@@ -5,6 +5,8 @@ import com.github.jadamon42.adventure.common.model.TextMessage;
 import com.github.jadamon42.adventure.common.state.serialize.GameStateDeserializer;
 import com.github.jadamon42.adventure.common.state.serialize.SerializableAcquireEffectTextNode;
 
+import java.util.UUID;
+
 public class AcquireEffectTextNode extends LinkableStoryTextNode {
     private final Effect effect;
     private final TextMessage message;
@@ -15,8 +17,8 @@ public class AcquireEffectTextNode extends LinkableStoryTextNode {
         this.message = new TextMessage(this.getText(), false);
     }
 
-    private AcquireEffectTextNode(TextMessage message, Effect effect) {
-        super(message.getText());
+    private AcquireEffectTextNode(UUID id, TextMessage message, Effect effect) {
+        super(id, message.getText());
         this.effect = effect;
         this.message = message;
     }
@@ -24,7 +26,7 @@ public class AcquireEffectTextNode extends LinkableStoryTextNode {
     public static AcquireEffectTextNode fromSerialized(SerializableAcquireEffectTextNode serialized, GameStateDeserializer data) {
         TextMessage textMessage = data.getMessageMap().get(serialized.messageId());
         Effect effect = data.getEffectMap().get(serialized.effectId());
-        return new AcquireEffectTextNode(textMessage, effect);
+        return new AcquireEffectTextNode(serialized.id(), textMessage, effect);
     }
 
     public Effect getEffect() {

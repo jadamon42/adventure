@@ -19,7 +19,9 @@ public class GameState {
     }
 
     public void addCheckpoint(CheckpointDelta checkpointDelta) {
-        this.checkpointDeltas.add(checkpointDelta);
+        if (checkpointDelta.hasChanges()) {
+            this.checkpointDeltas.add(checkpointDelta);
+        }
     }
 
     public Checkpoint getCheckpointForMessageId(UUID messageId) {

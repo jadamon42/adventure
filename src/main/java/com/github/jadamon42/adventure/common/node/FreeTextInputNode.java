@@ -5,6 +5,8 @@ import com.github.jadamon42.adventure.common.state.serialize.GameStateDeserializ
 import com.github.jadamon42.adventure.common.state.serialize.SerializableFreeTextInputNode;
 import com.github.jadamon42.adventure.common.util.PlayerDeltaBiFunction;
 
+import java.util.UUID;
+
 
 public class FreeTextInputNode extends LinkableStoryTextNode {
 
@@ -17,15 +19,15 @@ public class FreeTextInputNode extends LinkableStoryTextNode {
         this.message = new TextMessage(this.getText(), false, true);
     }
 
-    private FreeTextInputNode(TextMessage message, PlayerDeltaBiFunction<Object> consumer) {
-        super(message.getText());
+    private FreeTextInputNode(UUID id, TextMessage message, PlayerDeltaBiFunction<Object> consumer) {
+        super(id, message.getText());
         this.textConsumer = consumer;
         this.message = message;
     }
 
     public static FreeTextInputNode fromSerialized(SerializableFreeTextInputNode serialized, GameStateDeserializer data) {
         TextMessage message = data.getMessageMap().get(serialized.messageId());
-        return new FreeTextInputNode(message, serialized.consumer());
+        return new FreeTextInputNode(serialized.id(), message, serialized.consumer());
     }
 
     public PlayerDeltaBiFunction<Object> getTextConsumer() {

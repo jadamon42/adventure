@@ -5,6 +5,7 @@ import com.github.jadamon42.adventure.common.state.serialize.GameStateDeserializ
 import com.github.jadamon42.adventure.common.state.serialize.SerializableBranchNode;
 
 import java.util.List;
+import java.util.UUID;
 
 public class BranchNode extends StoryNode {
     private final List<LinkedConditionalText> choices;
@@ -19,6 +20,11 @@ public class BranchNode extends StoryNode {
         this.choices = List.of(options);
     }
 
+    private BranchNode(UUID id, LinkedConditionalText... options) {
+        super(id);
+        this.choices = List.of(options);
+    }
+
     public static BranchNode fromSerialized(SerializableBranchNode serialized, GameStateDeserializer data) {
         LinkedConditionalText[] choices = serialized.choices().stream()
                 .map((serializedChoice) -> {
@@ -27,7 +33,7 @@ public class BranchNode extends StoryNode {
                     return condition;
                 })
                 .toArray(LinkedConditionalText[]::new);
-        return new BranchNode(choices);
+        return new BranchNode(serialized.id(), choices);
     }
 
     public LinkedConditionalText getBranch(Player player) {
