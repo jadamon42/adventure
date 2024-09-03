@@ -1,10 +1,10 @@
 package com.github.jadamon42.adventure.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class Inventory implements Serializable {
+public class Inventory implements Iterable<Item> {
     private final List<Item> items;
 
     public Inventory() {
@@ -34,5 +34,10 @@ public class Inventory implements Serializable {
             }
         }
         return false;
+    }
+
+    @Override
+    public Iterator<Item> iterator() {
+        return items.iterator();
     }
 }

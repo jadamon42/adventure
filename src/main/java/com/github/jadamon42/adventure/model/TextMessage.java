@@ -1,11 +1,12 @@
 package com.github.jadamon42.adventure.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.jadamon42.adventure.util.TextInterpolator;
 
-import java.io.Serializable;
 import java.util.UUID;
 
-public class TextMessage implements Serializable {
+public class TextMessage {
     private final UUID id;
     private final String text;
     private final boolean isPlayerMessage;
@@ -25,6 +26,14 @@ public class TextMessage implements Serializable {
         this.isInteractable = isInteractable;
     }
 
+    @JsonCreator
+    TextMessage(@JsonProperty("id") UUID id, @JsonProperty("text") String text, @JsonProperty("isPlayerMessage") boolean isPlayerMessage, @JsonProperty("isInteractable") boolean isInteractable) {
+        this.id = id;
+        this.text = text;
+        this.isPlayerMessage = isPlayerMessage;
+        this.isInteractable = isInteractable;
+    }
+
     public UUID getId() {
         return id;
     }
@@ -33,10 +42,12 @@ public class TextMessage implements Serializable {
         return text;
     }
 
+    @JsonProperty("isPlayerMessage")
     public boolean isPlayerMessage() {
         return isPlayerMessage;
     }
 
+    @JsonProperty("isInteractable")
     public boolean isInteractable() {
         return isInteractable;
     }

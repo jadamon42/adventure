@@ -3,13 +3,12 @@ package com.github.jadamon42.adventure.builder.node;
 import com.github.jadamon42.adventure.builder.element.*;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
-import com.github.jadamon42.adventure.model.Player;
 import com.github.jadamon42.adventure.util.PlayerDeltaBiFunction;
 
 import java.util.List;
 
 public class InputHandler extends BasicNode implements VisitableNode {
-    private PlayerDeltaBiFunction<Player, Object> handler;
+    private PlayerDeltaBiFunction<Object> handler;
     private final AttachmentLink inputHandlerLink;
 
     public InputHandler() {
@@ -26,7 +25,7 @@ public class InputHandler extends BasicNode implements VisitableNode {
         setFooter(footer);
     }
 
-    public PlayerDeltaBiFunction<Player, Object> getHandler() {
+    public PlayerDeltaBiFunction<Object> getHandler() {
         return handler;
     }
 

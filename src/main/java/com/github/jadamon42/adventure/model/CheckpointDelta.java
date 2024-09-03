@@ -1,18 +1,17 @@
 package com.github.jadamon42.adventure.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class CheckpointDelta implements Serializable {
-    private final TextMessage[] textMessages;
+public class CheckpointDelta {
+    private final List<TextMessage> textMessages;
     private final PlayerDelta playerDelta;
     private final UUID currentNodeId;
     private final UUID currentMessageId;
 
     public CheckpointDelta(List<TextMessage> textMessages, PlayerDelta playerDelta, UUID currentNodeId, UUID currentMessageId) {
-        this.textMessages = textMessages.toArray(new TextMessage[0]);
+        this.textMessages = textMessages;
         this.playerDelta = playerDelta;
         this.currentNodeId = currentNodeId;
         this.currentMessageId = currentMessageId;
@@ -26,7 +25,7 @@ public class CheckpointDelta implements Serializable {
         return playerDelta;
     }
 
-    public TextMessage[] getMessages() {
+    public List<TextMessage> getMessages() {
         return textMessages;
     }
 

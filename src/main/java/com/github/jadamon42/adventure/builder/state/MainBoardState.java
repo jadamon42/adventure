@@ -6,12 +6,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javafx.scene.layout.Pane;
 
-import java.io.Serializable;
 import java.util.List;
 
 @JsonSerialize
 @JsonDeserialize
-public class MainBoardState implements Serializable {
+public class MainBoardState {
     private final List<SerializableNode> mainStateChildren;
 
     @JsonCreator

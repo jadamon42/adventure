@@ -3,12 +3,11 @@ package com.github.jadamon42.adventure.model;
 import com.github.jadamon42.adventure.node.StoryNode;
 import com.github.jadamon42.adventure.util.StoryNodeTraverser;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class Checkpoint implements Serializable {
+public class Checkpoint {
     private final Player player;
     private final HashMap<UUID, StoryNode> nodeMap;
     private final UUID currentNodeId;

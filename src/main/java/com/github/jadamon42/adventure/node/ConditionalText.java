@@ -2,11 +2,11 @@ package com.github.jadamon42.adventure.node;
 
 import com.github.jadamon42.adventure.model.TextMessage;
 import com.github.jadamon42.adventure.model.Player;
+import com.github.jadamon42.adventure.serialize.GameStateDeserializer;
+import com.github.jadamon42.adventure.serialize.SerializedChoice;
 import com.github.jadamon42.adventure.util.BooleanFunction;
 
-import java.io.Serializable;
-
-public class ConditionalText implements Serializable {
+public class ConditionalText {
     private final String text;
     private final TextMessage message;
     private final BooleanFunction<Player> condition;
@@ -23,6 +23,17 @@ public class ConditionalText implements Serializable {
         this.message = createMessage();
     }
 
+    protected ConditionalText(TextMessage message, BooleanFunction<Player> condition) {
+        this.text = message.getText();
+        this.condition = condition;
+        this.message = message;
+    }
+
+    public static ConditionalText fromSerialized(SerializedChoice serialized, GameStateDeserializer data) {
+        TextMessage textMessage = data.getMessageMap().get(serialized.messageId());
+        return new ConditionalText(textMessage, serialized.condition());
+    }
+
     protected TextMessage createMessage() {
         return new TextMessage(text, false);
     }
@@ -37,5 +48,9 @@ public class ConditionalText implements Serializable {
 
     public TextMessage getMessage() {
         return message;
+    }
+
+    public BooleanFunction<Player> getCondition() {
+        return condition;
     }
 }

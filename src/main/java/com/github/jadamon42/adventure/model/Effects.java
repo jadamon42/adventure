@@ -1,10 +1,10 @@
 package com.github.jadamon42.adventure.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class Effects implements Serializable {
+public class Effects implements Iterable<Effect> {
     private final List<Effect> effects;
 
     public Effects() {
@@ -34,5 +34,10 @@ public class Effects implements Serializable {
             }
         }
         return false;
+    }
+
+    @Override
+    public Iterator<Effect> iterator() {
+        return effects.iterator();
     }
 }

@@ -1,7 +1,7 @@
 package com.github.jadamon42.adventure.node;
 
 public interface StoryNodeVisitor {
-    void visit(LinkableStoryTextNode node);
+    void visit(ExpositionalTextNode node);
 
     void visit(ChoiceTextInputNode node);
 

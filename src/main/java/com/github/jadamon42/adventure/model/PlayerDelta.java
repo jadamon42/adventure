@@ -1,54 +1,52 @@
 package com.github.jadamon42.adventure.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-public class PlayerDelta implements Serializable {
+public class PlayerDelta {
     private final String name;
-    private final Item[] items;
-    private final Effect[] effects;
+    private final List<Item> items;
+    private final List<Effect> effects;
 
     public PlayerDelta(String name, List<Item> items, List<Effect> effects) {
         this.name = name;
-        this.items = items.toArray(new Item[0]);
-        this.effects = effects.toArray(new Effect[0]);
+        this.items = items;
+        this.effects = effects;
     }
 
     public PlayerDelta(String name) {
         this.name = name;
-        this.items = new Item[0];
-        this.effects = new Effect[0];
+        this.items = List.of();
+        this.effects = List.of();
     }
 
     public PlayerDelta(Item item) {
         this.name = null;
-        this.items = new Item[] {item};
-        this.effects = new Effect[0];
+        this.items = List.of(item);
+        this.effects = List.of();
     }
 
     public PlayerDelta(Effect effect) {
         this.name = null;
-        this.items = new Item[0];
-        this.effects = new Effect[] {effect};
+        this.items = List.of();
+        this.effects = List.of(effect);
     }
 
     public PlayerDelta() {
         this.name = null;
-        this.items = new Item[0];
-        this.effects = new Effect[0];
+        this.items = List.of();
+        this.effects = List.of();
     }
 
     public String getName() {
         return name;
     }
 
-    public Item[] getItems() {
+    public List<Item> getItems() {
         return items;
     }
 
-    public Effect[] getEffects() {
+    public List<Effect> getEffects() {
         return effects;
     }
 

@@ -80,7 +80,7 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
         handleInteractableOutputNode(node);
 
         String input = inputHandler.getFreeTextInput();
-        PlayerDeltaBiFunction<Player, Object> textConsumer = node.getTextConsumer();
+        PlayerDeltaBiFunction<Object> textConsumer = node.getTextConsumer();
         if (textConsumer != null) {
             textConsumer.apply(player, input);
         }
@@ -102,7 +102,7 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
     }
 
     @Override
-    public void visit(LinkableStoryTextNode node) {
+    public void visit(ExpositionalTextNode node) {
         handleOutput(node.getMessage().getInterpolatedText(player));
         currentNode = node.getNextNode();
     }

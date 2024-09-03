@@ -125,7 +125,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
     }
 
     @Override
-    public void visit(LinkableStoryTextNode node) {
+    public void visit(ExpositionalTextNode node) {
         addGameMessage(node.getMessage());
         currentNode = node.getNextNode();
     }
@@ -153,7 +153,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
         CountDownLatch latch = new CountDownLatch(1);
         uiController.showTextInput(e -> {
             String input = uiController.getTextInput();
-            PlayerDeltaBiFunction<Player, Object> textConsumer = node.getTextConsumer();
+            PlayerDeltaBiFunction<Object> textConsumer = node.getTextConsumer();
             if (textConsumer != null) {
                 PlayerDelta playerDelta = textConsumer.apply(player, input);
                 checkpointDeltaBuilder.applyPlayerDelta(playerDelta);

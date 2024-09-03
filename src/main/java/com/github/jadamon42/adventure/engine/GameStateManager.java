@@ -1,32 +1,48 @@
 package com.github.jadamon42.adventure.engine;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.github.jadamon42.adventure.model.GameState;
+import com.github.jadamon42.adventure.serialize.*;
 
 import java.io.*;
 
 public class GameStateManager {
-    public void saveGame(String saveFile, GameState gameState) throws IOException {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(saveFile))) {
-            out.writeObject(gameState);
-        }
+    private final static ObjectMapper objectMapper;
+    private final static SimpleModule module;
+
+    static {
+        module = new SimpleModule();
+        module.registerSubtypes(
+                new NamedType(SerializedAcquireItemTextNode.class, "SerializedAcquireItemTextNode"),
+                new NamedType(SerializedAcquireEffectTextNode.class, "SerializedAcquireEffectTextNode"),
+                new NamedType(SerializedBranchNode.class, "SerializedBranchNode"),
+                new NamedType(SerializedChoiceTextInputNode.class, "SerializedChoiceTextInputNode"),
+                new NamedType(SerializedExpositionalTextNode.class, "SerializedExpositionalTextNode"),
+                new NamedType(SerializedFreeTextInputNode.class, "SerializedFreeTextInputNode"),
+                new NamedType(SerializedSwitchNode.class, "SerializedSwitchNode")
+        );
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(module);
     }
 
-    public void saveGame(File saveFile, GameState gameState) throws IOException {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(saveFile))) {
-            out.writeObject(gameState);
-        }
+    public void saveGame(String saveFile, GameState gameState) throws IOException {
+        File file = new File(saveFile);
+        saveGame(file, gameState);
     }
 
     public GameState loadGame(String saveFile) throws IOException, ClassNotFoundException {
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(saveFile))) {
-            return (GameState) in.readObject();
-        }
+        File file = new File(saveFile);
+        return loadGame(file);
     }
 
-    public GameState loadGame(File saveFile) throws IOException, ClassNotFoundException {
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(saveFile))) {
-            return (GameState) in.readObject();
-        }
+    public void saveGame(File saveFile, GameState gameState) throws IOException {
+        objectMapper.writeValue(saveFile, gameState);
+    }
+
+    public GameState loadGame(File saveFile) throws IOException {
+        return objectMapper.readValue(saveFile, GameState.class);
     }
 }
 

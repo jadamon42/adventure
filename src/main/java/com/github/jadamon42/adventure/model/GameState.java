@@ -1,9 +1,15 @@
 package com.github.jadamon42.adventure.model;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.github.jadamon42.adventure.serialize.GameStateDeserializer;
+import com.github.jadamon42.adventure.serialize.GameStateSerializer;
+
 import java.util.*;
 
-public class GameState implements Serializable {
+@JsonSerialize(using = GameStateSerializer.class)
+@JsonDeserialize(using = GameStateDeserializer.class)
+public class GameState {
     private final Checkpoint initialCheckpoint;
     private final List<CheckpointDelta> checkpointDeltas;
 
@@ -33,6 +39,10 @@ public class GameState implements Serializable {
 
     public Checkpoint getLatestCheckpoint() {
         return initialCheckpoint.applyAll(checkpointDeltas);
+    }
+
+    public List<CheckpointDelta> getCheckpointDeltas() {
+        return checkpointDeltas;
     }
 
     public void reset() {

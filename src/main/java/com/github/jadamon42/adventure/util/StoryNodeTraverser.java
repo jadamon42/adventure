@@ -17,14 +17,14 @@ public class StoryNodeTraverser implements StoryNodeVisitor {
         return storyNodeMap;
     }
 
-    private void visitNext(Linked linked) {
-        if (linked.getNextNode() != null) {
-            linked.getNextNode().accept(this);
+    private void visitNext(Linkable linkable) {
+        if (linkable.getNextNode() != null) {
+            linkable.getNextNode().accept(this);
         }
     }
 
     @Override
-    public void visit(LinkableStoryTextNode node) {
+    public void visit(ExpositionalTextNode node) {
         storyNodeMap.put(node.getId(), node);
         visitNext(node);
     }

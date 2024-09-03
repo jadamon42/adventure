@@ -8,11 +8,6 @@ public abstract class LinkableStoryTextNode extends StoryTextNode implements Lin
     }
 
     @Override
-    public void accept(StoryNodeVisitor visitor) {
-        visitor.visit(this);
-    }
-
-    @Override
     public StoryNode getNextNode() {
         return nextNode;
     }

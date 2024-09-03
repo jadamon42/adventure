@@ -1,12 +1,10 @@
 package com.github.jadamon42.adventure.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public class MessageHistory implements Iterable<TextMessage>, Serializable {
+public class MessageHistory implements Iterable<TextMessage> {
     private final List<TextMessage> textMessages;
 
     public MessageHistory() {
@@ -21,26 +19,12 @@ public class MessageHistory implements Iterable<TextMessage>, Serializable {
         textMessages.add(textMessage);
     }
 
-    public void addAll(TextMessage[] textMessages) {
-        this.textMessages.addAll(Arrays.asList(textMessages));
+    public void addAll(List<TextMessage> textMessages) {
+        this.textMessages.addAll(textMessages);
     }
 
     @Override
     public Iterator<TextMessage> iterator() {
-        return new MessageHistoryIterator();
-    }
-
-    private class MessageHistoryIterator implements Iterator<TextMessage> {
-        private int currentIndex = 0;
-
-        @Override
-        public boolean hasNext() {
-            return currentIndex < textMessages.size();
-        }
-
-        @Override
-        public TextMessage next() {
-            return textMessages.get(currentIndex++);
-        }
+        return textMessages.iterator();
     }
 }

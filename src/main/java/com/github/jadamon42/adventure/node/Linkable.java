@@ -1,5 +1,8 @@
 package com.github.jadamon42.adventure.node;
 
-public interface Linkable extends Linked {
+import java.io.Serializable;
+
+public interface Linkable extends Serializable {
+    StoryNode getNextNode();
     <T extends  StoryNode> T then(T nextNode);
 }

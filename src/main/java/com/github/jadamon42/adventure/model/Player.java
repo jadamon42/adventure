@@ -1,8 +1,6 @@
 package com.github.jadamon42.adventure.model;
 
-import java.io.Serializable;
-
-public class Player implements Serializable {
+public class Player {
     private String name;
     private final Inventory inventory;
     private final Effects effects;

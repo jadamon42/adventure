@@ -20,7 +20,11 @@ public class GuiAdventureGameTest extends Application {
         JavaFXGameEngine gameEngine = new JavaFXGameEngine(player, start());
         gameEngine.initialize(stage);
 //        gameEngine.startGame();
-        gameEngine.loadGame("/Users/jdamon/Documents/Adventure/hannahsGame.adv");
+//        gameEngine.saveGame("/Users/jdamon/Documents/Adventure/blah.json");
+//        gameEngine.loadGame("/Users/jdamon/Documents/Adventure/blah.json");
+        gameEngine.loadGame("/Users/jdamon/Documents/Adventure/newSampleGame.adv");
+
+
     }
 
     private static ExpositionalTextNode start() {
@@ -51,8 +55,8 @@ public class GuiAdventureGameTest extends Application {
         return new ExpositionalTextNode("Your life is boring.");
     }
 
-    private static LinkableStoryTextNode nameTag() {
-        LinkableStoryTextNode node = new ExpositionalTextNode("The room is empty, but you notice a name tag on a small table with a pen next to it.");
+    private static ExpositionalTextNode nameTag() {
+        ExpositionalTextNode node = new ExpositionalTextNode("The room is empty, but you notice a name tag on a small table with a pen next to it.");
         node.then(new ChoiceTextInputNode("Would you like to put your name on the name tag and wear it?",
                                           new LinkedTextChoice("Yes", wearTheNameTag()),
                                           new LinkedTextChoice("No", leaveTheNameTag())));
