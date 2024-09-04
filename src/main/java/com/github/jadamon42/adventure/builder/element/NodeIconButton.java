@@ -3,6 +3,7 @@ package com.github.jadamon42.adventure.builder.element;
 import com.github.jadamon42.adventure.builder.AppState;
 import com.github.jadamon42.adventure.builder.node.Node;
 import com.github.jadamon42.adventure.builder.node.NodeFactory;
+import com.github.jadamon42.adventure.builder.node.NodeType;
 import com.github.jadamon42.adventure.common.util.ImageUtils;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -14,22 +15,22 @@ import javafx.scene.input.*;
 import javafx.scene.layout.VBox;
 
 public class NodeIconButton extends VBox {
-    private final Class<? extends  Node> nodeClass;
+    private final NodeType nodeType;
 
     public NodeIconButton(Class<? extends Node> nodeClass) {
-        this.nodeClass = nodeClass;
+        this.nodeType = NodeType.fromString(nodeClass.getSimpleName());
 
         setSpacing(5);
         setAlignment(Pos.CENTER);
         setCursor(Cursor.HAND);
 
-        WritableImage icon = NodeFactory.getNodeSnapshot(nodeClass.getSimpleName());
+        WritableImage icon = NodeFactory.getNodeSnapshot(nodeType.getName());
         ImageView imageView = new ImageView(icon);
         imageView.setFitWidth(70);
         imageView.setPreserveRatio(true);
 
-        Label label = new Label(nodeClass.getSimpleName());
-        label.setStyle("-fx-font-size: 9px; -fx-font-weight: bold; -fx-text-fill: lightgrey;");
+        Label label = new Label(nodeType.getDisplayName());
+        label.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: lightgrey;");
 
         getChildren().addAll(imageView, label);
 
@@ -41,10 +42,10 @@ public class NodeIconButton extends VBox {
     private void onDragDetected(MouseEvent event) {
         Dragboard db = startDragAndDrop(TransferMode.ANY);
         ClipboardContent content = new ClipboardContent();
-        content.putString(nodeClass.getSimpleName());
+        content.putString(nodeType.getName());
         db.setContent(content);
 
-        WritableImage snapshot = NodeFactory.getNodeSnapshot(nodeClass.getSimpleName());
+        WritableImage snapshot = NodeFactory.getNodeSnapshot(nodeType.getName());
         ImageUtils.setOpacity(snapshot, 0.75);
 
         Image dragView = new WritableImage(snapshot.getPixelReader(), 0, 0, (int) snapshot.getWidth(), (int) snapshot.getHeight());
@@ -62,7 +63,7 @@ public class NodeIconButton extends VBox {
 
     private void onMouseClicked(MouseEvent event) {
         if (event.getClickCount() == 2) {
-            Node newNode = NodeFactory.createNode(nodeClass.getSimpleName());
+            Node newNode = NodeFactory.createNode(nodeType.getName());
 
             AppState.getInstance().addChildToMainBoard(newNode);
             AppState.getInstance().centerNode(newNode);

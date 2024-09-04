@@ -1,3 +1,7 @@
+.root {
+    -fx-font-family: Arial;
+}
+
 .node {
     -fx-background-color: linear-gradient(to bottom, #3c444c, #44444c);
     -fx-padding: 5;
@@ -174,5 +178,5 @@
 
 .icon-select {
     -fx-background-color: #2c2f33;
-    -fx-padding: 20 0 20 0;
+    -fx-padding: 10 0 0 0;
 }

@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.VBox;
 
@@ -40,6 +41,7 @@ public class ZoomableScrollPane extends ScrollPane {
     private Node outerNode(Node node) {
         Node outerNode = centeredNode(node);
         outerNode.setOnZoom(this::onZoom);
+        outerNode.setOnScroll(this::onScroll);
         return outerNode;
     }
 
@@ -52,24 +54,37 @@ public class ZoomableScrollPane extends ScrollPane {
     private void updateScale() {
         target.setScaleX(scaleValue.get());
         target.setScaleY(scaleValue.get());
-//        AppState.getInstance().setScaleFactor(scaleValue.get());
     }
 
     private void onZoom(ZoomEvent event) {
         event.consume();
         double zoomFactor = event.getZoomFactor();
 
-        // Calculate new scale value
+        zoomAtPoint(zoomFactor, event.getX(), event.getY());
+    }
+
+    private void onScroll(ScrollEvent event) {
+        if (event.isControlDown()) {
+            event.consume();
+            double zoomFactor = 1.0;
+            if (event.getDeltaY() > 0) {
+                zoomFactor = 1.1;
+            } else if (event.getDeltaY() < 0) {
+                zoomFactor = 0.9;
+            }
+            zoomAtPoint(zoomFactor, event.getX(), event.getY());
+        }
+    }
+
+    private void zoomAtPoint(double zoomFactor, double x, double y) {
         double newScaleValue = scaleValue.get() * zoomFactor;
 
-        // Determine the minimum scale based on target node's bounds
         Bounds targetBounds = target.getLayoutBounds();
         double minScale = Math.min(
                 getViewportBounds().getWidth() / targetBounds.getWidth(),
                 getViewportBounds().getHeight() / targetBounds.getHeight()
         );
 
-        // Clamp the scale value
         if (newScaleValue < minScale) {
             newScaleValue = minScale;
         }
@@ -78,14 +93,13 @@ public class ZoomableScrollPane extends ScrollPane {
         updateScale();
         this.layout();
 
-        // Adjust the scroll position
         Bounds innerBounds = zoomNode.getLayoutBounds();
         Bounds viewportBounds = getViewportBounds();
 
         double valX = this.getHvalue() * (innerBounds.getWidth() - viewportBounds.getWidth());
         double valY = this.getVvalue() * (innerBounds.getHeight() - viewportBounds.getHeight());
 
-        Point2D posInZoomTarget = target.parentToLocal(zoomNode.parentToLocal(new Point2D(event.getX(), event.getY())));
+        Point2D posInZoomTarget = target.parentToLocal(zoomNode.parentToLocal(new Point2D(x, y)));
         Point2D adjustment = target.getLocalToParentTransform().deltaTransform(posInZoomTarget.multiply(zoomFactor - 1));
 
         Bounds updatedInnerBounds = zoomNode.getBoundsInLocal();
