@@ -1,5 +1,6 @@
 package com.github.jadamon42.adventure.builder;
 
+import com.github.jadamon42.adventure.builder.element.ExceptionContent;
 import com.github.jadamon42.adventure.builder.element.NodeIconButton;
 import com.github.jadamon42.adventure.builder.state.MainBoardState;
 import com.github.jadamon42.adventure.builder.element.ZoomableScrollPane;
@@ -119,23 +120,32 @@ public class BuilderUiController {
     }
 
     @FXML
-    private void handleSave() throws IOException {
+    private void handleSave() {
         MainBoardState state = AppState.getInstance().getMainBoardState();
         File save = getSaveFileFromUser();
         if (save != null) {
             MainBoardStateManager manager = new MainBoardStateManager();
-            manager.saveGame(save, state);
+            try {
+                manager.saveGame(save, state);
+            } catch (IOException e) {
+                alertError("Save Failed", "An error occurred while saving the adventure.", e);
+            }
         }
     }
 
     @FXML
-    private void handleLoad() throws IOException {
+    private void handleLoad() {
         File save = getLoadFileFromUser();
         if (save != null) {
             mainBoard.getChildren().clear();
             MainBoardStateManager manager = new MainBoardStateManager();
-            MainBoardState state = manager.loadGame(save);
-            state.applyTo(mainBoard);
+            MainBoardState state;
+            try {
+                state = manager.loadGame(save);
+                state.applyTo(mainBoard);
+            } catch (IOException | NullPointerException e) {
+                alertError("Load Failed", "An error occurred while loading the adventure.", e);
+            }
             mainBoard.layout();
             for (javafx.scene.Node node : mainBoard.getChildren()) {
                 if (node instanceof Start startNode) {
@@ -146,12 +156,16 @@ public class BuilderUiController {
     }
 
     @FXML
-    private void handleExport() throws IOException {
+    private void handleExport() {
         StoryNode adventure = start.getAdventure();
         if (adventure != null) {
-            export(adventure);
+            try {
+                export(adventure);
+            } catch (IOException e) {
+                alertError("Export Failed", "An error occurred while exporting the adventure.", e);
+            }
         } else {
-            alertUser("Export Failed", "Adventure must have at least one node.");
+            alertInformation("Export Failed", "Adventure must have at least one node.");
         }
     }
 
@@ -171,11 +185,23 @@ public class BuilderUiController {
         }
     }
 
-    private void alertUser(String title, String message) {
+    private void alertInformation(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void alertError(String title, String message, Exception e) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+
+        ExceptionContent exception = new ExceptionContent(e);
+        alert.getDialogPane().setExpandableContent(exception);
+
         alert.showAndWait();
     }
 
