@@ -31,7 +31,6 @@ public class ZoomableScrollPane extends ScrollPane {
         this.zoomNode = new Group(target);
         setContent(outerNode(zoomNode));
         updateScale();
-        centerContent();
     }
 
     public DoubleProperty scaleValueProperty() {
@@ -105,16 +104,5 @@ public class ZoomableScrollPane extends ScrollPane {
         Bounds updatedInnerBounds = zoomNode.getBoundsInLocal();
         this.setHvalue((valX + adjustment.getX()) / (updatedInnerBounds.getWidth() - viewportBounds.getWidth()));
         this.setVvalue((valY + adjustment.getY()) / (updatedInnerBounds.getHeight() - viewportBounds.getHeight()));
-    }
-
-    private void centerContent() {
-        Bounds viewportBounds = getViewportBounds();
-        Bounds contentBounds = zoomNode.getLayoutBounds();
-
-        double centerX = (contentBounds.getWidth() - viewportBounds.getWidth()) / 2;
-        double centerY = (contentBounds.getHeight() - viewportBounds.getHeight()) / 2;
-
-        setHvalue(centerX / (contentBounds.getWidth() - viewportBounds.getWidth()));
-        setVvalue(centerY / (contentBounds.getHeight() - viewportBounds.getHeight()));
     }
 }
