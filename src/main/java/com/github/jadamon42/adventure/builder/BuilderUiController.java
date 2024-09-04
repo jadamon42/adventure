@@ -139,9 +139,8 @@ public class BuilderUiController {
         if (save != null) {
             mainBoard.getChildren().clear();
             MainBoardStateManager manager = new MainBoardStateManager();
-            MainBoardState state;
             try {
-                state = manager.loadGame(save);
+                MainBoardState state = manager.loadGame(save);
                 state.applyTo(mainBoard);
             } catch (IOException | NullPointerException e) {
                 alertError("Load Failed", "An error occurred while loading the adventure.", e);
