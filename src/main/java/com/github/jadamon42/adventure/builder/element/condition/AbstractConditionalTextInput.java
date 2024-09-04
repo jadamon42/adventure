@@ -32,18 +32,7 @@ public abstract class AbstractConditionalTextInput extends HBox implements Infor
     private AttachmentLink conditionLink;
 
     public AbstractConditionalTextInput(String promptText) {
-        setId(UUID.randomUUID().toString());
-        leftIcons = new HBox();
-        leftIcons.setPrefWidth(32);
-        leftIcons.setAlignment(Pos.CENTER_LEFT);
-        leftIcons.setSpacing(5);
-        leftIcons.setPadding(new Insets(0, 0, 0, 5));
-        conditionLink = new AttachmentLink(ConnectionType.CONDITION, ConnectionGender.FEMALE);
-        leftIcons.getChildren().add(conditionLink);
-        getChildren().add(leftIcons);
-
-        textInput = new ExpandableTextInput(promptText);
-        getChildren().add(textInput);
+        this(promptText, false);
     }
 
     public AbstractConditionalTextInput(String promptText, boolean defaulted) {
@@ -53,9 +42,15 @@ public abstract class AbstractConditionalTextInput extends HBox implements Infor
         leftIcons.setAlignment(Pos.CENTER_LEFT);
         leftIcons.setSpacing(5);
         leftIcons.setPadding(new Insets(0, 0, 0, 5));
-        Pane spacer = new Pane();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        leftIcons.getChildren().addFirst(spacer);
+
+        if (defaulted) {
+            Pane spacer = new Pane();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
+            leftIcons.getChildren().addFirst(spacer);
+        } else {
+            conditionLink = new AttachmentLink(ConnectionType.CONDITION, ConnectionGender.FEMALE);
+            leftIcons.getChildren().add(conditionLink);
+        }
         getChildren().add(leftIcons);
 
         textInput = new ExpandableTextInput(promptText);
