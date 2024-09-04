@@ -5,6 +5,7 @@ import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import com.github.jadamon42.adventure.common.model.Player;
 import com.github.jadamon42.adventure.common.util.BooleanFunction;
+import com.github.jadamon42.adventure.common.util.ListHelper;
 
 import java.util.List;
 
@@ -43,11 +44,11 @@ public class And extends BasicNode implements ConditionTranslator, VisitableNode
     }
 
     public String getCondition1ConnectionId() {
-        return getFirst(getFooter().getAttachmentConnectionIds());
+        return ListHelper.getFirst(getFooter().getAttachmentConnectionIds());
     }
 
     public String getCondition2ConnectionId() {
-        return getLast(getFooter().getAttachmentConnectionIds());
+        return ListHelper.getLast(getFooter().getAttachmentConnectionIds());
     }
 
     public List<String> getConditionConnectionIds() {

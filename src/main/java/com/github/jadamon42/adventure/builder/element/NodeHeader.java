@@ -3,6 +3,7 @@ package com.github.jadamon42.adventure.builder.element;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionGender;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.node.Node;
+import com.github.jadamon42.adventure.common.util.ListHelper;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.input.KeyEvent;
@@ -72,7 +73,7 @@ public class NodeHeader extends HBox implements InformableChild {
     }
 
     public String getNextNodeConnectionId() {
-        return getFirst(nextNodeLink.getConnectionIds());
+        return ListHelper.getFirst(nextNodeLink.getConnectionIds());
     }
 
     public List<String> getPreviousNodeConnectionIds() {

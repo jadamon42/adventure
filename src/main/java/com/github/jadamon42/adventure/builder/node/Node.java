@@ -10,7 +10,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 
-import java.util.List;
 import java.util.UUID;
 
 public abstract class Node extends VBox {
@@ -21,14 +20,6 @@ public abstract class Node extends VBox {
         dragContext = new DragContext();
         makeDraggable();
         makeDeletable();
-    }
-
-    public <T> T getFirst(List<T> list) {
-        return list.isEmpty() ? null : list.getFirst();
-    }
-
-    public <T> T getLast(List<T> list) {
-        return list.isEmpty() ? null : list.getLast();
     }
 
     private void makeDraggable() {

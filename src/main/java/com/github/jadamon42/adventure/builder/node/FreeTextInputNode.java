@@ -4,6 +4,7 @@ import com.github.jadamon42.adventure.builder.element.*;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import com.github.jadamon42.adventure.common.state.PlayerDelta;
+import com.github.jadamon42.adventure.common.util.ListHelper;
 import com.github.jadamon42.adventure.common.util.PlayerDeltaBiFunction;
 
 public class FreeTextInputNode extends BasicNode implements StoryNodeTranslator, VisitableNode {
@@ -23,7 +24,7 @@ public class FreeTextInputNode extends BasicNode implements StoryNodeTranslator,
     @Override
     public com.github.jadamon42.adventure.common.node.FreeTextInputNode toStoryNode() {
         PlayerDeltaBiFunction<Object> handler = (player, obj) -> new PlayerDelta();
-        Node node = getFirst(getAttachmentNodes());
+        Node node = ListHelper.getFirst(getAttachmentNodes());
         if (node instanceof InputHandler handlerNode) {
             handler = handlerNode.getHandler();
         }
@@ -41,7 +42,7 @@ public class FreeTextInputNode extends BasicNode implements StoryNodeTranslator,
     }
 
     public String getInputHandlerConnectionId() {
-        return getFirst(getFooter().getAttachmentConnectionIds());
+        return ListHelper.getFirst(getFooter().getAttachmentConnectionIds());
     }
 
     public void setInputHandlerConnection(ConnectionLine connectionLine) {

@@ -10,6 +10,7 @@ import com.github.jadamon42.adventure.builder.element.ConditionTranslator;
 import com.github.jadamon42.adventure.builder.node.Node;
 import com.github.jadamon42.adventure.common.model.Player;
 import com.github.jadamon42.adventure.common.util.BooleanFunction;
+import com.github.jadamon42.adventure.common.util.ListHelper;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.Event;
@@ -105,7 +106,7 @@ public abstract class AbstractConditionalTextInput extends HBox implements Infor
 
     public BooleanFunction<Player> getCondition() {
         BooleanFunction<Player> condition = player -> true;
-        Node connectedNode = getFirst(conditionLink.getConnectedNodes());
+        Node connectedNode = ListHelper.getFirst(conditionLink.getConnectedNodes());
         if (connectedNode instanceof ConditionTranslator conditionNode) {
             condition = conditionNode.getCondition();
         }
@@ -123,7 +124,7 @@ public abstract class AbstractConditionalTextInput extends HBox implements Infor
     public String getConditionConnectionId() {
         String id = null;
         if (conditionLink != null) {
-            id = getFirst(conditionLink.getConnectionIds());
+            id = ListHelper.getFirst(conditionLink.getConnectionIds());
         }
         return id;
     }

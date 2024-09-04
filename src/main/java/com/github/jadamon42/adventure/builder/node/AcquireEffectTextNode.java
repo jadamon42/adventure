@@ -3,6 +3,7 @@ package com.github.jadamon42.adventure.builder.node;
 import com.github.jadamon42.adventure.builder.element.*;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
+import com.github.jadamon42.adventure.common.util.ListHelper;
 
 public class AcquireEffectTextNode extends BasicNode implements StoryNodeTranslator, VisitableNode {
     private final AttachmentLink effectLink;
@@ -44,7 +45,7 @@ public class AcquireEffectTextNode extends BasicNode implements StoryNodeTransla
     }
 
     public String getEffectConnectionId() {
-        return getFirst(getFooter().getAttachmentConnectionIds());
+        return ListHelper.getFirst(getFooter().getAttachmentConnectionIds());
     }
 
     public void setEffectConnection(ConnectionLine connectionLine) {
