@@ -30,7 +30,8 @@ public class NodeIconButton extends VBox {
         imageView.setPreserveRatio(true);
 
         Label label = new Label(nodeType.getDisplayName());
-        label.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: lightgrey;");
+        label.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: lightgrey; -fx-alignment: center;");
+        label.setMinWidth(80);
 
         getChildren().addAll(imageView, label);
 

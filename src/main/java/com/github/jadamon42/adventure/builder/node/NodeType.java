@@ -10,7 +10,7 @@ public enum NodeType {
     CHOICE_TEXT_INPUT_NODE(ChoiceTextInputNode.class.getSimpleName(), ChoiceTextInputNode::new, "Multiple Choice"),
     EFFECT(Effect.class.getSimpleName(), Effect::new, "Effect"),
     EFFECT_CONDITION(EffectCondition.class.getSimpleName(), EffectCondition::new, "Effect Condition"),
-    EXPOSITIONAL_TEXT_NODE(ExpositionalTextNode.class.getSimpleName(), ExpositionalTextNode::new, "Expositional Text"),
+    EXPOSITIONAL_TEXT_NODE(ExpositionalTextNode.class.getSimpleName(), ExpositionalTextNode::new, "Text"),
     FREE_TEXT_INPUT_NODE(FreeTextInputNode.class.getSimpleName(), FreeTextInputNode::new, "Free Text"),
     INPUT_HANDLER(InputHandler.class.getSimpleName(), InputHandler::new, "Input Handler"),
     ITEM(Item.class.getSimpleName(), Item::new, "Item"),

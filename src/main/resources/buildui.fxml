@@ -22,25 +22,25 @@
         </MenuBar>
     </top>
     <left>
-        <VBox alignment="TOP_CENTER" spacing="10" style="-fx-padding: 10;" prefWidth="240">
+        <VBox alignment="TOP_CENTER" spacing="10" style="-fx-padding: 10;" maxWidth="221">
             <TitledPane text="Story Drivers" styleClass="node-expandable-pane">
                 <ScrollPane fitToWidth="true" vbarPolicy="NEVER">
-                    <FlowPane fx:id="storyDriversBox" hgap="10" vgap="10" styleClass="icon-select" />
+                    <FlowPane fx:id="storyDriversBox" hgap="15" vgap="10" styleClass="icon-select" />
                 </ScrollPane>
             </TitledPane>
             <TitledPane text="Conditions" expanded="false" styleClass="node-expandable-pane">
                 <ScrollPane fitToWidth="true" vbarPolicy="NEVER">
-                    <FlowPane fx:id="conditionsBox" hgap="10" vgap="10" styleClass="icon-select" />
+                    <FlowPane fx:id="conditionsBox" hgap="15" vgap="10" styleClass="icon-select" />
                 </ScrollPane>
             </TitledPane>
             <TitledPane text="Models" expanded="false" styleClass="node-expandable-pane">
                 <ScrollPane fitToWidth="true" vbarPolicy="NEVER">
-                    <FlowPane fx:id="modelsBox" hgap="10" vgap="10" styleClass="icon-select" />
+                    <FlowPane fx:id="modelsBox" hgap="15" vgap="10" styleClass="icon-select" />
                 </ScrollPane>
             </TitledPane>
             <TitledPane text="Handlers" expanded="false" styleClass="node-expandable-pane">
                 <ScrollPane fitToWidth="true" vbarPolicy="NEVER">
-                    <FlowPane fx:id="handlersBox" hgap="10" vgap="10" styleClass="icon-select" />
+                    <FlowPane fx:id="handlersBox" hgap="15" vgap="10" styleClass="icon-select" />
                 </ScrollPane>
             </TitledPane>
         </VBox>

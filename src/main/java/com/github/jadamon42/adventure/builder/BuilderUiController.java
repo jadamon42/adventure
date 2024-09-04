@@ -11,6 +11,7 @@ import com.github.jadamon42.adventure.common.state.GameState;
 import com.github.jadamon42.adventure.common.model.Player;
 import com.github.jadamon42.adventure.common.node.StoryNode;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.image.WritableImage;
@@ -88,6 +89,7 @@ public class BuilderUiController {
 
     private void addDraggableNodeButton(FlowPane box, Class<? extends Node> nodeClass) {
         NodeIconButton button = new NodeIconButton(nodeClass);
+        button.setAlignment(Pos.BOTTOM_CENTER);
 
         mainBoard.setOnDragOver(event -> {
             if (event.getGestureSource() != mainBoard && event.getDragboard().hasString()) {
