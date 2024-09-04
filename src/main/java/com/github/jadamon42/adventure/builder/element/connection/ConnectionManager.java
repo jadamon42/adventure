@@ -53,8 +53,4 @@ public class ConnectionManager {
             currentConnectionLine = null;
         }
     }
-
-    public void removeConnectionLine(ConnectionLine line) {
-        AppState.getInstance().removeChildFromMainBoard(line);
-    }
 }

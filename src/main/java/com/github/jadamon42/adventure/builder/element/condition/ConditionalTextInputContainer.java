@@ -1,6 +1,6 @@
 package com.github.jadamon42.adventure.builder.element.condition;
 
-import com.github.jadamon42.adventure.builder.element.DraggableChild;
+import com.github.jadamon42.adventure.builder.element.InformableChild;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public abstract class ConditionalTextInputContainer<T extends AbstractConditionalTextInput> extends VBox implements Iterable<T>, DraggableChild {
+public abstract class ConditionalTextInputContainer<T extends AbstractConditionalTextInput> extends VBox implements Iterable<T>, InformableChild {
     private final List<T> conditionalTextInputs;
 
     public ConditionalTextInputContainer() {
@@ -73,6 +73,13 @@ public abstract class ConditionalTextInputContainer<T extends AbstractConditiona
     public void onParentDragged() {
         for (T condition : conditionalTextInputs) {
             condition.onParentDragged();
+        }
+    }
+
+    @Override
+    public void onParentDeleted() {
+        for (T condition : conditionalTextInputs) {
+            condition.onParentDeleted();
         }
     }
 }

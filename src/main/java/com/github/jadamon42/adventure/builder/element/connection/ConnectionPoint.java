@@ -1,6 +1,6 @@
 package com.github.jadamon42.adventure.builder.element.connection;
 
-import com.github.jadamon42.adventure.builder.element.DraggableChild;
+import com.github.jadamon42.adventure.builder.element.InformableChild;
 import com.github.jadamon42.adventure.builder.node.Node;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class ConnectionPoint extends HBox implements DraggableChild {
+public abstract class ConnectionPoint extends HBox implements InformableChild {
     private final List<ConnectionLine> connections;
     private final ConnectionGender gender;
     private boolean isConnected;
@@ -97,6 +97,13 @@ public abstract class ConnectionPoint extends HBox implements DraggableChild {
     public void onParentDragged() {
         for (ConnectionLine line : connections) {
             line.onParentDragged();
+        }
+    }
+
+    @Override
+    public void onParentDeleted() {
+        for (ConnectionLine line : new ArrayList<>(connections)) {
+            line.onParentDeleted();
         }
     }
 

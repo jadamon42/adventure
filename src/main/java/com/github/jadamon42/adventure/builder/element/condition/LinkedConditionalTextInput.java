@@ -58,4 +58,10 @@ public class LinkedConditionalTextInput extends AbstractConditionalTextInput imp
         notifyConditionLinkOfParentDrag();
         nodeLink.onParentDragged();
     }
+
+    @Override
+    public void onParentDeleted() {
+        notifyConditionLinkOfParentDeletion();
+        nodeLink.onParentDeleted();
+    }
 }

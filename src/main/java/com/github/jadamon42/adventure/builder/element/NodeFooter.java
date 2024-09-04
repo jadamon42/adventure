@@ -14,7 +14,7 @@ import javafx.scene.paint.Paint;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NodeFooter extends HBox implements DraggableChild {
+public class NodeFooter extends HBox implements InformableChild {
     private final VBox left;
     private final List<AttachmentLink> leftAttachments;
     private final VBox right;
@@ -95,6 +95,16 @@ public class NodeFooter extends HBox implements DraggableChild {
         }
         for (AttachmentLink link : rightAttachments) {
             link.onParentDragged();
+        }
+    }
+
+    @Override
+    public void onParentDeleted() {
+        for (AttachmentLink link : leftAttachments) {
+            link.onParentDeleted();
+        }
+        for (AttachmentLink link : rightAttachments) {
+            link.onParentDeleted();
         }
     }
 }

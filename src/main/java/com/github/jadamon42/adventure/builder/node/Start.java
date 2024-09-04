@@ -51,7 +51,7 @@ public class Start extends Node implements VisitableNode {
         visitor.visit(this);
     }
 
-    public static class StartHeader extends StackPane implements DraggableChild {
+    public static class StartHeader extends StackPane implements InformableChild {
         private final NodeLink nextNodeLink;
 
         public StartHeader() {

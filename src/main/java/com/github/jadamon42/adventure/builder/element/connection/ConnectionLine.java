@@ -1,7 +1,7 @@
 package com.github.jadamon42.adventure.builder.element.connection;
 
 import com.github.jadamon42.adventure.builder.AppState;
-import com.github.jadamon42.adventure.builder.element.DraggableChild;
+import com.github.jadamon42.adventure.builder.element.InformableChild;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
@@ -13,7 +13,7 @@ import javafx.scene.shape.Line;
 
 import java.util.UUID;
 
-public class ConnectionLine extends Line implements DraggableChild {
+public class ConnectionLine extends Line implements InformableChild {
     private ConnectionPoint malePoint;
     private ConnectionPoint femalePoint;
     private Color focusColor;
@@ -71,9 +71,7 @@ public class ConnectionLine extends Line implements DraggableChild {
 
     private void handleKeyPress(KeyEvent event) {
         if (isFocused() && (event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE)) {
-            malePoint.removeConnection(this);
-            femalePoint.removeConnection(this);
-            ConnectionManager.getInstance().removeConnectionLine(this);
+            delete();
         } else if (isFocused() && event.getCode() == KeyCode.ESCAPE) {
             setFocused(false);
         }
@@ -154,6 +152,17 @@ public class ConnectionLine extends Line implements DraggableChild {
     @Override
     public void onParentDragged() {
         update();
+    }
+
+    @Override
+    public void onParentDeleted() {
+        delete();
+    }
+
+    private void delete() {
+        malePoint.removeConnection(this);
+        femalePoint.removeConnection(this);
+        AppState.getInstance().removeChildFromMainBoard(this);
     }
 
     private void updateOtherEnd(double x, double y) {

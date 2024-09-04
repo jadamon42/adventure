@@ -1,7 +1,7 @@
 package com.github.jadamon42.adventure.builder.node;
 
 import com.github.jadamon42.adventure.builder.AppState;
-import com.github.jadamon42.adventure.builder.element.DraggableChild;
+import com.github.jadamon42.adventure.builder.element.InformableChild;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
@@ -62,11 +62,20 @@ public abstract class Node extends VBox {
 
     private void notifyChildrenOfDrag() {
         getChildren().forEach(child -> {
-            if (child instanceof DraggableChild draggableChild) {
-                draggableChild.onParentDragged();
+            if (child instanceof InformableChild informableChild) {
+                informableChild.onParentDragged();
             }
         });
     }
+
+    private void notifyChildrenOfDeletion() {
+        getChildren().forEach(child -> {
+            if (child instanceof InformableChild informableChild) {
+                informableChild.onParentDeleted();
+            }
+        });
+    }
+
 
     private void makeDeletable() {
         focusedProperty().addListener(this::focusListener);
@@ -89,9 +98,8 @@ public abstract class Node extends VBox {
 
     private void handleKeyPress(KeyEvent event) {
         if (isFocused() && (event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE)) {
-            if (getParent() != null && getParent() instanceof Pane) {
-                ((Pane) getParent()).getChildren().remove(this);
-            }
+            notifyChildrenOfDeletion();
+            AppState.getInstance().removeChildFromMainBoard(this);
         } else if (isFocused() && event.getCode() == KeyCode.ESCAPE) {
             setFocused(false);
         }

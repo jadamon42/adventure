@@ -12,7 +12,7 @@ import javafx.scene.layout.StackPane;
 
 import java.util.List;
 
-public class NodeHeader extends HBox implements DraggableChild {
+public class NodeHeader extends HBox implements InformableChild {
     private final StackPane stackPane;
     private final NodeTitle nodeTitle;
     private NodeLink previousNodeLink;
@@ -86,6 +86,16 @@ public class NodeHeader extends HBox implements DraggableChild {
         }
         if (nextNodeLink != null) {
             nextNodeLink.onParentDragged();
+        }
+    }
+
+    @Override
+    public void onParentDeleted() {
+        if (previousNodeLink != null) {
+            previousNodeLink.onParentDeleted();
+        }
+        if (nextNodeLink != null) {
+            nextNodeLink.onParentDeleted();
         }
     }
 

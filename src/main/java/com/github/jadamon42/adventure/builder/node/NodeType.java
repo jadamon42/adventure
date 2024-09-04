@@ -9,13 +9,13 @@ public enum NodeType {
     BRANCH_NODE(BranchNode.class.getSimpleName(), BranchNode::new, "Branch"),
     CHOICE_TEXT_INPUT_NODE(ChoiceTextInputNode.class.getSimpleName(), ChoiceTextInputNode::new, "Multiple Choice"),
     EFFECT(Effect.class.getSimpleName(), Effect::new, "Effect"),
-    EFFECT_CONDITION(EffectCondition.class.getSimpleName(), EffectCondition::new, "Effect Condition"),
+    EFFECT_CONDITION(EffectCondition.class.getSimpleName(), EffectCondition::new, "Has Effect"),
     EXPOSITIONAL_TEXT_NODE(ExpositionalTextNode.class.getSimpleName(), ExpositionalTextNode::new, "Text"),
     FREE_TEXT_INPUT_NODE(FreeTextInputNode.class.getSimpleName(), FreeTextInputNode::new, "Free Text"),
     INPUT_HANDLER(InputHandler.class.getSimpleName(), InputHandler::new, "Input Handler"),
     ITEM(Item.class.getSimpleName(), Item::new, "Item"),
-    ITEM_CONDITION(ItemCondition.class.getSimpleName(), ItemCondition::new, "Item Condition"),
-    NAME_CONDITION(NameCondition.class.getSimpleName(), NameCondition::new, "Name Condition"),
+    ITEM_CONDITION(ItemCondition.class.getSimpleName(), ItemCondition::new, "Has Item"),
+    NAME_CONDITION(NameCondition.class.getSimpleName(), NameCondition::new, "Has Name"),
     OR(Or.class.getSimpleName(), Or::new, "Or"),
     SWITCH_NODE(SwitchNode.class.getSimpleName(), SwitchNode::new, "Switch");
 

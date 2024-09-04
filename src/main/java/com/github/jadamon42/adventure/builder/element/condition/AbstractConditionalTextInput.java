@@ -1,7 +1,7 @@
 package com.github.jadamon42.adventure.builder.element.condition;
 
 import com.github.jadamon42.adventure.builder.element.AttachmentLink;
-import com.github.jadamon42.adventure.builder.element.DraggableChild;
+import com.github.jadamon42.adventure.builder.element.InformableChild;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionGender;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
@@ -24,7 +24,7 @@ import javafx.scene.paint.Paint;
 
 import java.util.UUID;
 
-public abstract class AbstractConditionalTextInput extends HBox implements DraggableChild {
+public abstract class AbstractConditionalTextInput extends HBox implements InformableChild {
     private final HBox leftIcons;
     private final ExpandableTextInput textInput;
     private EventHandler<Event> onDelete;
@@ -141,9 +141,20 @@ public abstract class AbstractConditionalTextInput extends HBox implements Dragg
         notifyConditionLinkOfParentDrag();
     }
 
+    @Override
+    public void onParentDeleted() {
+        notifyConditionLinkOfParentDeletion();
+    }
+
     void notifyConditionLinkOfParentDrag() {
         if (conditionLink != null) {
             conditionLink.onParentDragged();
+        }
+    }
+
+    void notifyConditionLinkOfParentDeletion() {
+        if (conditionLink != null) {
+            conditionLink.onParentDeleted();
         }
     }
 }
