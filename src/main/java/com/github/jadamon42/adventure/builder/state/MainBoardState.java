@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.github.jadamon42.adventure.builder.state.serialize.SerializableNode;
+import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 
 import java.util.List;
@@ -27,6 +28,6 @@ public class MainBoardState {
 
     public void applyTo(Pane mainBoard) {
         MainBoardStateApplier applier = new MainBoardStateApplier(mainBoard, this);
-        applier.apply();
+        Platform.runLater(applier::apply);
     }
 }
