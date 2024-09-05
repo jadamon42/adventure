@@ -77,19 +77,10 @@ public class ZoomableScrollPane extends ScrollPane {
 
     private void zoomAtPoint(double zoomFactor, double x, double y) {
         double newScaleValue = scaleValue.get() * zoomFactor;
-
-        Bounds targetBounds = target.getLayoutBounds();
-        double minScale = Math.min(
-                getViewportBounds().getWidth() / targetBounds.getWidth(),
-                getViewportBounds().getHeight() / targetBounds.getHeight()
-        );
         double maxScale = 4.5;
+        double minScale = 0.05;
 
-        if (newScaleValue < minScale) {
-            newScaleValue = minScale;
-        }
-
-        if (newScaleValue <= maxScale) {
+        if (newScaleValue <= maxScale && newScaleValue >= minScale) {
             scaleValue.set(newScaleValue);
             updateScale();
             this.layout();
