@@ -25,9 +25,6 @@ public class GuiAdventureGameTest extends Application {
         JavaFXGameEngine gameEngine = new JavaFXGameEngine(player, start());
         gameEngine.initialize(stage);
 //        gameEngine.startGame();
-//        gameEngine.saveGame("/Users/jdamon/Documents/Adventure/blah.json");
-//        gameEngine.loadGame("/Users/jdamon/Documents/Adventure/blah.json");
-//        gameEngine.loadGame("/Users/jdamon/Documents/Adventure/sampleBuilderExport.adv");
         File file = new File(getClass().getResource("/samples/sampleBuilderExport.adv").getFile());
         gameEngine.loadGame(file.getAbsolutePath());
 

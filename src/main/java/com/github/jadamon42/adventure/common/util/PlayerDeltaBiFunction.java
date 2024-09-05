@@ -14,6 +14,11 @@ import com.github.jadamon42.adventure.common.state.PlayerDelta;
 import java.io.*;
 import java.util.function.BiFunction;
 
+/*
+ * WARNING
+ * `PlayerDeltaBiFunction<T>` gets serialized to a string during JSON serialization.
+ * Changes to this class will break compatibility with existing save files.
+ */
 @JsonSerialize(using = PlayerDeltaBiFunction.Serializer.class)
 @JsonDeserialize(using = PlayerDeltaBiFunction.Deserializer.class)
 public interface PlayerDeltaBiFunction<T> extends BiFunction<Player, T, PlayerDelta>, Serializable {

@@ -222,7 +222,7 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
         checkpointDeltaBuilder.setCurrentMessageId(message.getId());
         checkpointDeltaBuilder.setCurrentNodeId(currentNode.getId());
         gameState.addCheckpoint(checkpointDeltaBuilder.build());
-        saveGame("sampleRunnerSave.adv");
+//        saveGame("sampleRunnerSave.adv");
         checkpointDeltaBuilder = CheckpointDelta.newBuilder();
         checkpointDeltaBuilder.addMessage(message);
 

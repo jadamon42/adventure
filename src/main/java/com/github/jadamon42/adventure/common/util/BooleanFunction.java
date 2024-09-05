@@ -11,6 +11,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.io.*;
 
+/*
+ * WARNING
+ * `BooleanFunction<T>` gets serialized to a string during JSON serialization.
+ * Changes to this class will break compatibility with existing save files.
+ */
 @JsonSerialize(using = BooleanFunction.Serializer.class)
 @JsonDeserialize(using = BooleanFunction.Deserializer.class)
 public interface BooleanFunction<T> extends SerializableFunction<T, Boolean> {

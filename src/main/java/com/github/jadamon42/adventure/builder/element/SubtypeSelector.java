@@ -41,5 +41,6 @@ public class SubtypeSelector extends HBox {
 
     public void setSelectedOption(String option) {
         comboBox.setValue(option);
+        handleSelectionChange();
     }
 }

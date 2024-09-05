@@ -11,6 +11,7 @@ import com.github.jadamon42.adventure.common.state.Checkpoint;
 import com.github.jadamon42.adventure.common.state.GameState;
 import com.github.jadamon42.adventure.common.model.Player;
 import com.github.jadamon42.adventure.common.node.StoryNode;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -84,7 +85,7 @@ public class BuilderUiController {
 
     private void addStartNode() {
         start = new Start();
-        mainBoard.getChildren().add(start);
+        AppState.getInstance().addChildToMainBoard(start);
         AppState.getInstance().centerNode(start);
     }
 
@@ -105,7 +106,7 @@ public class BuilderUiController {
             if (db.hasString()) {
                 Node newNode = NodeFactory.createNode(db.getString());
                 WritableImage snapshot = NodeFactory.getNodeSnapshot(db.getString());
-                mainBoard.getChildren().add(newNode);
+                AppState.getInstance().addChildToMainBoard(newNode);
                 double centerX = event.getX() - snapshot.getWidth() / 2;
                 double centerY = event.getY() - snapshot.getHeight() / 2;
                 newNode.setLayoutX(centerX);
@@ -145,12 +146,14 @@ public class BuilderUiController {
             } catch (IOException | NullPointerException e) {
                 alertError("Load Failed", "An error occurred while loading the adventure.", e);
             }
-            mainBoard.layout();
-            for (javafx.scene.Node node : mainBoard.getChildren()) {
-                if (node instanceof Start startNode) {
-                    start = startNode;
+            Platform.runLater(() -> {
+                mainBoard.layout();
+                for (javafx.scene.Node node : mainBoard.getChildren()) {
+                    if (node instanceof Start startNode) {
+                        start = startNode;
+                    }
                 }
-            }
+            });
         }
     }
 

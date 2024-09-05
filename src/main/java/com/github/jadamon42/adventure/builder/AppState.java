@@ -69,7 +69,7 @@ public class AppState {
 
     public void addChildToMainBoard(Node newNode) {
         mainBoard.getChildren().add(newNode);
-        mainBoard.layout();
+        Platform.runLater(mainBoard::layout);
     }
 
     public void centerNode(Node newNode) {

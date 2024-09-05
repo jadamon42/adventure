@@ -5,7 +5,9 @@ import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import com.github.jadamon42.adventure.common.model.Player;
 import com.github.jadamon42.adventure.common.util.BooleanFunction;
+import com.github.jadamon42.adventure.common.util.Range;
 import com.github.jadamon42.adventure.common.util.SerializableFunction;
+import com.github.jadamon42.adventure.common.util.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,21 +26,35 @@ public class NameCondition extends BasicNode implements ConditionTranslator, Vis
                 "Name Equals",
                 event -> {
                     setGameMessageInput("Player Name");
-                    conditionCreator = string -> (player -> player.getName().equalsIgnoreCase(string));
+                    conditionCreator = string -> (player -> StringUtils.equalsIgnoreCase(player.getName(), string));
+                }
+        );
+        selector.addOption(
+                "Name Equals Any",
+                event -> {
+                    setGameMessageInput("Player Names (comma separated)");
+                    conditionCreator = string -> (player -> StringUtils.equalsAnyIgnoreCase(player.getName(), string));
                 }
         );
         selector.addOption(
                 "Name Contains",
                 event -> {
                     setGameMessageInput("Substring");
-                    conditionCreator = string -> (player -> player.getName().toLowerCase().contains(string.toLowerCase()));
+                    conditionCreator = string -> (player -> StringUtils.containsIgnoreCase(player.getName(), string));
+                }
+        );
+        selector.addOption(
+                "Name Contains Any",
+                event -> {
+                    setGameMessageInput("Substrings (comma separated)");
+                    conditionCreator = string -> (player -> StringUtils.containsAnyIgnoreCase(player.getName(), string));
                 }
         );
         selector.addOption(
                 "Name Has Length",
                 event -> {
-                    setGameMessageInput("Length");
-                    conditionCreator = string -> (player -> player.getName().length() == string.length());
+                    setGameMessageInput("Length (number or range)");
+                    conditionCreator = string -> (player -> Range.parse(string).contains(player.getName().length()));
                 }
         );
         setSubtypeSelector(selector);
