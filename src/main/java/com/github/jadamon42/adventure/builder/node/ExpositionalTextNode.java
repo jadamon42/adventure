@@ -14,6 +14,10 @@ public class ExpositionalTextNode extends BasicNode implements StoryNodeTranslat
         setGameMessageInput("Enter game message");
     }
 
+    public static String getDescription() {
+        return "Display a message to the player to advance the story.";
+    }
+
     @Override
     public com.github.jadamon42.adventure.common.node.ExpositionalTextNode toStoryNode() {
         var retval = new com.github.jadamon42.adventure.common.node.ExpositionalTextNode(getText());

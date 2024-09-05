@@ -22,6 +22,10 @@ public abstract class Node extends VBox {
         makeDeletable();
     }
 
+    public static String getDescription() {
+        return "A node. Can be dragged and deleted.";
+    }
+
     private void makeDraggable() {
         setOnMousePressed(mouseEvent -> {
             if (mouseEvent.getButton() == MouseButton.PRIMARY) {

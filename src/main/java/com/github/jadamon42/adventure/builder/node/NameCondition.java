@@ -49,6 +49,10 @@ public class NameCondition extends BasicNode implements ConditionTranslator, Vis
         setFooter(footer);
     }
 
+    public static String getDescription() {
+        return "Check if the player has a name that meets one of the specified conditions.";
+    }
+
     @Override
     public BooleanFunction<Player> getCondition() {
         String text = getText();

@@ -5,7 +5,7 @@ import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import com.github.jadamon42.adventure.common.model.Player;
 import com.github.jadamon42.adventure.common.util.BooleanFunction;
-import com.github.jadamon42.adventure.common.util.ListHelper;
+import com.github.jadamon42.adventure.common.util.ListUtils;
 
 import java.util.List;
 
@@ -38,13 +38,17 @@ public class ItemCondition extends BasicNode implements ConditionTranslator, Vis
         return hasItem;
     }
 
+    public static String getDescription() {
+        return "Check if the player has a specific item.";
+    }
+
     @Override
     public void accept(NodeVisitor visitor) {
         visitor.visit(this);
     }
 
     public String getItemConnectionId() {
-        return ListHelper.getFirst(getFooter().getAttachmentConnectionIds());
+        return ListUtils.getFirst(getFooter().getAttachmentConnectionIds());
     }
 
     public List<String> getConditionConnectionIds() {

@@ -4,9 +4,12 @@ import com.github.jadamon42.adventure.builder.element.connection.ConnectionGende
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionPoint;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import com.github.jadamon42.adventure.builder.node.Node;
+import com.github.jadamon42.adventure.common.util.StringUtils;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Paint;
+import javafx.util.Duration;
 
 import java.util.List;
 
@@ -17,6 +20,14 @@ public class NodeLink extends ConnectionPoint {
         nodeLinkIcon.setFill(Paint.valueOf("lightgrey"));
         nodeLinkIcon.setGlyphSize(25);
         getChildren().add(nodeLinkIcon);
+
+        String description;
+        description = StringUtils.softWrap(
+                "Link to next node in the story",
+                50);
+        Tooltip tooltip = new Tooltip(description);
+        tooltip.setShowDuration(Duration.INDEFINITE);
+        Tooltip.install(this, tooltip);
     }
 
     @Override

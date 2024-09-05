@@ -20,6 +20,10 @@ public class Item extends BasicNode implements VisitableNode {
         item = new com.github.jadamon42.adventure.common.model.Item(getTitle());
     }
 
+    public static String getDescription() {
+        return "An item that can be acquired by the player, or used to evaluate conditions.";
+    }
+
     public com.github.jadamon42.adventure.common.model.Item getItemModel() {
         return item;
     }

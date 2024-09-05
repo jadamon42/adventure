@@ -5,7 +5,7 @@ import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import com.github.jadamon42.adventure.common.model.Player;
 import com.github.jadamon42.adventure.common.util.BooleanFunction;
-import com.github.jadamon42.adventure.common.util.ListHelper;
+import com.github.jadamon42.adventure.common.util.ListUtils;
 
 import java.util.List;
 
@@ -20,6 +20,10 @@ public class EffectCondition extends BasicNode implements ConditionTranslator, V
         conditionLink = footer.addAttacher(ConnectionType.CONDITION);
         effectLink = footer.addAttachment("Attach Effect", ConnectionType.EFFECT);
         setFooter(footer);
+    }
+
+    public static String getDescription() {
+        return "Check if the player has a specific effect.";
     }
 
     @Override
@@ -44,7 +48,7 @@ public class EffectCondition extends BasicNode implements ConditionTranslator, V
     }
 
     public String getEffectConnectionId() {
-        return ListHelper.getFirst(getFooter().getAttachmentConnectionIds());
+        return ListUtils.getFirst(getFooter().getAttachmentConnectionIds());
     }
 
     public List<String> getConditionConnectionIds() {

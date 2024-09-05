@@ -22,6 +22,10 @@ public class BranchNode extends BasicNode implements StoryNodeTranslator, Visita
         setConditionals(branches);
     }
 
+    public static String getDescription() {
+        return "Advance the story along the branch with the first condition that is true.";
+    }
+
     @Override
     public com.github.jadamon42.adventure.common.node.BranchNode toStoryNode() {
         List<LinkedConditionalText> branches = new ArrayList<>();

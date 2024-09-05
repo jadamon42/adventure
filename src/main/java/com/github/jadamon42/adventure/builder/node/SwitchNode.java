@@ -26,6 +26,10 @@ public class SwitchNode extends BasicNode implements StoryNodeTranslator, Visita
         setConditionals(cases);
     }
 
+    public static String getDescription() {
+        return "Display one of a set of messages to the user based on the supplied conditions.";
+    }
+
     @Override
     public com.github.jadamon42.adventure.common.node.SwitchNode toStoryNode() {
         List<ConditionalText> cases = new ArrayList<>();

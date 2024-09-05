@@ -2,7 +2,7 @@ package com.github.jadamon42.adventure.common.util;
 
 import java.util.List;
 
-public class ListHelper {
+public class ListUtils {
     public static <T> T getFirst(List<T> list) {
         return list.isEmpty() ? null : list.getFirst();
     }

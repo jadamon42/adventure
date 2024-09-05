@@ -25,6 +25,10 @@ public class InputHandler extends BasicNode implements VisitableNode {
         setFooter(footer);
     }
 
+    public static String getDescription() {
+        return "Handle input provided by the player.";
+    }
+
     public PlayerDeltaBiFunction<Object> getHandler() {
         return handler;
     }

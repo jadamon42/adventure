@@ -5,7 +5,7 @@ import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import com.github.jadamon42.adventure.common.model.Player;
 import com.github.jadamon42.adventure.common.util.BooleanFunction;
-import com.github.jadamon42.adventure.common.util.ListHelper;
+import com.github.jadamon42.adventure.common.util.ListUtils;
 
 import java.util.List;
 
@@ -22,6 +22,10 @@ public class And extends BasicNode implements ConditionTranslator, VisitableNode
         condition1Link = footer.addAttachment("Condition 1", ConnectionType.CONDITION);
         condition2Link = footer.addAttachment("Condition 2", ConnectionType.CONDITION);
         setFooter(footer);
+    }
+
+    public static String getDescription() {
+        return "Combine two conditions together. Both conditions must be true for the combined condition to be true.";
     }
 
     @Override
@@ -44,11 +48,11 @@ public class And extends BasicNode implements ConditionTranslator, VisitableNode
     }
 
     public String getCondition1ConnectionId() {
-        return ListHelper.getFirst(getFooter().getAttachmentConnectionIds());
+        return ListUtils.getFirst(getFooter().getAttachmentConnectionIds());
     }
 
     public String getCondition2ConnectionId() {
-        return ListHelper.getLast(getFooter().getAttachmentConnectionIds());
+        return ListUtils.getLast(getFooter().getAttachmentConnectionIds());
     }
 
     public List<String> getConditionConnectionIds() {

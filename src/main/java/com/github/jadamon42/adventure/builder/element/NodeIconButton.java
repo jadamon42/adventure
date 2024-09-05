@@ -5,14 +5,19 @@ import com.github.jadamon42.adventure.builder.node.Node;
 import com.github.jadamon42.adventure.builder.node.NodeFactory;
 import com.github.jadamon42.adventure.builder.node.NodeType;
 import com.github.jadamon42.adventure.common.util.ImageUtils;
+import com.github.jadamon42.adventure.common.util.StringUtils;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.*;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class NodeIconButton extends VBox {
     private final NodeType nodeType;
@@ -38,6 +43,19 @@ public class NodeIconButton extends VBox {
         setOnDragDetected(this::onDragDetected);
         setOnDragDone(this::onDragDone);
         setOnMouseClicked(this::onMouseClicked);
+
+        String specificDescription;
+        try {
+            specificDescription = (String) nodeClass.getMethod("getDescription").invoke(null);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            specificDescription = Node.getDescription();
+        }
+        String generalDescription = StringUtils.softWrap(
+                "Double click or drag to create a new node.\n\n" + specificDescription,
+                50);
+        Tooltip tooltip = new Tooltip(generalDescription);
+        tooltip.setShowDuration(Duration.INDEFINITE);
+        Tooltip.install(this, tooltip);
     }
 
     private void onDragDetected(MouseEvent event) {

@@ -4,7 +4,7 @@ import com.github.jadamon42.adventure.builder.element.*;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
 import com.github.jadamon42.adventure.common.state.PlayerDelta;
-import com.github.jadamon42.adventure.common.util.ListHelper;
+import com.github.jadamon42.adventure.common.util.ListUtils;
 import com.github.jadamon42.adventure.common.util.PlayerDeltaBiFunction;
 
 public class FreeTextInputNode extends BasicNode implements StoryNodeTranslator, VisitableNode {
@@ -21,10 +21,14 @@ public class FreeTextInputNode extends BasicNode implements StoryNodeTranslator,
         setFooter(footer);
     }
 
+    public static String getDescription() {
+        return "Allow the player to enter free text. Use an input handler to process the text.";
+    }
+
     @Override
     public com.github.jadamon42.adventure.common.node.FreeTextInputNode toStoryNode() {
         PlayerDeltaBiFunction<Object> handler = (player, obj) -> new PlayerDelta();
-        Node node = ListHelper.getFirst(getAttachmentNodes());
+        Node node = ListUtils.getFirst(getAttachmentNodes());
         if (node instanceof InputHandler handlerNode) {
             handler = handlerNode.getHandler();
         }
@@ -42,7 +46,7 @@ public class FreeTextInputNode extends BasicNode implements StoryNodeTranslator,
     }
 
     public String getInputHandlerConnectionId() {
-        return ListHelper.getFirst(getFooter().getAttachmentConnectionIds());
+        return ListUtils.getFirst(getFooter().getAttachmentConnectionIds());
     }
 
     public void setInputHandlerConnection(ConnectionLine connectionLine) {

@@ -21,6 +21,14 @@ public class ChoiceTextInputNode extends BasicNode implements StoryNodeTranslato
         setConditionals(choices);
     }
 
+    public static String getDescription() {
+        return """
+                Present the player with a choice. Each choice can lead to a different story path.
+                
+                If a condition is supplied for one of the choices, \
+                that choice will only be presented to the user if the condition is true.""";
+    }
+
     @Override
     public com.github.jadamon42.adventure.common.node.ChoiceTextInputNode toStoryNode() {
         List<LinkedTextChoice> choices = new ArrayList<>();

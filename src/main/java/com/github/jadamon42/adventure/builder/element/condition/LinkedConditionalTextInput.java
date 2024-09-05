@@ -7,7 +7,7 @@ import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.node.Node;
 import com.github.jadamon42.adventure.common.node.LinkedConditionalText;
 import com.github.jadamon42.adventure.common.node.StoryNode;
-import com.github.jadamon42.adventure.common.util.ListHelper;
+import com.github.jadamon42.adventure.common.util.ListUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
@@ -47,7 +47,7 @@ public class LinkedConditionalTextInput extends AbstractConditionalTextInput imp
 
     @Override
     public String getNextConnectionId() {
-        return ListHelper.getFirst(nodeLink.getConnectionIds());
+        return ListUtils.getFirst(nodeLink.getConnectionIds());
     }
 
     public void setNextNodeConnection(ConnectionLine connection) {

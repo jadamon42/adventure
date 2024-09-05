@@ -4,11 +4,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public enum ConnectionType {
-    NODE(new ConnectionConfig(Color.web("white"), 6.0, ConnectionRelationship.MANY_TO_ONE)),
-    ITEM(new ConnectionConfig(Color.web("#2980b9"), 3.0, ConnectionRelationship.ONE_TO_MANY)),
-    EFFECT(new ConnectionConfig(Color.web("#2980b9"), 3.0, ConnectionRelationship.ONE_TO_MANY)),
-    CONDITION(new ConnectionConfig(Color.web("#2980b9"), 3.0, ConnectionRelationship.ONE_TO_MANY)),
-    HANDLER(new ConnectionConfig(Color.web("#2980b9"), 3.0, ConnectionRelationship.ONE_TO_MANY));
+    NODE(new ConnectionConfig(Color.web("white"), 6.0, ConnectionRelationship.MANY_TO_ONE, "a node")),
+    ITEM(new ConnectionConfig(Color.web("#2980b9"), 3.0, ConnectionRelationship.ONE_TO_MANY, "an item")),
+    EFFECT(new ConnectionConfig(Color.web("#2980b9"), 3.0, ConnectionRelationship.ONE_TO_MANY, "an effect")),
+    CONDITION(new ConnectionConfig(Color.web("#2980b9"), 3.0, ConnectionRelationship.ONE_TO_MANY, "a condition")),
+    HANDLER(new ConnectionConfig(Color.web("#2980b9"), 3.0, ConnectionRelationship.ONE_TO_MANY, "a handler"));
 
     private final ConnectionConfig config;
 
@@ -20,7 +20,7 @@ public enum ConnectionType {
         return config;
     }
 
-    public record ConnectionConfig(Paint color, double width, ConnectionRelationship desiredRelationship) {
+    public record ConnectionConfig(Paint color, double width, ConnectionRelationship desiredRelationship, String displayableType) {
     }
 
     public enum ConnectionRelationship {

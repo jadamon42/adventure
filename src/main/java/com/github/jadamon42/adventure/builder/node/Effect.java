@@ -20,6 +20,10 @@ public class Effect extends BasicNode implements VisitableNode {
         effect = new com.github.jadamon42.adventure.common.model.Effect(getTitle());
     }
 
+    public static String getDescription() {
+        return "An effect that can be applied to the player, or used to evaluate conditions.";
+    }
+
     public com.github.jadamon42.adventure.common.model.Effect getEffectModel() {
         return effect;
     }

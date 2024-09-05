@@ -3,7 +3,7 @@ package com.github.jadamon42.adventure.builder.node;
 import com.github.jadamon42.adventure.builder.element.*;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionLine;
 import com.github.jadamon42.adventure.builder.element.connection.ConnectionType;
-import com.github.jadamon42.adventure.common.util.ListHelper;
+import com.github.jadamon42.adventure.common.util.ListUtils;
 
 public class AcquireItemTextNode extends BasicNode  implements StoryNodeTranslator, VisitableNode {
     private final AttachmentLink itemLink;
@@ -17,6 +17,10 @@ public class AcquireItemTextNode extends BasicNode  implements StoryNodeTranslat
         NodeFooter footer = new NodeFooter();
         itemLink = footer.addAttachment("Attach Item", ConnectionType.ITEM);
         setFooter(footer);
+    }
+
+    public static String getDescription() {
+        return "Add an item to the player's inventory.";
     }
 
     @Override
@@ -45,7 +49,7 @@ public class AcquireItemTextNode extends BasicNode  implements StoryNodeTranslat
     }
 
     public String getItemConnectionId() {
-        return ListHelper.getFirst(getFooter().getAttachmentConnectionIds());
+        return ListUtils.getFirst(getFooter().getAttachmentConnectionIds());
     }
 
     public void setItemConnection(ConnectionLine connectionLine) {
