@@ -83,26 +83,29 @@ public class ZoomableScrollPane extends ScrollPane {
                 getViewportBounds().getWidth() / targetBounds.getWidth(),
                 getViewportBounds().getHeight() / targetBounds.getHeight()
         );
+        double maxScale = 4.5;
 
         if (newScaleValue < minScale) {
             newScaleValue = minScale;
         }
 
-        scaleValue.set(newScaleValue);
-        updateScale();
-        this.layout();
+        if (newScaleValue <= maxScale) {
+            scaleValue.set(newScaleValue);
+            updateScale();
+            this.layout();
 
-        Bounds innerBounds = zoomNode.getLayoutBounds();
-        Bounds viewportBounds = getViewportBounds();
+            Bounds innerBounds = zoomNode.getLayoutBounds();
+            Bounds viewportBounds = getViewportBounds();
 
-        double valX = this.getHvalue() * (innerBounds.getWidth() - viewportBounds.getWidth());
-        double valY = this.getVvalue() * (innerBounds.getHeight() - viewportBounds.getHeight());
+            double valX = this.getHvalue() * (innerBounds.getWidth() - viewportBounds.getWidth());
+            double valY = this.getVvalue() * (innerBounds.getHeight() - viewportBounds.getHeight());
 
-        Point2D posInZoomTarget = target.parentToLocal(zoomNode.parentToLocal(new Point2D(x, y)));
-        Point2D adjustment = target.getLocalToParentTransform().deltaTransform(posInZoomTarget.multiply(zoomFactor - 1));
+            Point2D posInZoomTarget = target.parentToLocal(zoomNode.parentToLocal(new Point2D(x, y)));
+            Point2D adjustment = target.getLocalToParentTransform().deltaTransform(posInZoomTarget.multiply(zoomFactor - 1));
 
-        Bounds updatedInnerBounds = zoomNode.getBoundsInLocal();
-        this.setHvalue((valX + adjustment.getX()) / (updatedInnerBounds.getWidth() - viewportBounds.getWidth()));
-        this.setVvalue((valY + adjustment.getY()) / (updatedInnerBounds.getHeight() - viewportBounds.getHeight()));
+            Bounds updatedInnerBounds = zoomNode.getBoundsInLocal();
+            this.setHvalue((valX + adjustment.getX()) / (updatedInnerBounds.getWidth() - viewportBounds.getWidth()));
+            this.setVvalue((valY + adjustment.getY()) / (updatedInnerBounds.getHeight() - viewportBounds.getHeight()));
+        }
     }
 }
