@@ -2,9 +2,11 @@ package com.github.jadamon42.adventure.builder.node;
 
 import com.github.jadamon42.adventure.builder.element.*;
 import com.github.jadamon42.adventure.builder.element.condition.ConditionalTextInputContainer;
+import javafx.scene.control.Tooltip;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public abstract class BasicNode extends Node {
     private ExpandableTextInput textInput;
@@ -74,6 +76,29 @@ public abstract class BasicNode extends Node {
             textInput.setPromptText(promptText);
         }
         orderChildren();
+    }
+
+    @Override
+    public boolean isValid() {
+        return textInput == null || textInput.isValid();
+    }
+
+    public void setInputValidityCheck(Predicate<String> validityCheck) {
+        if (textInput != null) {
+            textInput.setValidityCheck(validityCheck);
+        }
+    }
+
+    public void setInputInvalidTooltip(Tooltip invalidTooltip) {
+        if (textInput != null) {
+            textInput.setInvalidTooltip(invalidTooltip);
+        }
+    }
+
+    public void checkValidityOnInput() {
+        if (textInput != null) {
+            textInput.checkValidity();
+        }
     }
 
     public void setConditionals(ConditionalTextInputContainer<?> options) {

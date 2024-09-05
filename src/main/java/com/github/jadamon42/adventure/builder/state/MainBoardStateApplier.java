@@ -186,8 +186,9 @@ class MainBoardStateApplier implements SerializableNodeVisitor {
     public void visit(SerializableNameCondition serializableNode) {
         NameCondition node = new NameCondition();
         setBaseProperties(serializableNode, node);
-        node.setText(serializableNode.text());
         node.setSubtype(serializableNode.subtype());
+        node.setText(serializableNode.text());
+        node.checkValidityOnInput();
         for (String connectionId : serializableNode.conditionConnectionIds()) {
             node.addConditionConnection(getConnectionLine(connectionId));
         }

@@ -19,11 +19,20 @@ public record Range(int start, int end) {
         return "Range{" + "start=" + start + ", end=" + end + '}';
     }
 
+    public static boolean canParse(String input) {
+        try {
+            parse(input);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
     public static Range parse(String input) {
         input = input.replaceAll("[\\[\\]{}()]", "");
 
         String[] patterns = {
-                "^\\d+$",
+                "^(\\d+)$",
                 "^(\\d+),(\\d+)$",
                 "^(\\d+)-(\\d+)$"
         };
@@ -36,7 +45,9 @@ public record Range(int start, int end) {
                 int start = Integer.parseInt(matcher.group(1));
                 String endStr = matcher.groupCount() > 1 ? matcher.group(2) : matcher.group(1);
                 int end = endStr.isEmpty() ? start : Integer.parseInt(endStr);
-                return new Range(start, end);
+                if (start <= end) {
+                    return new Range(start, end);
+                }
             }
         }
 

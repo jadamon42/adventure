@@ -8,9 +8,12 @@ import com.github.jadamon42.adventure.common.util.BooleanFunction;
 import com.github.jadamon42.adventure.common.util.Range;
 import com.github.jadamon42.adventure.common.util.SerializableFunction;
 import com.github.jadamon42.adventure.common.util.StringUtils;
+import javafx.scene.control.Tooltip;
+import javafx.util.Duration;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 public class NameCondition extends BasicNode implements ConditionTranslator, VisitableNode {
     private SerializableFunction<String, BooleanFunction<Player>> conditionCreator;
@@ -26,6 +29,7 @@ public class NameCondition extends BasicNode implements ConditionTranslator, Vis
                 "Name Equals",
                 event -> {
                     setGameMessageInput("Player Name");
+                    clearValidity();
                     conditionCreator = string -> (player -> StringUtils.equalsIgnoreCase(player.getName(), string));
                 }
         );
@@ -33,6 +37,10 @@ public class NameCondition extends BasicNode implements ConditionTranslator, Vis
                 "Name Equals Any",
                 event -> {
                     setGameMessageInput("Player Names (comma separated)");
+                    handleValidity(
+                        StringUtils::isCorrectlyDelimited,
+                        "Invalid name list format. Use a comma separated list of names."
+                    );
                     conditionCreator = string -> (player -> StringUtils.equalsAnyIgnoreCase(player.getName(), string));
                 }
         );
@@ -40,6 +48,7 @@ public class NameCondition extends BasicNode implements ConditionTranslator, Vis
                 "Name Contains",
                 event -> {
                     setGameMessageInput("Substring");
+                    clearValidity();
                     conditionCreator = string -> (player -> StringUtils.containsIgnoreCase(player.getName(), string));
                 }
         );
@@ -47,6 +56,10 @@ public class NameCondition extends BasicNode implements ConditionTranslator, Vis
                 "Name Contains Any",
                 event -> {
                     setGameMessageInput("Substrings (comma separated)");
+                    handleValidity(
+                        StringUtils::isCorrectlyDelimited,
+                        "Invalid name list format. Use a comma separated list of names (or parts of names)."
+                    );
                     conditionCreator = string -> (player -> StringUtils.containsAnyIgnoreCase(player.getName(), string));
                 }
         );
@@ -54,6 +67,10 @@ public class NameCondition extends BasicNode implements ConditionTranslator, Vis
                 "Name Has Length",
                 event -> {
                     setGameMessageInput("Length (number or range)");
+                    handleValidity(
+                        Range::canParse,
+                        "Invalid name length format. Use a number or range (e.g. 3-5)."
+                    );
                     conditionCreator = string -> (player -> Range.parse(string).contains(player.getName().length()));
                 }
         );
@@ -95,5 +112,24 @@ public class NameCondition extends BasicNode implements ConditionTranslator, Vis
 
     public void addConditionConnection(ConnectionLine connectionLine) {
         conditionLink.addConnection(connectionLine);
+    }
+
+    private void handleValidity(
+            Predicate<String> validityCheck,
+            String tooltipText
+    ) {
+        setInputValidityCheck(validityCheck);
+        Tooltip tooltip = new Tooltip(tooltipText);
+        tooltip.setShowDuration(Duration.INDEFINITE);
+        tooltip.setShowDelay(Duration.millis(100));
+        setInputInvalidTooltip(tooltip);
+        setText("");
+        checkValidityOnInput();
+    }
+
+    private void clearValidity() {
+        setInputValidityCheck(null);
+        setInputInvalidTooltip(null);
+        checkValidityOnInput();
     }
 }

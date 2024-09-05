@@ -1,5 +1,6 @@
 package com.github.jadamon42.adventure.builder;
 
+import com.github.jadamon42.adventure.builder.element.ExpandableTextInput;
 import com.github.jadamon42.adventure.builder.element.VisitableNode;
 import com.github.jadamon42.adventure.builder.element.ZoomableScrollPane;
 import com.github.jadamon42.adventure.builder.state.MainBoardState;
@@ -11,10 +12,14 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AppState {
     private static AppState instance;
     private Pane mainBoard = null;
     private ZoomableScrollPane zoomableScrollPane = null;
+    private final List<ExpandableTextInput> invalidInputs = new ArrayList<>();
 
     private AppState() {}
 
@@ -34,7 +39,7 @@ public class AppState {
     }
 
     public double getScaleFactor() {
-        return zoomableScrollPane.scaleValueProperty().get();
+        return zoomableScrollPane.scaleFactorProperty().get();
     }
 
     public Bounds getMainBoardBounds() {
@@ -89,6 +94,42 @@ public class AppState {
     public void removeChildFromMainBoard(Node child) {
         mainBoard.getChildren().remove(child);
     }
+
+    public void addInvalidInput(ExpandableTextInput input) {
+        invalidInputs.add(input);
+    }
+
+    public void removeInvalidInput(ExpandableTextInput input) {
+        invalidInputs.remove(input);
+    }
+
+    public List<ExpandableTextInput> getInvalidInputs() {
+        return invalidInputs;
+    }
+
+    public void focusOnNode(Node node) {
+        zoomableScrollPane.setScaleFactor(1.0);
+
+        Platform.runLater(() -> {
+            Point2D mainBoardPoint = getMainBoardPointFromNode(node);
+            Bounds boundsOfVisibleSectionOnMainBoard = getVisibleBounds();
+
+            double viewportCenterX = boundsOfVisibleSectionOnMainBoard.getMinX() + boundsOfVisibleSectionOnMainBoard.getWidth() / 2;
+            double viewportCenterY = boundsOfVisibleSectionOnMainBoard.getMinY() + boundsOfVisibleSectionOnMainBoard.getHeight() / 2;
+            double hOffset = mainBoardPoint.getX() - viewportCenterX;
+            double vOffset = mainBoardPoint.getY() - viewportCenterY;
+
+            double hValue = zoomableScrollPane.getHvalue() + hOffset / (mainBoard.getWidth() - boundsOfVisibleSectionOnMainBoard.getWidth());
+            double vValue = zoomableScrollPane.getVvalue() + vOffset / (mainBoard.getHeight() - boundsOfVisibleSectionOnMainBoard.getHeight());
+
+            hValue = Math.max(0, Math.min(hValue, 1));
+            vValue = Math.max(0, Math.min(vValue, 1));
+
+            zoomableScrollPane.setHvalue(hValue);
+            zoomableScrollPane.setVvalue(vValue);
+        });
+    }
+
 
     private Bounds getVisibleBounds() {
         Bounds viewportBounds = zoomableScrollPane.getViewportBounds();

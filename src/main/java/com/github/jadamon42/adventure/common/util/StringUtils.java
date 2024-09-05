@@ -99,4 +99,16 @@ public class StringUtils {
     public static boolean equalsAnyIgnoreCase(String str, String delimitedSearchStrs) {
         return equalsAnyIgnoreCase(str, delimitedSearchStrs, "[,;\\s]+");
     }
+
+    public static boolean isCorrectlyDelimited(String str, String delimiterRegex) {
+        if (str == null || delimiterRegex == null) {
+            return false;
+        }
+        String[] substrings = str.split(delimiterRegex);
+        return substrings.length >= 1;
+    }
+
+    public static boolean isCorrectlyDelimited(String str) {
+        return isCorrectlyDelimited(str, "[,;\\s]+");
+    }
 }

@@ -26,6 +26,10 @@ public abstract class Node extends VBox {
         return "A node. Can be dragged and deleted.";
     }
 
+    public boolean isValid() {
+        return true;
+    }
+
     private void makeDraggable() {
         setOnMousePressed(mouseEvent -> {
             if (mouseEvent.getButton() == MouseButton.PRIMARY) {

@@ -1,6 +1,7 @@
 package com.github.jadamon42.adventure.builder;
 
 import com.github.jadamon42.adventure.builder.element.ExceptionContent;
+import com.github.jadamon42.adventure.builder.element.ExpandableTextInput;
 import com.github.jadamon42.adventure.builder.element.NodeIconButton;
 import com.github.jadamon42.adventure.builder.state.MainBoardState;
 import com.github.jadamon42.adventure.builder.element.ZoomableScrollPane;
@@ -178,6 +179,10 @@ public class BuilderUiController {
     }
 
     private void export(StoryNode adventure) throws IOException {
+        boolean invalidInputsFound = checkForInvalidInputs();
+        if (invalidInputsFound) {
+            return;
+        }
         File save = getExportFileFromUser();
         if (save != null) {
             Checkpoint start = new Checkpoint(new Player(), adventure);
@@ -226,5 +231,15 @@ public class BuilderUiController {
         fileChooser.setTitle("Export Adventure");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Adventure Files", "*.adv"));
         return fileChooser.showSaveDialog(new Stage());
+    }
+
+    private boolean checkForInvalidInputs() {
+        // return true if invalid inputs are found
+        for (ExpandableTextInput node : AppState.getInstance().getInvalidInputs()) {
+            AppState.getInstance().focusOnNode(node);
+            alertInformation("Invalid Input", "Please correct the invalid input.");
+            return true;
+        }
+        return false;
     }
 }

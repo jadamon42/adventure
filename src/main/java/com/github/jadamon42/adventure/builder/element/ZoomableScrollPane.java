@@ -1,5 +1,6 @@
 package com.github.jadamon42.adventure.builder.element;
 
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Bounds;
@@ -13,7 +14,7 @@ import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.VBox;
 
 public class ZoomableScrollPane extends ScrollPane {
-    private final DoubleProperty scaleValue = new SimpleDoubleProperty(1.0);
+    private final DoubleProperty scaleFactor = new SimpleDoubleProperty(1.0);
     private Node target;
     private Node zoomNode;
 
@@ -33,8 +34,13 @@ public class ZoomableScrollPane extends ScrollPane {
         updateScale();
     }
 
-    public DoubleProperty scaleValueProperty() {
-        return scaleValue;
+    public DoubleProperty scaleFactorProperty() {
+        return scaleFactor;
+    }
+
+    public void setScaleFactor(double scaleFactor) {
+        this.scaleFactor.set(scaleFactor);
+        updateScale();
     }
 
     private Node outerNode(Node node) {
@@ -51,8 +57,11 @@ public class ZoomableScrollPane extends ScrollPane {
     }
 
     private void updateScale() {
-        target.setScaleX(scaleValue.get());
-        target.setScaleY(scaleValue.get());
+        Platform.runLater(() -> {
+            target.setScaleX(scaleFactor.get());
+            target.setScaleY(scaleFactor.get());
+            layout();
+        });
     }
 
     private void onZoom(ZoomEvent event) {
@@ -76,12 +85,12 @@ public class ZoomableScrollPane extends ScrollPane {
     }
 
     private void zoomAtPoint(double zoomFactor, double x, double y) {
-        double newScaleValue = scaleValue.get() * zoomFactor;
+        double newScaleFactor = scaleFactor.get() * zoomFactor;
         double maxScale = 4.5;
         double minScale = 0.05;
 
-        if (newScaleValue <= maxScale && newScaleValue >= minScale) {
-            scaleValue.set(newScaleValue);
+        if (newScaleFactor <= maxScale && newScaleFactor >= minScale) {
+            scaleFactor.set(newScaleFactor);
             updateScale();
             this.layout();
 
