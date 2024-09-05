@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 
 import java.util.function.Predicate;
 
-public class ExpandableTextInput extends HBox {
+public class ExpandableTextInput extends HBox implements InformableChild {
     private String text = "";
     private final TextField textField;
     private Predicate<String> validityCheck = null;
@@ -105,6 +105,11 @@ public class ExpandableTextInput extends HBox {
                 Tooltip.install(textField, invalidTooltip);
             }
         }
+    }
+
+    @Override
+    public void onParentDeleted() {
+        AppState.getInstance().removeInvalidInput(this);
     }
 
     private void openDialog(TextField textField) {
