@@ -111,4 +111,13 @@ public class StringUtils {
     public static boolean isCorrectlyDelimited(String str) {
         return isCorrectlyDelimited(str, "[,;\\s]+");
     }
+
+    public static boolean isNumber(String str) {
+        try {
+            Long.parseLong(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 }

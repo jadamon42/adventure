@@ -7,6 +7,7 @@ import com.github.jadamon42.adventure.common.util.ListUtils;
 
 public class AcquireEffectTextNode extends BasicNode implements StoryNodeTranslator, VisitableNode {
     private final AttachmentLink effectLink;
+    private com.github.jadamon42.adventure.common.node.AcquireEffectTextNode storyNode;
 
     public AcquireEffectTextNode() {
         NodeHeader header = new NodeHeader("Acquire Effect", "Acquire Effect Text Node");
@@ -26,6 +27,18 @@ public class AcquireEffectTextNode extends BasicNode implements StoryNodeTransla
 
     @Override
     public com.github.jadamon42.adventure.common.node.AcquireEffectTextNode toStoryNode() {
+        if (storyNode == null) {
+            storyNode = buildStoryNode();
+        }
+        return storyNode;
+    }
+
+    @Override
+    public void clearCachedStoryNode() {
+        storyNode = null;
+    }
+
+    private com.github.jadamon42.adventure.common.node.AcquireEffectTextNode buildStoryNode() {
         String text = getText();
         com.github.jadamon42.adventure.common.model.Effect effect = null;
         for (Node node : getAttachmentNodes()) {

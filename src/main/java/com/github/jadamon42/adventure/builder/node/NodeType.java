@@ -17,7 +17,8 @@ public enum NodeType {
     ITEM_CONDITION(ItemCondition.class.getSimpleName(), ItemCondition::new, "Has Item"),
     NAME_CONDITION(NameCondition.class.getSimpleName(), NameCondition::new, "Has Name"),
     OR(Or.class.getSimpleName(), Or::new, "Or"),
-    SWITCH_NODE(SwitchNode.class.getSimpleName(), SwitchNode::new, "Switch");
+    SWITCH_NODE(SwitchNode.class.getSimpleName(), SwitchNode::new, "Switch"),
+    WAIT_NODE(WaitNode.class.getSimpleName(), WaitNode::new, "Wait");
 
     private final Supplier<Node> supplier;
     private final String name;

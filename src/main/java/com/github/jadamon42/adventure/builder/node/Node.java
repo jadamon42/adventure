@@ -14,9 +14,11 @@ import java.util.UUID;
 
 public abstract class Node extends VBox {
     private final DragContext dragContext;
+    private final UUID uuid;
 
     public Node() {
-        setId(UUID.randomUUID().toString());
+        uuid = UUID.randomUUID();
+        setId(uuid.toString());
         dragContext = new DragContext();
         makeDraggable();
         makeDeletable();
@@ -24,6 +26,10 @@ public abstract class Node extends VBox {
 
     public static String getDescription() {
         return "A node. Can be dragged and deleted.";
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 
     public boolean isValid() {

@@ -14,4 +14,6 @@ public interface StoryNodeVisitor {
     void visit(BranchNode node);
 
     void visit(SwitchNode node);
+
+    void visit(WaitNode waitNode);
 }

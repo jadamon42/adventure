@@ -1,10 +1,7 @@
 package com.github.jadamon42.adventure.builder;
 
-import com.github.jadamon42.adventure.builder.element.ExceptionContent;
-import com.github.jadamon42.adventure.builder.element.ExpandableTextInput;
-import com.github.jadamon42.adventure.builder.element.NodeIconButton;
+import com.github.jadamon42.adventure.builder.element.*;
 import com.github.jadamon42.adventure.builder.state.MainBoardState;
-import com.github.jadamon42.adventure.builder.element.ZoomableScrollPane;
 import com.github.jadamon42.adventure.builder.node.*;
 import com.github.jadamon42.adventure.builder.state.MainBoardStateManager;
 import com.github.jadamon42.adventure.common.state.GameStateManager;
@@ -65,13 +62,14 @@ public class BuilderUiController {
         AppState.getInstance().setMainBoard(mainBoard);
         AppState.getInstance().setZoomableScrollPane(zoomableScrollPane);
 
+        addDraggableNodeButton(storyDriversBox, ExpositionalTextNode.class);
+        addDraggableNodeButton(storyDriversBox, WaitNode.class);
         addDraggableNodeButton(storyDriversBox, ChoiceTextInputNode.class);
         addDraggableNodeButton(storyDriversBox, FreeTextInputNode.class);
         addDraggableNodeButton(storyDriversBox, AcquireEffectTextNode.class);
         addDraggableNodeButton(storyDriversBox, AcquireItemTextNode.class);
         addDraggableNodeButton(storyDriversBox, BranchNode.class);
         addDraggableNodeButton(storyDriversBox, SwitchNode.class);
-        addDraggableNodeButton(storyDriversBox, ExpositionalTextNode.class);
         addDraggableNodeButton(conditionsBox, ItemCondition.class);
         addDraggableNodeButton(conditionsBox, EffectCondition.class);
         addDraggableNodeButton(conditionsBox, NameCondition.class);
@@ -160,12 +158,18 @@ public class BuilderUiController {
 
     @FXML
     private void handleExport() {
+        boolean invalidInputsFound = checkForInvalidInputs();
+        if (invalidInputsFound) {
+            return;
+        }
         StoryNode adventure = start.getAdventure();
         if (adventure != null) {
             try {
                 export(adventure);
             } catch (IOException e) {
                 alertError("Export Failed", "An error occurred while exporting the adventure.", e);
+            } finally {
+                clearCachedStoryNodes();
             }
         } else {
             alertInformation("Export Failed", "Adventure must have at least one node.");
@@ -179,10 +183,6 @@ public class BuilderUiController {
     }
 
     private void export(StoryNode adventure) throws IOException {
-        boolean invalidInputsFound = checkForInvalidInputs();
-        if (invalidInputsFound) {
-            return;
-        }
         File save = getExportFileFromUser();
         if (save != null) {
             Checkpoint start = new Checkpoint(new Player(), adventure);
@@ -241,5 +241,13 @@ public class BuilderUiController {
             return true;
         }
         return false;
+    }
+
+    private void clearCachedStoryNodes() {
+        for (javafx.scene.Node node : mainBoard.getChildren()) {
+            if (node instanceof StoryNodeTranslator storyNodeTranslator) {
+                storyNodeTranslator.clearCachedStoryNode();
+            }
+        }
     }
 }

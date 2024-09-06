@@ -11,6 +11,7 @@ import java.util.List;
 
 public class ChoiceTextInputNode extends BasicNode implements StoryNodeTranslator, VisitableNode {
     private final Choices choices;
+    private com.github.jadamon42.adventure.common.node.ChoiceTextInputNode storyNode;
 
     public ChoiceTextInputNode() {
         NodeHeader header = new NodeHeader("Choice Text Input", "Choice Text Input Node");
@@ -31,6 +32,18 @@ public class ChoiceTextInputNode extends BasicNode implements StoryNodeTranslato
 
     @Override
     public com.github.jadamon42.adventure.common.node.ChoiceTextInputNode toStoryNode() {
+        if (storyNode == null) {
+            storyNode = buildStoryNode();
+        }
+        return storyNode;
+    }
+
+    @Override
+    public void clearCachedStoryNode() {
+        storyNode = null;
+    }
+
+    private com.github.jadamon42.adventure.common.node.ChoiceTextInputNode buildStoryNode() {
         List<LinkedTextChoice> choices = new ArrayList<>();
         for (LinkedTextChoiceInput conditionInput : this.choices.getConditionalTextInputs()) {
             choices.add(conditionInput.toConditionalText());

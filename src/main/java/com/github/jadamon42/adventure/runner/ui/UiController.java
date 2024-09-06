@@ -38,7 +38,7 @@ public class UiController {
     @FXML
     private FlowPane buttonInputContainer;
 
-    private final Queue<MessageContainer> messageQueue;
+    private final Queue<Object> messageQueue;
 
     public UiController() {
         this.messageQueue = new LinkedList<>();
@@ -144,6 +144,10 @@ public class UiController {
         });
     }
 
+    public void sleep(Duration duration) {
+        messageQueue.add(new WaitMessage(duration));
+    }
+
     public void addMessageWithTypingIndicator(TextMessage message, Player player, EventHandler<MouseEvent> onReplay) {
         MessageContainer messageContainer = new MessageContainer(message, player, onReplay);
         messageQueue.add(messageContainer);
@@ -221,26 +225,33 @@ public class UiController {
     }
 
     private void processMessageQueue(CountDownLatch latch) {
-        long keyFrameTime = 0L;
-        long waitTime;
+        double keyFrameTime = 0;
+        double waitTime;
         Timeline timeline = new Timeline();
 
         while (!messageQueue.isEmpty()) {
-            MessageContainer message = messageQueue.poll();
-            waitTime = 0L;
-            if (!message.isPlayerMessage()) {
-                waitTime = getMillisToWait(message.getText());
+            Object messageObject = messageQueue.poll();
+            if (messageObject instanceof MessageContainer message) {
+                waitTime = 0L;
+                if (!message.isPlayerMessage()) {
+                    waitTime = getMillisToWait(message.getText());
+                }
+
+                timeline.getKeyFrames().add(
+                        new KeyFrame(Duration.millis(keyFrameTime), e -> showTypingIndicator()));
+
+                keyFrameTime = keyFrameTime + waitTime;
+                timeline.getKeyFrames().add(new KeyFrame(Duration.millis(keyFrameTime), e -> {
+                    hideTypingIndicator();
+                    messagesContainer.getChildren().add(message);
+                    scrollToBottom();
+                }));
+            } else if (messageObject instanceof WaitMessage message) {
+                keyFrameTime += message.getDuration().toMillis();
+                if (messageQueue.isEmpty()) {
+                    timeline.getKeyFrames().add(new KeyFrame(Duration.millis(keyFrameTime), e -> latch.countDown()));
+                }
             }
-
-            timeline.getKeyFrames().add(
-                    new KeyFrame(Duration.millis(keyFrameTime), e -> showTypingIndicator()));
-
-            keyFrameTime = keyFrameTime + waitTime;
-            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(keyFrameTime), e -> {
-                hideTypingIndicator();
-                messagesContainer.getChildren().add(message);
-                scrollToBottom();
-            }));
         }
 
         timeline.setOnFinished(e -> latch.countDown());
@@ -267,6 +278,18 @@ public class UiController {
         messagesScrollPane.applyCss();
         messagesScrollPane.layout();
         messagesScrollPane.setVvalue(messagesScrollPane.getVmax());
+    }
+
+    private static class WaitMessage {
+        private final Duration duration;
+
+        public WaitMessage(Duration duration) {
+            this.duration = duration;
+        }
+
+        public Duration getDuration() {
+            return duration;
+        }
     }
 
     private static class MessageContainer extends HBox {

@@ -22,7 +22,8 @@ public class GameStateManager {
                 new NamedType(SerializableChoiceTextInputNode.class, "SerializedChoiceTextInputNode"),
                 new NamedType(SerializableExpositionalTextNode.class, "SerializedExpositionalTextNode"),
                 new NamedType(SerializableFreeTextInputNode.class, "SerializedFreeTextInputNode"),
-                new NamedType(SerializableSwitchNode.class, "SerializedSwitchNode")
+                new NamedType(SerializableSwitchNode.class, "SerializedSwitchNode"),
+                new NamedType(SerializableWaitNode.class, "SerializableWaitNode")
         );
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(module);

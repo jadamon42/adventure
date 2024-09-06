@@ -7,6 +7,7 @@ import com.github.jadamon42.adventure.common.util.ListUtils;
 
 public class AcquireItemTextNode extends BasicNode  implements StoryNodeTranslator, VisitableNode {
     private final AttachmentLink itemLink;
+    private com.github.jadamon42.adventure.common.node.AcquireItemTextNode storyNode;
 
     public AcquireItemTextNode() {
         NodeHeader header = new NodeHeader("Acquire Item", "Acquire Item Text Node");
@@ -25,6 +26,18 @@ public class AcquireItemTextNode extends BasicNode  implements StoryNodeTranslat
 
     @Override
     public com.github.jadamon42.adventure.common.node.AcquireItemTextNode toStoryNode() {
+        if (storyNode == null) {
+            storyNode = buildStoryNode();
+        }
+        return storyNode;
+    }
+
+    @Override
+    public void clearCachedStoryNode() {
+        storyNode = null;
+    }
+
+    private com.github.jadamon42.adventure.common.node.AcquireItemTextNode buildStoryNode() {
         String text = getText();
         com.github.jadamon42.adventure.common.model.Item item = null;
         for (Node node : getAttachmentNodes()) {

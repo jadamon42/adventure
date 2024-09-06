@@ -231,4 +231,16 @@ public class MainBoardStateBuilder implements NodeVisitor {
                 switchNode.getNextNodeConnectionId(),
                 serializableConditionals));
     }
+
+    @Override
+    public void visit(WaitNode waitNode) {
+        mainStateChildren.add(new SerializableWaitNode(
+                waitNode.getId(),
+                waitNode.getLayoutX(),
+                waitNode.getLayoutY(),
+                waitNode.getTitle(),
+                waitNode.getPreviousNodeConnectionIds(),
+                waitNode.getNextNodeConnectionId(),
+                waitNode.getDuration().toSeconds()));
+    }
 }

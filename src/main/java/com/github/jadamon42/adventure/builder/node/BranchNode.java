@@ -13,6 +13,7 @@ import java.util.List;
 
 public class BranchNode extends BasicNode implements StoryNodeTranslator, VisitableNode {
     private final Branches branches;
+    private com.github.jadamon42.adventure.common.node.BranchNode storyNode;
 
     public BranchNode() {
         NodeHeader header = new NodeHeader("Branch", "Branch Node");
@@ -28,6 +29,18 @@ public class BranchNode extends BasicNode implements StoryNodeTranslator, Visita
 
     @Override
     public com.github.jadamon42.adventure.common.node.BranchNode toStoryNode() {
+        if (storyNode == null) {
+            storyNode = buildStoryNode();
+        }
+        return storyNode;
+    }
+
+    @Override
+    public void clearCachedStoryNode() {
+        storyNode = null;
+    }
+
+    private com.github.jadamon42.adventure.common.node.BranchNode buildStoryNode() {
         List<LinkedConditionalText> branches = new ArrayList<>();
         for (LinkedConditionalTextInput conditionInput : this.branches.getConditionalTextInputs()) {
             branches.add(conditionInput.toConditionalText());

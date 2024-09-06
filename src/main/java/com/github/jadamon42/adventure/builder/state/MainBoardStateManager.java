@@ -31,7 +31,8 @@ public class MainBoardStateManager {
             new NamedType(SerializableNameCondition.class, "SerializableNameCondition"),
             new NamedType(SerializableOr.class, "SerializableOr"),
             new NamedType(SerializableStart.class, "SerializableStart"),
-            new NamedType(SerializableSwitchNode.class, "SerializableSwitchNode")
+            new NamedType(SerializableSwitchNode.class, "SerializableSwitchNode"),
+            new NamedType(SerializableWaitNode.class, "SerializableWaitNode")
         );
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(module);

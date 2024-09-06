@@ -57,6 +57,7 @@ public abstract class ConditionalTextInputContainer<T extends AbstractConditiona
         newCondition.setPromptText(getConditionPrompt(getChildren().size() - 1));
         newCondition.setDeletable(true);
         newCondition.setOnDelete(event -> {
+            conditionalTextInputs.remove(newCondition);
             getChildren().removeIf(child -> child == newCondition);
             reconfigureOptions();
         });

@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -209,6 +210,13 @@ public class JavaFXGameEngine implements GameEngine, StoryNodeVisitor {
     public void visit(SwitchNode node) {
         ConditionalText availableChoice = node.getCase(player);
         addGameMessage(availableChoice.getMessage());
+        currentNode = node.getNextNode();
+    }
+
+    @Override
+    public void visit(WaitNode node) {
+        Duration duration = Duration.millis(node.getDuration().toMillis());
+        uiController.sleep(duration);
         currentNode = node.getNextNode();
     }
 

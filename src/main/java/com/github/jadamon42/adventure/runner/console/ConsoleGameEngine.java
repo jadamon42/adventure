@@ -107,6 +107,16 @@ public class ConsoleGameEngine implements GameEngine, StoryNodeVisitor {
         currentNode = node.getNextNode();
     }
 
+    @Override
+    public void visit(WaitNode node) {
+        try {
+            Thread.sleep(node.getDuration());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        currentNode = node.getNextNode();
+    }
+
     private void handleInteractableOutputNode(StoryTextNode node) {
         String text = node.getMessage().getInterpolatedText(player);
         System.out.println(text);

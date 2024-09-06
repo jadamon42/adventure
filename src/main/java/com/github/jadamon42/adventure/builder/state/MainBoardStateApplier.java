@@ -239,6 +239,14 @@ class MainBoardStateApplier implements SerializableNodeVisitor {
         mainBoard.getChildren().add(node);
     }
 
+    @Override
+    public void visit(SerializableWaitNode serializableNode) {
+        WaitNode node = new WaitNode();
+        setFullyLinkedProperties(serializableNode, node);
+        node.setText(String.valueOf(serializableNode.seconds()));
+        mainBoard.getChildren().add(node);
+    }
+
     private void setBaseProperties(SerializableNode serializableNode, Node node) {
         node.setId(serializableNode.id());
         node.setLayoutX(serializableNode.layoutX());

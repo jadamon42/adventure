@@ -150,6 +150,17 @@ public class SerializableGameStateBuilder implements StoryNodeVisitor  {
         visitNext(node);
     }
 
+    @Override
+    public void visit(WaitNode waitNode) {
+        SerializableWaitNode serializedNode = new SerializableWaitNode(
+                waitNode.getId(),
+                getNextNodeId(waitNode),
+                waitNode.getDuration().getSeconds()
+        );
+        nodeMap.put(waitNode.getId(), serializedNode);
+        visitNext(waitNode);
+    }
+
     private UUID getNextNodeId(Linkable linkable) {
         return linkable.getNextNode() != null ? linkable.getNextNode().getId() : null;
     }

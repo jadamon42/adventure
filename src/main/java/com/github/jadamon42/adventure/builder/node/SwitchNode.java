@@ -16,6 +16,7 @@ import java.util.List;
 
 public class SwitchNode extends BasicNode implements StoryNodeTranslator, VisitableNode {
     private final Cases cases;
+    private com.github.jadamon42.adventure.common.node.SwitchNode storyNode;
 
     public SwitchNode() {
         NodeHeader header = new NodeHeader("Switch", "Switch Node");
@@ -32,6 +33,18 @@ public class SwitchNode extends BasicNode implements StoryNodeTranslator, Visita
 
     @Override
     public com.github.jadamon42.adventure.common.node.SwitchNode toStoryNode() {
+        if (storyNode == null) {
+            storyNode = buildStoryNode();
+        }
+        return storyNode;
+    }
+
+    @Override
+    public void clearCachedStoryNode() {
+        storyNode = null;
+    }
+
+    private com.github.jadamon42.adventure.common.node.SwitchNode buildStoryNode() {
         List<ConditionalText> cases = new ArrayList<>();
         for (ConditionalTextInput conditionInput : this.cases.getConditionalTextInputs()) {
             cases.add(conditionInput.toConditionalText());

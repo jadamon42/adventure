@@ -32,4 +32,6 @@ public interface SerializableNodeVisitor {
     void visit(SerializableStart serializableNode);
 
     void visit(SerializableSwitchNode serializableNode);
+
+    void visit(SerializableWaitNode serializableNode);
 }

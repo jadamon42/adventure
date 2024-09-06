@@ -69,4 +69,10 @@ public class StoryNodeTraverser implements StoryNodeVisitor {
         storyNodeMap.put(node.getId(), node);
         visitNext(node);
     }
+
+    @Override
+    public void visit(WaitNode node) {
+        storyNodeMap.put(node.getId(), node);
+        visitNext(node);
+    }
 }

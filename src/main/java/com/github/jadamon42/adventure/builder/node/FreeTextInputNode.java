@@ -9,6 +9,7 @@ import com.github.jadamon42.adventure.common.util.PlayerDeltaBiFunction;
 
 public class FreeTextInputNode extends BasicNode implements StoryNodeTranslator, VisitableNode {
     private final AttachmentLink inputHandlerLink;
+    private com.github.jadamon42.adventure.common.node.FreeTextInputNode storyNode;
 
     public FreeTextInputNode() {
         NodeHeader header = new NodeHeader("Free Text Input", "Free Text Input Node");
@@ -27,6 +28,18 @@ public class FreeTextInputNode extends BasicNode implements StoryNodeTranslator,
 
     @Override
     public com.github.jadamon42.adventure.common.node.FreeTextInputNode toStoryNode() {
+        if (storyNode == null) {
+            storyNode = buildStoryNode();
+        }
+        return storyNode;
+    }
+
+    @Override
+    public void clearCachedStoryNode() {
+        storyNode = null;
+    }
+
+    private com.github.jadamon42.adventure.common.node.FreeTextInputNode buildStoryNode() {
         PlayerDeltaBiFunction<Object> handler = (player, obj) -> new PlayerDelta();
         Node node = ListUtils.getFirst(getAttachmentNodes());
         if (node instanceof InputHandler handlerNode) {

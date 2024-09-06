@@ -15,6 +15,7 @@ import java.util.*;
 
 public class GameStateDeserializer extends JsonDeserializer<GameState> implements SerializableNodeVisitor {
     private SerializableGameState serializableGameState;
+    private Map<UUID, StoryNode> nodeMap = new HashMap<>();
 
     public GameStateDeserializer() {
         this.serializableGameState = null;
@@ -34,8 +35,11 @@ public class GameStateDeserializer extends JsonDeserializer<GameState> implement
 
     public StoryNode getNode(UUID nodeId) {
         StoryNode node = null;
-        if (serializableGameState.nodeMap().containsKey(nodeId)) {
+        if (nodeMap.containsKey(nodeId)) {
+            node = nodeMap.get(nodeId);
+        } else if (serializableGameState.nodeMap().containsKey(nodeId)) {
             node = serializableGameState.nodeMap().get(nodeId).accept(this);
+            nodeMap.put(nodeId, node);
         }
         return node;
     }
@@ -117,6 +121,13 @@ public class GameStateDeserializer extends JsonDeserializer<GameState> implement
     @Override
     public SwitchNode visit(SerializableSwitchNode serializedNode) {
         SwitchNode node = SwitchNode.fromSerialized(serializedNode, this);
+        node.then(getNode(serializedNode.nextNodeId()));
+        return node;
+    }
+
+    @Override
+    public StoryNode visit(SerializableWaitNode serializedNode) {
+        WaitNode node = WaitNode.fromSerialized(serializedNode);
         node.then(getNode(serializedNode.nextNodeId()));
         return node;
     }

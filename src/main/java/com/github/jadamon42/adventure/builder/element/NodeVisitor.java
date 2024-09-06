@@ -34,4 +34,6 @@ public interface NodeVisitor {
     void visit(Start start);
 
     void visit(SwitchNode switchNode);
+
+    void visit(WaitNode waitNode);
 }

@@ -16,4 +16,6 @@ public interface SerializableNodeVisitor {
     StoryNode visit(SerializableFreeTextInputNode serializedNode);
 
     StoryNode visit(SerializableSwitchNode serializedNode);
+
+    StoryNode visit(SerializableWaitNode serializedNode);
 }
