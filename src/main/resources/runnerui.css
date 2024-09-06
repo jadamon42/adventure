@@ -67,6 +67,8 @@
     -fx-border-radius: 15px;
     -fx-background-radius: 14px;
     -fx-focus-traversable: false;
+    -fx-max-width: 500;
+    -fx-wrap-text: true;
 }
 
 .choice-button:hover {

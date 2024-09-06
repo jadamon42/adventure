@@ -118,10 +118,12 @@ public class UiController {
 
     public void addChoiceButton(String text, EventHandler<ActionEvent> eventHandler) {
         Platform.runLater(() -> {
+            HBox hBox = new HBox();
             JFXButton button = new JFXButton(text);
             button.getStyleClass().add("choice-button");
             button.setOnAction(eventHandler);
-            buttonInputContainer.getChildren().add(button);
+            hBox.getChildren().add(button);
+            buttonInputContainer.getChildren().add(hBox);
         });
     }
 
