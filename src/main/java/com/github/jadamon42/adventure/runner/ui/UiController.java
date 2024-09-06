@@ -2,16 +2,13 @@ package com.github.jadamon42.adventure.runner.ui;
 
 import com.github.jadamon42.adventure.common.model.Player;
 import com.github.jadamon42.adventure.common.model.TextMessage;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import com.github.jadamon42.adventure.runner.ui.element.*;
 import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -38,7 +35,7 @@ public class UiController {
     @FXML
     private FlowPane buttonInputContainer;
 
-    private final Queue<Object> messageQueue;
+    private final Queue<MessageAction> messageQueue;
 
     public UiController() {
         this.messageQueue = new LinkedList<>();
@@ -145,17 +142,17 @@ public class UiController {
     }
 
     public void sleep(Duration duration) {
-        messageQueue.add(new WaitMessage(duration));
+        messageQueue.add(MessageAction.of(new WaitAmount(duration)));
     }
 
     public void addMessageWithTypingIndicator(TextMessage message, Player player, EventHandler<MouseEvent> onReplay) {
         MessageContainer messageContainer = new MessageContainer(message, player, onReplay);
-        messageQueue.add(messageContainer);
+        messageQueue.add(MessageAction.of(messageContainer));
     }
 
     public void addMessageWithTypingIndicator(TextMessage message, Player player) {
         MessageContainer messageContainer = new MessageContainer(message, player);
-        messageQueue.add(messageContainer);
+        messageQueue.add(MessageAction.of(messageContainer));
     }
 
     public void clearMessages() {
@@ -230,8 +227,16 @@ public class UiController {
         Timeline timeline = new Timeline();
 
         while (!messageQueue.isEmpty()) {
-            Object messageObject = messageQueue.poll();
-            if (messageObject instanceof MessageContainer message) {
+            MessageAction messageAction = messageQueue.poll();
+            if (messageAction.getWaitMessage() != null) {
+                WaitAmount waitAmount = messageAction.getWaitMessage();
+                keyFrameTime += waitAmount.getDuration().toMillis();
+                if (messageQueue.isEmpty()) {
+                    timeline.getKeyFrames().add(new KeyFrame(Duration.millis(keyFrameTime), e -> latch.countDown()));
+                }
+            }
+            if (messageAction.getMessageContainer() != null) {
+                MessageContainer message = messageAction.getMessageContainer();
                 waitTime = 0L;
                 if (!message.isPlayerMessage()) {
                     waitTime = getMillisToWait(message.getText());
@@ -246,11 +251,6 @@ public class UiController {
                     messagesContainer.getChildren().add(message);
                     scrollToBottom();
                 }));
-            } else if (messageObject instanceof WaitMessage message) {
-                keyFrameTime += message.getDuration().toMillis();
-                if (messageQueue.isEmpty()) {
-                    timeline.getKeyFrames().add(new KeyFrame(Duration.millis(keyFrameTime), e -> latch.countDown()));
-                }
             }
         }
 
@@ -280,104 +280,4 @@ public class UiController {
         messagesScrollPane.setVvalue(messagesScrollPane.getVmax());
     }
 
-    private static class WaitMessage {
-        private final Duration duration;
-
-        public WaitMessage(Duration duration) {
-            this.duration = duration;
-        }
-
-        public Duration getDuration() {
-            return duration;
-        }
-    }
-
-    private static class MessageContainer extends HBox {
-        private final boolean isPlayerMessage;
-        private final boolean isInteractable;
-
-        public MessageContainer(TextMessage message, Player player, EventHandler<MouseEvent> onReplay) {
-            setId(message.getId().toString());
-            addLabel(message, player);
-            addReplayButton(message, onReplay);
-            this.isPlayerMessage = message.isPlayerMessage();
-            this.isInteractable = message.isInteractable();
-        }
-
-        public MessageContainer(TextMessage message, Player player) {
-            setId(message.getId().toString());
-            addLabel(message, player);
-            this.isPlayerMessage = message.isPlayerMessage();
-            this.isInteractable = false;
-        }
-
-        public boolean isPlayerMessage() {
-            return isPlayerMessage;
-        }
-
-        public boolean isInteractable() {
-            return isInteractable;
-        }
-
-        public String getText() {
-            return ((Label) getChildren().getFirst()).getText();
-        }
-
-        private void addLabel(TextMessage message, Player player) {
-            Label label = new Label(message.getInterpolatedText(player));
-
-            if (message.isPlayerMessage()) {
-                getStyleClass().add("user-message-container");
-                label.getStyleClass().add("user-message");
-            } else {
-                getStyleClass().add("message-container");
-                label.getStyleClass().add("message");
-            }
-
-            getChildren().add(label);
-        }
-
-        private void addReplayButton(TextMessage message, EventHandler<MouseEvent> onReplay) {
-            if (message.isInteractable()) {
-                getChildren().add(new ReplayButton(onReplay));
-            }
-        }
-    }
-
-    private static class ReplayButton extends HBox {
-        public ReplayButton(EventHandler<MouseEvent> eventHandler) {
-            getStyleClass().add("replay-button");
-            FontAwesomeIconView icon = new FontAwesomeIconView(FontAwesomeIcon.ROTATE_LEFT);
-            getChildren().add(icon);
-
-            setOnMouseClicked(eventHandler);
-            setVisible(false);
-        }
-    }
-
-    public static class TypingIndicator extends HBox {
-        public TypingIndicator() {
-            getStyleClass().add("typing-indicator-container");
-            FontAwesomeIconView dot1 = new FontAwesomeIconView(FontAwesomeIcon.CIRCLE);
-            FontAwesomeIconView dot2 = new FontAwesomeIconView(FontAwesomeIcon.CIRCLE);
-            FontAwesomeIconView dot3 = new FontAwesomeIconView(FontAwesomeIcon.CIRCLE);
-            getChildren().addAll(dot1, dot2, dot3);
-
-            createBounceAnimation(dot1, 0).play();
-            createBounceAnimation(dot2, 200).play();
-            createBounceAnimation(dot3, 400).play();
-        }
-
-        private Timeline createBounceAnimation(FontAwesomeIconView dot, int delay) {
-            Timeline timeline = new Timeline(
-                    new KeyFrame(Duration.ZERO, new KeyValue(dot.translateYProperty(), 0)),
-                    new KeyFrame(Duration.millis(200), new KeyValue(dot.translateYProperty(), -10)),
-                    new KeyFrame(Duration.millis(400), new KeyValue(dot.translateYProperty(), 0)),
-                    new KeyFrame(Duration.millis(1000), new KeyValue(dot.translateYProperty(), 0))
-            );
-            timeline.setCycleCount(Timeline.INDEFINITE);
-            timeline.setDelay(Duration.millis(delay));
-            return timeline;
-        }
-    }
 }
