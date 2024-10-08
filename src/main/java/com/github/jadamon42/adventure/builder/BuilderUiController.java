@@ -61,28 +61,25 @@ public class BuilderUiController {
 
         AppState.getInstance().setMainBoard(mainBoard);
         AppState.getInstance().setZoomableScrollPane(zoomableScrollPane);
-
-        addDraggableNodeButton(storyDriversBox, ExpositionalTextNode.class);
-        addDraggableNodeButton(storyDriversBox, WaitNode.class);
-        addDraggableNodeButton(storyDriversBox, ChoiceTextInputNode.class);
-        addDraggableNodeButton(storyDriversBox, FreeTextInputNode.class);
-        addDraggableNodeButton(storyDriversBox, AcquireEffectTextNode.class);
-        addDraggableNodeButton(storyDriversBox, AcquireItemTextNode.class);
-        addDraggableNodeButton(storyDriversBox, BranchNode.class);
-        addDraggableNodeButton(storyDriversBox, SwitchNode.class);
-        addDraggableNodeButton(conditionsBox, ItemCondition.class);
-        addDraggableNodeButton(conditionsBox, EffectCondition.class);
-        addDraggableNodeButton(conditionsBox, NameCondition.class);
-        addDraggableNodeButton(conditionsBox, And.class);
-        addDraggableNodeButton(conditionsBox, Or.class);
-        addDraggableNodeButton(modelsBox, Item.class);
-        addDraggableNodeButton(modelsBox, Effect.class);
-        addDraggableNodeButton(handlersBox, InputHandler.class);
-
-        addStartNode();
     }
 
-    private void addStartNode() {
+    public void addDraggableNodeButtonToStory(Class<? extends Node> nodeClass) {
+        addDraggableNodeButton(storyDriversBox, nodeClass);
+    }
+
+    public void addDraggableNodeButtonToConditions(Class<? extends Node> nodeClass) {
+        addDraggableNodeButton(conditionsBox, nodeClass);
+    }
+
+    public void addDraggableNodeButtonToModels(Class<? extends Node> nodeClass) {
+        addDraggableNodeButton(modelsBox, nodeClass);
+    }
+
+    public void addDraggableNodeButtonToHandlers(Class<? extends Node> nodeClass) {
+        addDraggableNodeButton(handlersBox, nodeClass);
+    }
+
+    public void addStartNode() {
         start = new Start();
         AppState.getInstance().addChildToMainBoard(start);
         AppState.getInstance().centerNode(start);
