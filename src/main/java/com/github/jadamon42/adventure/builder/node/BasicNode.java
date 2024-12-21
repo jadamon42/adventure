@@ -2,6 +2,8 @@ package com.github.jadamon42.adventure.builder.node;
 
 import com.github.jadamon42.adventure.builder.element.*;
 import com.github.jadamon42.adventure.builder.element.condition.ConditionalTextInputContainer;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Tooltip;
 
 import java.util.ArrayList;
@@ -76,6 +78,19 @@ public abstract class BasicNode extends Node {
             textInput.setPromptText(promptText);
         }
         orderChildren();
+    }
+
+    public void removeGameMessageInput() {
+        if (textInput != null) {
+            getChildren().remove(textInput);
+            textInput = null;
+        }
+    }
+
+    public void setOnTextChange(EventHandler<ActionEvent> eventHandler) {
+        if (textInput != null) {
+            textInput.setOnTextChange(eventHandler);
+        }
     }
 
     @Override

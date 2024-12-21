@@ -70,6 +70,9 @@ public class CheckpointDelta {
             if (playerDelta.getName() != null) {
                 playerDeltaBuilder.setName(playerDelta.getName());
             }
+            for (var customAttribute : playerDelta.getCustomAttributes()) {
+                playerDeltaBuilder.addCustomAttribute(customAttribute.getKey(), customAttribute.getValue());
+            }
             for (Item item : playerDelta.getItems()) {
                 playerDeltaBuilder.addItem(item);
             }

@@ -16,7 +16,21 @@ public class InputHandler extends BasicNode implements VisitableNode {
         setHeader(header);
         SubtypeSelector selector = new SubtypeSelector(
                 "Set Name",
-                event -> handler = (player, obj) -> player.setName(obj.toString())
+                event -> {
+                    removeGameMessageInput();
+                    handler = (player, obj) -> player.setName(obj.toString());
+                }
+        );
+        selector.addOption(
+                "Set Custom Attribute",
+                event -> {
+                    setGameMessageInput("Custom Attribute Name");
+                    setOnTextChange(event1 -> {
+                        String attributeName = getText();
+                        handler = (player, obj) ->
+                                player.addCustomAttribute(attributeName, obj.toString());
+                    });
+                }
         );
         handler = (player, obj) -> player.setName(obj.toString());
         setSubtypeSelector(selector);

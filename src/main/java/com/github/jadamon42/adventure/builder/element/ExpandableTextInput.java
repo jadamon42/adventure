@@ -3,6 +3,8 @@ package com.github.jadamon42.adventure.builder.element;
 import com.github.jadamon42.adventure.builder.AppState;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -33,7 +35,7 @@ public class ExpandableTextInput extends HBox implements InformableChild {
         textField.getStyleClass().add("node-text-input");
         textField.setPromptText(promptText);
         textField.setFocusTraversable(false);
-        textField.setOnKeyTyped(event -> text = textField.getText());
+        textField.setOnKeyTyped(event -> setTextFromTextField());
         textField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.ESCAPE) {
                 getScene().getRoot().requestFocus();
@@ -71,6 +73,10 @@ public class ExpandableTextInput extends HBox implements InformableChild {
         return text;
     }
 
+    private void setTextFromTextField() {
+        text = textField.getText();
+    }
+
     public void setPromptText(String promptText) {
         textField.setPromptText(promptText);
     }
@@ -105,6 +111,13 @@ public class ExpandableTextInput extends HBox implements InformableChild {
                 Tooltip.install(textField, invalidTooltip);
             }
         }
+    }
+
+    public void setOnTextChange(EventHandler<ActionEvent> eventHandler) {
+        textField.setOnKeyTyped(event -> {
+            setTextFromTextField();
+            eventHandler.handle(new ActionEvent());
+        });
     }
 
     @Override

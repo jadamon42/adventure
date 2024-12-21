@@ -183,19 +183,7 @@ public class SerializableGameStateBuilder implements StoryNodeVisitor  {
                 }
                 messageIds.add(message.getId());
             }
-            List<UUID> itemIds = new ArrayList<>();
-            for (Item item : delta.getPlayerDelta().getItems()) {
-                itemIds.add(item.getId());
-            }
-            List<UUID> effectIds = new ArrayList<>();
-            for (Effect effect : delta.getPlayerDelta().getEffects()) {
-                effectIds.add(effect.getId());
-            }
-            SerializablePlayerDelta serializablePlayerDelta = new SerializablePlayerDelta(
-                    delta.getPlayerDelta().getName(),
-                    itemIds,
-                    effectIds
-            );
+            SerializablePlayerDelta serializablePlayerDelta = getSerializablePlayerDelta(delta);
             serializableCheckpointDeltas.add(new SerializableCheckpointDelta(
                     messageIds,
                     serializablePlayerDelta,
@@ -203,6 +191,25 @@ public class SerializableGameStateBuilder implements StoryNodeVisitor  {
                     delta.getCurrentMessageId()
             ));
         }
+    }
+
+    private static SerializablePlayerDelta getSerializablePlayerDelta(CheckpointDelta delta) {
+        List<Map.Entry<String, String>> customAttributes =
+                new ArrayList<>(delta.getPlayerDelta().getCustomAttributes());
+        List<UUID> itemIds = new ArrayList<>();
+        for (Item item : delta.getPlayerDelta().getItems()) {
+            itemIds.add(item.getId());
+        }
+        List<UUID> effectIds = new ArrayList<>();
+        for (Effect effect : delta.getPlayerDelta().getEffects()) {
+            effectIds.add(effect.getId());
+        }
+        return new SerializablePlayerDelta(
+                delta.getPlayerDelta().getName(),
+                customAttributes,
+                itemIds,
+                effectIds
+        );
     }
 
     private SerializableGameState buildSerializedGameState() {

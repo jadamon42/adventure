@@ -15,7 +15,7 @@ import java.util.*;
 
 public class GameStateDeserializer extends JsonDeserializer<GameState> implements SerializableNodeVisitor {
     private SerializableGameState serializableGameState;
-    private Map<UUID, StoryNode> nodeMap = new HashMap<>();
+    private final Map<UUID, StoryNode> nodeMap = new HashMap<>();
 
     public GameStateDeserializer() {
         this.serializableGameState = null;
@@ -55,6 +55,8 @@ public class GameStateDeserializer extends JsonDeserializer<GameState> implement
             for (UUID messageId : serializableCheckpointDelta.messageIds()) {
                 messages.add(serializableGameState.messageMap().get(messageId));
             }
+            List<Map.Entry<String, String>> customAttributes =
+                    new ArrayList<>(serializableCheckpointDelta.playerDelta().customAttributes());
             List<Item> items = new ArrayList<>();
             for (UUID itemId : serializableCheckpointDelta.playerDelta().itemIds()) {
                 items.add(serializableGameState.itemMap().get(itemId));
@@ -65,6 +67,7 @@ public class GameStateDeserializer extends JsonDeserializer<GameState> implement
             }
             PlayerDelta playerDelta = new PlayerDelta(
                     serializableCheckpointDelta.playerDelta().name(),
+                    customAttributes,
                     items,
                     effects
             );
