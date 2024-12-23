@@ -1,5 +1,6 @@
 package com.github.jadamon42.adventure.common.state.serialize;
 
+import com.github.jadamon42.adventure.common.model.CustomAttribute;
 import com.github.jadamon42.adventure.common.model.Effect;
 import com.github.jadamon42.adventure.common.model.Item;
 import com.github.jadamon42.adventure.common.model.TextMessage;
@@ -194,7 +195,7 @@ public class SerializableGameStateBuilder implements StoryNodeVisitor  {
     }
 
     private static SerializablePlayerDelta getSerializablePlayerDelta(CheckpointDelta delta) {
-        List<Map.Entry<String, String>> customAttributes =
+        List<CustomAttribute> customAttributes =
                 new ArrayList<>(delta.getPlayerDelta().getCustomAttributes());
         List<UUID> itemIds = new ArrayList<>();
         for (Item item : delta.getPlayerDelta().getItems()) {

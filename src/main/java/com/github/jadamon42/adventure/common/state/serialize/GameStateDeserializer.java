@@ -55,7 +55,7 @@ public class GameStateDeserializer extends JsonDeserializer<GameState> implement
             for (UUID messageId : serializableCheckpointDelta.messageIds()) {
                 messages.add(serializableGameState.messageMap().get(messageId));
             }
-            List<Map.Entry<String, String>> customAttributes =
+            List<CustomAttribute> customAttributes =
                     new ArrayList<>(serializableCheckpointDelta.playerDelta().customAttributes());
             List<Item> items = new ArrayList<>();
             for (UUID itemId : serializableCheckpointDelta.playerDelta().itemIds()) {

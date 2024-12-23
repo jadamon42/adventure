@@ -2,24 +2,21 @@ package com.github.jadamon42.adventure.common.model;
 
 import com.github.jadamon42.adventure.common.state.PlayerDelta;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Player {
     private String name;
-    private final Map<String, String> customAttributes;
+    private final CustomAttributes customAttributes;
     private final Inventory inventory;
     private final Effects effects;
 
     public Player() {
-        customAttributes = new HashMap<>();
+        customAttributes = new CustomAttributes();
         inventory = new Inventory();
         effects = new Effects();
     }
 
     public Player(Player player) {
         this.name = player.name;
-        this.customAttributes = new HashMap<>(player.customAttributes);
+        this.customAttributes = new CustomAttributes(player.getCustomAttributes());
         this.inventory = new Inventory(player.getInventory());
         this.effects = new Effects(player.getEffects());
     }
@@ -37,16 +34,16 @@ public class Player {
         if (key == null) {
             throw new IllegalArgumentException("Key cannot be null");
         }
-        if (value == null) {
-            customAttributes.remove(key);
-        } else {
-            customAttributes.put(key, value);
-        }
+        customAttributes.putOrRemove(new CustomAttribute(key, value));
         return new PlayerDelta(key, value);
     }
 
     public String getCustomAttribute(String key) {
         return customAttributes.get(key);
+    }
+
+    public CustomAttributes getCustomAttributes() {
+        return customAttributes;
     }
 
     public Inventory getInventory() {
@@ -87,12 +84,8 @@ public class Player {
         if (playerDelta.getName() != null) {
             this.name = playerDelta.getName();
         }
-        for (Map.Entry<String, String> customAttribute : playerDelta.getCustomAttributes()) {
-            if (customAttribute.getValue() == null) {
-                this.customAttributes.remove(customAttribute.getKey());
-            } else {
-                this.customAttributes.put(customAttribute.getKey(), customAttribute.getValue());
-            }
+        for (CustomAttribute customAttribute : playerDelta.getCustomAttributes()) {
+            customAttributes.putOrRemove(customAttribute);
         }
         for (Item item : playerDelta.getItems()) {
             this.inventory.add(item);

@@ -1,5 +1,6 @@
 package com.github.jadamon42.adventure.common.state;
 
+import com.github.jadamon42.adventure.common.model.CustomAttribute;
 import com.github.jadamon42.adventure.common.model.Effect;
 import com.github.jadamon42.adventure.common.model.Item;
 import com.github.jadamon42.adventure.common.model.TextMessage;
@@ -70,8 +71,8 @@ public class CheckpointDelta {
             if (playerDelta.getName() != null) {
                 playerDeltaBuilder.setName(playerDelta.getName());
             }
-            for (var customAttribute : playerDelta.getCustomAttributes()) {
-                playerDeltaBuilder.addCustomAttribute(customAttribute.getKey(), customAttribute.getValue());
+            for (CustomAttribute customAttribute : playerDelta.getCustomAttributes()) {
+                playerDeltaBuilder.addCustomAttribute(customAttribute);
             }
             for (Item item : playerDelta.getItems()) {
                 playerDeltaBuilder.addItem(item);
