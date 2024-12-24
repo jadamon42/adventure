@@ -153,6 +153,7 @@ public class MainBoardStateBuilder implements NodeVisitor {
                 inputHandler.getLayoutY(),
                 inputHandler.getTitle(),
                 inputHandler.getSubtype(),
+                inputHandler.getText(),
                 inputHandler.getInputHandlerConnectionIds()));
     }
 

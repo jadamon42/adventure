@@ -8,6 +8,7 @@ public record SerializableInputHandler(
         double layoutY,
         String title,
         String subtype,
+        String text,
         List<String> inputHandlerConnectionIds
 ) implements SerializableNode {
     @Override

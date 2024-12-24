@@ -153,6 +153,7 @@ class MainBoardStateApplier implements SerializableNodeVisitor {
         InputHandler node = new InputHandler();
         setBaseProperties(serializableNode, node);
         node.setSubtype(serializableNode.subtype());
+        node.setText(serializableNode.text());
         for (String connectionId : serializableNode.inputHandlerConnectionIds()) {
             node.addInputHandlerConnection(getConnectionLine(connectionId));
         }
