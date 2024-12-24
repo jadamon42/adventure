@@ -26,7 +26,8 @@ public class TextInterpolator {
             if (variableName.equals("PLAYER_NAME")) {
                 return capitalizeWords(player.getName());
             }
-            return player.getCustomAttribute(variableName);
+            String customAttribute = player.getCustomAttribute(variableName);
+            return customAttribute != null ? customAttribute : "";
         }
 
         private static String capitalizeWords(String string) {

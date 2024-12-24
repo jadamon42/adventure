@@ -144,7 +144,7 @@ public class SerializableGameStateBuilder implements StoryNodeVisitor  {
         }
         SerializableSwitchNode serializedNode = new SerializableSwitchNode(
                 node.getId(),
-                node.getNextNode().getId(),
+                getNextNodeId(node),
                 choices
         );
         nodeMap.put(node.getId(), serializedNode);
