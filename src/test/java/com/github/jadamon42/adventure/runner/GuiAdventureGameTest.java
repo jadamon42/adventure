@@ -24,9 +24,9 @@ public class GuiAdventureGameTest extends Application {
         Player player = new Player();
         JavaFXGameEngine gameEngine = new JavaFXGameEngine(player, start());
         gameEngine.initialize(stage);
-//        gameEngine.startGame();
-        File file = new File(getClass().getResource("/samples/northPoleEmergencyHotline.adv").getFile());
-            gameEngine.loadGame(file.getAbsolutePath());
+        gameEngine.startGame();
+//        File file = new File(getClass().getResource("/samples/northPoleEmergencyHotline.adv").getFile());
+//            gameEngine.loadGame(file.getAbsolutePath());
 
     }
 
