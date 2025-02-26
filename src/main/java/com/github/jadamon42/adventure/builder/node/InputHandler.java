@@ -32,8 +32,8 @@ public class InputHandler extends BasicNode implements VisitableNode {
                     });
                 }
         );
-        handler = (player, obj) -> player.setName(obj.toString());
         setSubtypeSelector(selector);
+        initializeHandler();
         NodeFooter footer = new NodeFooter();
         inputHandlerLink = footer.addAttacher(ConnectionType.HANDLER);
         setFooter(footer);
@@ -66,5 +66,17 @@ public class InputHandler extends BasicNode implements VisitableNode {
 
     public void addInputHandlerConnection(ConnectionLine connectionLine) {
         inputHandlerLink.addConnection(connectionLine);
+    }
+
+    public void initializeHandler() {
+        String subtype = getSubtype();
+        if (subtype.equals("Set Custom Attribute")) {
+            setGameMessageInput("Custom Attribute Name");
+            String attributeName = getText();
+            handler = (player, obj) ->
+                    player.addCustomAttribute(attributeName, obj.toString());
+        } else {
+            handler = (player, obj) -> player.setName(obj.toString());
+        }
     }
 }
